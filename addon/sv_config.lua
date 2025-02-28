@@ -18,7 +18,8 @@ SVConfig.Messages = {
     zh = "检测到禁用模型: ",
     jp = "禁止されたモデルが検出されました: ",
     it = "Modello proibito rilevato: ",
-    pt = "Modelo proibido detectado: "
+    pt = "Modelo proibido detectado: ", 
+    pl = "Wykryto model z blacklisty: ",
 }
 -- Default language
 SVConfig.Language = "en"
