@@ -1,0 +1,59 @@
+-- local xssPatterns = {
+--     "<meta.-/>",
+--     "<script.-</script>",
+--     "<.*?>",
+--     "<iframe",
+--     "onload=",
+--     "onerror=",
+--     "javascript:",
+--     "<img",
+--     "eval%(",
+--     "atob%(",
+--     "btoa%("
+-- }
+
+-- local function containsXSS(playerId, input)
+--     if type(input) == 'table' then
+--         for k,v in pairs(input) do
+--             if type(v) == 'string' then
+--                 for _, pattern in ipairs(xssPatterns) do
+--                     if string.find(v, pattern, 1, true) then
+--                         return true
+--                     end
+--                 end
+--             end
+--         end
+--     end
+--     if type(input) == 'string' then
+--         for _, pattern in ipairs(xssPatterns) do
+--             if string.find(input, pattern, 1, true) then
+--                 return true
+--             end
+--         end
+--     end
+--     return false
+-- end
+
+-- -- Add your event name inhere and delete this existing hamood
+-- local allowedEvents = {
+--     "ckd-killfeed:sendToKillFeed",
+--     "gfx-killfeed:sendToKillFeed",
+--     "cfx-bongz-based:notify"
+-- }
+
+-- AddEventHandler('onResourceStart', function(resourceName)
+--     if resourceName == GetCurrentResourceName() then
+--         Citizen.Wait(500)
+--         for _, eventName in ipairs(allowedEvents) do
+--             AddEventHandler(eventName, function(...)
+--                 local playerId = source
+--                 local args = {...}
+--                 for _, v in ipairs(args) do
+--                     if containsXSS(playerId, v) then
+--                         return DropPlayer(playerId, 'Why you hamood injection? tf')
+--                     end
+--                 end
+--             end)
+--         end
+--     end
+-- end)
