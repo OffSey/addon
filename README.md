@@ -15,11 +15,11 @@ Enable bypasses and permission for fiveguard troght the following permission sys
 
 ### Preconfigured temporany permissions
 Prevent bans and allow your players to get fun without making your code for temporany permissions
-- RTX THemepark
+- RTX Themepark
 - Rcore Clothing
 
 ### Additional checks
-- Prevent reosurce stop
+- Prevent resource stop
 - Prevent carry exploit
 - Prevent unwanted peds
 
