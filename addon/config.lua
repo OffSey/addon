@@ -1,292 +1,423 @@
-Config = {}
-Config.ResourceName = "fiveguard" -- resource name
-Config.DebugConsole = true -- DebugConsole
+return {
+    Debug = true,
+    CheckUpdates = false, --RECOMMENDED Enable this to be notified when an update is available!
 
------------- ANTI CARRY VEHUCLE ------------
-Config.AntiCarry = true -- Activate AntiCarry or not ?
-Config.RecordPlayer = true -- Record ? true = yes / false = no | FOR ANTI CARRY
-Config.RecordTime = 1000 -- 2000 = 2 Seconde (The player will be banned after 2 seconds) | Not useful if "Config.RecordPlayer" is false| FOR ANTI CARRY
--- FOR WEBHOOK GO TO sv_config.lua !!! /!\ /!\ /!\
-Config.WlZone = { -- | FOR ANTI CARRY
-    {coords = vector3(-1659.5439, -1102.4888, 13.1184), radius = 150.0}, -- Rtx ThemePark (Beach ThemePark)
-    -- {coords = vector3(-1659.5439, -1102.4888, 33.1184), radius = 150.0}, -- Rtx ThemePark (Beach ThemePark) etc...
-}
-
------------- ANTI MODEL DETECTOR ------------
------ FOR CONFIG ANTI MODEL DETECTOR GO TO sv_config.lua
-Config.AntiModelDetector = true -- Activate Anti Model Detector ?
-
-
------------- ANTI STOP ------------
-Config.AntiStopper = true
-Config.CheckInterval = 10  -- | FOR ANTI STOP
-
------------- RTX DEV ------------
-Config.ThemeParkRTX = true -- For remove false ban
-
------------- RCORE ------------
-Config.RcoreClothing = true -- For permissions StealOutfit for false ban :D 
-
-
------------- Permissions ------------
-
--------- /!\ /!\ /!\ ONLY WITH ACE PERMISSIONS (DISABLE "ALTERNATIVE PERMISSIONS CHECK" IN "PERMISSIONS" CATEGORIE IN FIVEGUARD)  /!\ /!\ /!\ --------
-
------ TX ADMIN PERMISSIONS
-Config.TxAdminBypass = false -- Bypass all people on TxAdmin (Admin User)
-Config.PermissionsTxAdmin = { -- Permissions that'll be set if player has TxAdmin Access
-    --[[ AdminMenu ]]  --
-    "AdminMenuAccess",
-    "AnnouncementAccess",
-    "ESPAccess",
-    "ClearEntitiesAccess",
-    "BanAndKickAccess",
-    "GotoAndBringAccess",
-    "VehicleAccess",
-    "MiscAccess",
-    "LogsAccess",
-    "PlayerSelectorAccess",
-    "BanListAndUnbanAccess",
-    "ModelChangerAccess",
-    --[[ Client ]] --
-    "BypassSpectate",
-    "BypassGodMode",
-    "BypassInvisible",
-    "BypassStealOutfit",
-    "BypassInfStamina",
-    "BypassNoclip",
-    "BypassSuperJump",
-    "BypassFreecam",
-    "BypassSpeedHack",
-    "BypassTeleport",
-    "BypassNightVision",
-    "BypassThermalVision",
-    "BypassOCR",
-    "BypassNuiDevtools",
-    "BypassBlacklistedTextures",
-    "BlipsBypass",
-    "BypassCbScanner",
-    --[[ Weapon ]] --
-    "BypassWeaponDmgModifier",
-    "BypassInfAmmo",
-    "BypassNoReload",
-    "BypassRapidFire",
-    --[[ Vehicle ]] --
-    "BypassVehicleFixAndGodMode",
-    "BypassVehicleHandlingEdit",
-    "BypassVehicleModifier",
-    "BypassBulletproofTires",
-    --[[ Blacklist ]] --
-    "BypassModelChanger",
-    "BypassWeaponBlacklist",
-    --[[ Misc ]] --
-    "FGCommands",
-    "BypassVPN",
-    "BypassExplosion",
-    "BypassClearTasks",
-    "BypassParticle"
-}
-
------ ESX ACE PERMISSIONS
-Config.UseAcePermissions = false -- Group Ace Permissions // ONLY ESX FOR THE MOMENT (Soon QbCore & vRP)
-Config.UserGroup = "user"
-Config.PermissionsCustom = {
-    fondateur = {
-        --[[ AdminMenu ]] --
-        "AdminMenuAccess",
-        "AnnouncementAccess",
-        "ESPAccess",
-        "ClearEntitiesAccess",
-        "BanAndKickAccess",
-        "GotoAndBringAccess",
-        "VehicleAccess",
-        "MiscAccess",
-        "LogsAccess",
-        "PlayerSelectorAccess",
-        "BanListAndUnbanAccess",
-        "ModelChangerAccess",
-        --[[ Client ]] --
-        "BypassSpectate",
-        "BypassGodMode",
-        "BypassInvisible",
-        "BypassStealOutfit",
-        "BypassInfStamina",
-        "BypassNoclip",
-        "BypassSuperJump",
-        "BypassFreecam",
-        "BypassSpeedHack",
-        "BypassTeleport",
-        "BypassNightVision",
-        "BypassThermalVision",
-        "BypassOCR",
-        "BypassNuiDevtools",
-        "BypassBlacklistedTextures",
-        "BlipsBypass",
-        "BypassCbScanner",
-        --[[ Weapon ]] --
-        "BypassWeaponDmgModifier",
-        "BypassInfAmmo",
-        "BypassNoReload",
-        "BypassRapidFire",
-        --[[ Vehicle ]] --
-        "BypassVehicleFixAndGodMode",
-        "BypassVehicleHandlingEdit",
-        "BypassVehicleModifier",
-        "BypassBulletproofTires",
-        --[[ Blacklist ]] --
-        "BypassModelChanger",
-        "BypassWeaponBlacklist",
-        --[[ Misc ]] --
-        "FGCommands",
-        "BypassVPN",
-        "BypassExplosion",
-        "BypassClearTasks",
-        "BypassParticle"
+    -- prevent cheaters to take and launch vehicles
+    AntiCarry = {
+        enable = true,
+        recordPlayer = true, --send a clip in your whebhook before player get banned
+        webhookURL = "https://discord.com/api/webhooks/URL", -- Discord webhook URL (store recorded clips)
+        recordTime = 1000, -- in seconds
+        whitelistedZones = {
+            -- { -- EXAMPLE
+            --     coords = vector3(0, 0, 0),
+            --     radius = 100.0
+            -- },
+            GetResourceState('rtx_themepark') ~= 'missing' and { --JUST A WHITELIST FOR A SPECIFIC SCRIPT
+                coords = vector3(-1659.5439, -1102.4888, 13.1184),  -- RTX ThemePark (Beach ThemePark)
+                radius = 150.0
+            } or nil
+        }
     },
-    responsable = {
-        --[[ Client ]] --
-        "BypassSpectate",
-        "BypassGodMode",
-        "BypassInvisible",
-        "BypassStealOutfit",
-        "BypassInfStamina",
-        "BypassNoclip",
-        "BypassSuperJump",
-        "BypassFreecam",
-        "BypassSpeedHack",
-        "BypassTeleport",
-        "BypassNightVision",
-        "BypassThermalVision",
-        "BypassOCR",
-        "BypassNuiDevtools",
-        "BypassBlacklistedTextures",
-        "BlipsBypass",
-        "BypassCbScanner",
-        --[[ Weapon ]] --
-        "BypassWeaponDmgModifier",
-        "BypassInfAmmo",
-        "BypassNoReload",
-        "BypassRapidFire",
-        --[[ Vehicle ]] --
-        "BypassVehicleFixAndGodMode",
-        "BypassVehicleHandlingEdit",
-        "BypassVehicleModifier",
-        "BypassBulletproofTires",
-        --[[ Blacklist ]] --
-        "BypassModelChanger",
-        "BypassWeaponBlacklist",
-        --[[ Misc ]] --
-        "FGCommands",
-        "BypassVPN",
-        "BypassExplosion",
-        "BypassClearTasks",
-        "BypassParticle"
+
+    --Fiveguard AntiStopper
+    AntiStopper = {
+        enable = false,
+        checkInterval = 5 --interval in seconds
     },
-    admin = {
-        --[[ Client ]] --
-        "BypassSpectate",
-        "BypassGodMode",
-        "BypassInvisible",
-        "BypassStealOutfit",
-        "BypassInfStamina",
-        "BypassNoclip",
-        "BypassSuperJump",
-        "BypassFreecam",
-        "BypassSpeedHack",
-        "BypassTeleport",
-        "BypassNightVision",
-        "BypassThermalVision",
-        "BypassOCR",
-        "BypassNuiDevtools",
-        "BypassBlacklistedTextures",
-        "BlipsBypass",
-        "BypassCbScanner",
-        --[[ Weapon ]] --
-        "BypassWeaponDmgModifier",
-        "BypassInfAmmo",
-        "BypassNoReload",
-        "BypassRapidFire",
-        --[[ Vehicle ]] --
-        "BypassVehicleFixAndGodMode",
-        "BypassVehicleHandlingEdit",
-        "BypassVehicleModifier",
-        "BypassBulletproofTires",
-        --[[ Blacklist ]] --
-        "BypassModelChanger",
-        "BypassWeaponBlacklist",
-        --[[ Misc ]] --
-        "FGCommands",
-        "BypassVPN",
-        "BypassExplosion",
-        "BypassClearTasks",
-        "BypassParticle"
+
+    --Enable this if u have rtx_themepark to prevent false bans, now it will detect automatically
+    RTX_ThemePark_Bypass = {
+        enable = GetResourceState('rtx_themepark') ~= 'missing'
     },
-    modo = {
-        --[[ Client ]] --
-        "BypassSpectate",
-        "BypassGodMode",
-        "BypassInvisible",
-        "BypassStealOutfit",
-        "BypassInfStamina",
-        "BypassNoclip",
-        "BypassSuperJump",
-        "BypassFreecam",
-        "BypassSpeedHack",
-        "BypassTeleport",
-        "BypassNightVision",
-        "BypassThermalVision",
-        "BypassOCR",
-        "BypassNuiDevtools",
-        "BypassBlacklistedTextures",
-        "BlipsBypass",
-        "BypassCbScanner",
-        --[[ Weapon ]] --
-        "BypassWeaponDmgModifier",
-        "BypassInfAmmo",
-        "BypassNoReload",
-        "BypassRapidFire",
-        --[[ Vehicle ]] --
-        "BypassVehicleFixAndGodMode",
-        "BypassVehicleHandlingEdit",
-        "BypassVehicleModifier",
-        "BypassBulletproofTires",
-        --[[ Blacklist ]] --
-        "BypassModelChanger",
-        "BypassWeaponBlacklist",
-        --[[ Misc ]] --
-        "BypassVPN",
-        "BypassExplosion",
-        "BypassClearTasks",
-        "BypassParticle"
+
+    --Enable this if u have rcore_clothing to prevent false bans, now it will detect automatically
+    rcore_clothing_bypass = {
+        enable = GetResourceState('rcore_clothing') ~= 'missing'
     },
-    helper = {
-        --[[ Client ]] --
-        "BypassSpectate",
-        "BypassGodMode",
-        "BypassInvisible",
-        "BypassStealOutfit",
-        "BypassInfStamina",
-        "BypassNoclip",
-        "BypassSuperJump",
-        "BypassFreecam",
-        "BypassSpeedHack",
-        "BypassTeleport",
-        "BypassNightVision",
-        "BypassThermalVision",
-        "BypassOCR",
-        "BypassNuiDevtools",
-        "BypassBlacklistedTextures",
-        "BlipsBypass",
-        "BypassCbScanner",
-        --[[ Vehicle ]] --
-        "BypassVehicleFixAndGodMode",
-        "BypassVehicleHandlingEdit",
-        "BypassVehicleModifier",
-        "BypassBulletproofTires",
-        --[[ Misc ]] --
-        "BypassVPN",
-        "BypassExplosion",
-        "BypassClearTasks",
-        "BypassParticle"
+
+    -- Check for a specified time if a player have a model, if true he will be banned/kicked
+    BlacklistedModels = {
+        enable = true,
+        ban = true, --if false player is kicked
+        checkInterval = 10, --in seconds
+        blacklist = { -- a list of ped/animal models that player can't use
+            "a_c_fish",
+            'A_C_Boar',
+            'A_C_Boar_02',
+            'A_C_Cat_01',
+            'A_C_Chickenhawk',
+            'A_C_Chimp',
+            'A_C_Chimp_02'
+        }
     },
+
+    -- !! DO NOT ENABLE MORE THAN 1 PERMISSION SYSTEM AT SAME TIME !!
+    -- Bypass txAdmin admins
+    txAdminPermissions = {
+        enable = true,
+        fgPermissions = { -- Permissions that'll be set if player has TxAdmin Access
+            --[[ AdminMenu ]]  --
+                "AdminMenuAccess",
+                "AnnouncementAccess",
+                "ESPAccess",
+                "ClearEntitiesAccess",
+                "BanAndKickAccess",
+                "GotoAndBringAccess",
+                "VehicleAccess",
+                "MiscAccess",
+                "LogsAccess",
+                "PlayerSelectorAccess",
+                "BanListAndUnbanAccess",
+                "ModelChangerAccess",
+            --[[ Client ]] --
+                "BypassSpectate",
+                "BypassGodMode",
+                "BypassInvisible",
+                "BypassStealOutfit",
+                "BypassInfStamina",
+                "BypassNoclip",
+                "BypassSuperJump",
+                "BypassFreecam",
+                "BypassSpeedHack",
+                "BypassTeleport",
+                "BypassNightVision",
+                "BypassThermalVision",
+                "BypassOCR",
+                "BypassNuiDevtools",
+                "BypassBlacklistedTextures",
+                "BlipsBypass",
+                "BypassCbScanner",
+            --[[ Weapon ]] --
+                "BypassWeaponDmgModifier",
+                "BypassInfAmmo",
+                "BypassNoReload",
+                "BypassRapidFire",
+            --[[ Vehicle ]] --
+                "BypassVehicleFixAndGodMode",
+                "BypassVehicleHandlingEdit",
+                "BypassVehicleModifier",
+                "BypassBulletproofTires",
+            --[[ Blacklist ]] --
+                "BypassModelChanger",
+                "BypassWeaponBlacklist",
+            --[[ Misc ]] --
+                "FGCommands",
+                "BypassVPN",
+                "BypassExplosion",
+                "BypassClearTasks",
+                "BypassParticle"
+        }
+    },
+
+    -- Use framework permission to determinate when add or remove fg perms
+    FrameworkPermissions = {
+        enable = false,
+        customFramework = {
+            enable = false, -- enable this only if u have a custom settings and u know what u are doing
+            customEvent = '', -- name of the events that's triggered when a player get/lose a group
+            invokerResource = '', -- name of the resource that's triggers the event (security check)
+        },
+        groups = {
+            ['god'] = {
+                --[[ AdminMenu ]] --
+                "AdminMenuAccess",
+                "AnnouncementAccess",
+                "ESPAccess",
+                "ClearEntitiesAccess",
+                "BanAndKickAccess",
+                "GotoAndBringAccess",
+                "VehicleAccess",
+                "MiscAccess",
+                "LogsAccess",
+                "PlayerSelectorAccess",
+                "BanListAndUnbanAccess",
+                "ModelChangerAccess",
+                --[[ Client ]] --
+                "BypassSpectate",
+                "BypassGodMode",
+                "BypassInvisible",
+                "BypassStealOutfit",
+                "BypassInfStamina",
+                "BypassNoclip",
+                "BypassSuperJump",
+                "BypassFreecam",
+                "BypassSpeedHack",
+                "BypassTeleport",
+                "BypassNightVision",
+                "BypassThermalVision",
+                "BypassOCR",
+                "BypassNuiDevtools",
+                "BypassBlacklistedTextures",
+                "BlipsBypass",
+                "BypassCbScanner",
+                --[[ Weapon ]] --
+                "BypassWeaponDmgModifier",
+                "BypassInfAmmo",
+                "BypassNoReload",
+                "BypassRapidFire",
+                --[[ Vehicle ]] --
+                "BypassVehicleFixAndGodMode",
+                "BypassVehicleHandlingEdit",
+                "BypassVehicleModifier",
+                "BypassBulletproofTires",
+                --[[ Blacklist ]] --
+                "BypassModelChanger",
+                "BypassWeaponBlacklist",
+                --[[ Misc ]] --
+                "FGCommands",
+                "BypassVPN",
+                "BypassExplosion",
+                "BypassClearTasks",
+                "BypassParticle"
+            },
+            ['admin'] = {
+                --[[ AdminMenu ]] --
+                "AdminMenuAccess",
+                "AnnouncementAccess",
+                "ESPAccess",
+                "ClearEntitiesAccess",
+                "BanAndKickAccess",
+                "GotoAndBringAccess",
+                "VehicleAccess",
+                "MiscAccess",
+                "LogsAccess",
+                "PlayerSelectorAccess",
+                "BanListAndUnbanAccess",
+                "ModelChangerAccess",
+                --[[ Client ]] --
+                "BypassSpectate",
+                "BypassGodMode",
+                "BypassInvisible",
+                "BypassStealOutfit",
+                "BypassInfStamina",
+                "BypassNoclip",
+                "BypassSuperJump",
+                "BypassFreecam",
+                "BypassSpeedHack",
+                "BypassTeleport",
+                "BypassNightVision",
+                "BypassThermalVision",
+                "BypassOCR",
+                "BypassNuiDevtools",
+                "BypassBlacklistedTextures",
+                "BlipsBypass",
+                "BypassCbScanner",
+                --[[ Weapon ]] --
+                "BypassWeaponDmgModifier",
+                "BypassInfAmmo",
+                "BypassNoReload",
+                "BypassRapidFire",
+                --[[ Vehicle ]] --
+                "BypassVehicleFixAndGodMode",
+                "BypassVehicleHandlingEdit",
+                "BypassVehicleModifier",
+                "BypassBulletproofTires",
+                --[[ Blacklist ]] --
+                "BypassModelChanger",
+                "BypassWeaponBlacklist",
+                --[[ Misc ]] --
+                "FGCommands",
+                "BypassVPN",
+                "BypassExplosion",
+                "BypassClearTasks",
+                "BypassParticle"
+            },
+            ['mod'] = {
+                --[[ Client ]] --
+                "BypassSpectate",
+                "BypassGodMode",
+                "BypassInvisible",
+                "BypassStealOutfit",
+                "BypassInfStamina",
+                "BypassNoclip",
+                "BypassSuperJump",
+                "BypassFreecam",
+                "BypassSpeedHack",
+                "BypassTeleport",
+                "BypassNightVision",
+                "BypassThermalVision",
+                "BypassOCR",
+                "BypassNuiDevtools",
+                "BypassBlacklistedTextures",
+                "BlipsBypass",
+                "BypassCbScanner",
+                --[[ Weapon ]] --
+                "BypassWeaponDmgModifier",
+                "BypassInfAmmo",
+                "BypassNoReload",
+                "BypassRapidFire",
+                --[[ Vehicle ]] --
+                "BypassVehicleFixAndGodMode",
+                "BypassVehicleHandlingEdit",
+                "BypassVehicleModifier",
+                "BypassBulletproofTires",
+                --[[ Blacklist ]] --
+                "BypassModelChanger",
+                "BypassWeaponBlacklist",
+                --[[ Misc ]] --
+                "BypassVPN",
+                "BypassExplosion",
+                "BypassClearTasks",
+                "BypassParticle"
+            },
+            ['helper'] = {
+                --[[ Client ]] --
+                "BypassSpectate",
+                "BypassGodMode",
+                "BypassInvisible",
+                "BypassStealOutfit",
+                "BypassInfStamina",
+                "BypassNoclip",
+                "BypassSuperJump",
+                "BypassFreecam",
+                "BypassSpeedHack",
+                "BypassTeleport",
+                "BypassNightVision",
+                "BypassThermalVision",
+                "BypassOCR",
+                "BypassNuiDevtools",
+                "BypassBlacklistedTextures",
+                "BlipsBypass",
+                "BypassCbScanner",
+                --[[ Vehicle ]] --
+                "BypassVehicleFixAndGodMode",
+                "BypassVehicleHandlingEdit",
+                "BypassVehicleModifier",
+                "BypassBulletproofTires",
+                --[[ Misc ]] --
+                "BypassVPN",
+                "BypassExplosion",
+                "BypassClearTasks",
+                "BypassParticle"
+            },
+        }
+    },
+
+    -- Use ACE Permissions from FiveM natives
+    AcePermissions = {
+        enable = false, -- Group Ace Permissions // ONLY ESX FOR THE MOMENT (Soon QbCore & vRP)
+        groups = {      -- define wich perms you want to add for a specific group
+            ['admin'] = {
+                --[[ AdminMenu ]] --
+                "AdminMenuAccess",
+                "AnnouncementAccess",
+                "ESPAccess",
+                "ClearEntitiesAccess",
+                "BanAndKickAccess",
+                "GotoAndBringAccess",
+                "VehicleAccess",
+                "MiscAccess",
+                "LogsAccess",
+                "PlayerSelectorAccess",
+                "BanListAndUnbanAccess",
+                "ModelChangerAccess",
+                --[[ Client ]] --
+                "BypassSpectate",
+                "BypassGodMode",
+                "BypassInvisible",
+                "BypassStealOutfit",
+                "BypassInfStamina",
+                "BypassNoclip",
+                "BypassSuperJump",
+                "BypassFreecam",
+                "BypassSpeedHack",
+                "BypassTeleport",
+                "BypassNightVision",
+                "BypassThermalVision",
+                "BypassOCR",
+                "BypassNuiDevtools",
+                "BypassBlacklistedTextures",
+                "BlipsBypass",
+                "BypassCbScanner",
+                --[[ Weapon ]] --
+                "BypassWeaponDmgModifier",
+                "BypassInfAmmo",
+                "BypassNoReload",
+                "BypassRapidFire",
+                --[[ Vehicle ]] --
+                "BypassVehicleFixAndGodMode",
+                "BypassVehicleHandlingEdit",
+                "BypassVehicleModifier",
+                "BypassBulletproofTires",
+                --[[ Blacklist ]] --
+                "BypassModelChanger",
+                "BypassWeaponBlacklist",
+                --[[ Misc ]] --
+                "FGCommands",
+                "BypassVPN",
+                "BypassExplosion",
+                "BypassClearTasks",
+                "BypassParticle"
+            },
+            ['mod'] = {
+                --[[ Client ]] --
+                "BypassSpectate",
+                "BypassGodMode",
+                "BypassInvisible",
+                "BypassStealOutfit",
+                "BypassInfStamina",
+                "BypassNoclip",
+                "BypassSuperJump",
+                "BypassFreecam",
+                "BypassSpeedHack",
+                "BypassTeleport",
+                "BypassNightVision",
+                "BypassThermalVision",
+                "BypassOCR",
+                "BypassNuiDevtools",
+                "BypassBlacklistedTextures",
+                "BlipsBypass",
+                "BypassCbScanner",
+                --[[ Weapon ]] --
+                "BypassWeaponDmgModifier",
+                "BypassInfAmmo",
+                "BypassNoReload",
+                "BypassRapidFire",
+                --[[ Vehicle ]] --
+                "BypassVehicleFixAndGodMode",
+                "BypassVehicleHandlingEdit",
+                "BypassVehicleModifier",
+                "BypassBulletproofTires",
+                --[[ Blacklist ]] --
+                "BypassModelChanger",
+                "BypassWeaponBlacklist",
+                --[[ Misc ]] --
+                "BypassVPN",
+                "BypassExplosion",
+                "BypassClearTasks",
+                "BypassParticle"
+            },
+            ['helper'] = {
+                --[[ Client ]] --
+                "BypassSpectate",
+                "BypassGodMode",
+                "BypassInvisible",
+                "BypassStealOutfit",
+                "BypassInfStamina",
+                "BypassNoclip",
+                "BypassSuperJump",
+                "BypassFreecam",
+                "BypassSpeedHack",
+                "BypassTeleport",
+                "BypassNightVision",
+                "BypassThermalVision",
+                "BypassOCR",
+                "BypassNuiDevtools",
+                "BypassBlacklistedTextures",
+                "BlipsBypass",
+                "BypassCbScanner",
+                --[[ Vehicle ]] --
+                "BypassVehicleFixAndGodMode",
+                "BypassVehicleHandlingEdit",
+                "BypassVehicleModifier",
+                "BypassBulletproofTires",
+                --[[ Misc ]] --
+                "BypassVPN",
+                "BypassExplosion",
+                "BypassClearTasks",
+                "BypassParticle"
+            },
+        }
+    }
 }

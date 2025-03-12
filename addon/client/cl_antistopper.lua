@@ -1,18 +1,14 @@
-if Config.AntiStopper then
-    local resourceNameToMonitor = Config.ResourceName
+local data = LoadResourceFile(CurrentResourceName,'config.lua')
+local Config = assert(load(data))()?.AntiStopper
+while not Fiveguard do Wait(0) end
+if not Config?.enable then return end
 
-    local function isResourceActive()
-        return GetResourceState(resourceNameToMonitor) == "started"
-    end
+AddEventHandler("playerSpawned", function()
+    TriggerServerEvent("fg:addon:hb", GetResourceState(Fiveguard) == "started")
+end)
 
-    AddEventHandler("playerSpawned", function()
-        TriggerServerEvent("jetecheck:comme:alabatch", isResourceActive())
-    end)
-
-    Citizen.CreateThread(function()
-        while true do
-            Citizen.Wait(Config.CheckInterval * 1000)
-            TriggerServerEvent("jetecheck:comme:alabatch", isResourceActive())
-        end
-    end)
+local function check()
+    TriggerServerEvent("fg:addon:hb", GetResourceState(Fiveguard) == "started")
+    Citizen.SetTimeout(Config.checkInterval * 1000, check)
 end
+Citizen.SetTimeout(Config.checkInterval * 1000, check)
