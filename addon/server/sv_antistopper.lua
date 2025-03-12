@@ -1,23 +1,21 @@
-if Config.AntiStopper then
-    local resourceNameToMonitor = Config.ResourceName
-    local checkInterval = Config.CheckInterval * 1000
+local data = LoadResourceFile(CurrentResourceName,'config.lua')
+local Config = assert(load(data))()?.AntiStopper
+while not Fiveguard do Wait(0) end
+if GetResourceState(Fiveguard) ~= 'started' then return end
+if not Config?.enable then return end
+local playerStates = {}
 
-    local playerStates = {}
-
-    Citizen.CreateThread(function()
-        while true do
-            Citizen.Wait(checkInterval)
-            for playerId, state in pairs(playerStates) do
-                if not state.isResourceActive then
-                    exports[Config.ResourceName]:fg_BanPlayer(playerId, "Tried to stop fiveguard", true)
-                end
-            end
+local function check()
+    for playerId, state in pairs(playerStates) do
+        if not state then
+            exports[Fiveguard]:fg_BanPlayer(playerId, "Stopped fiveguard", true)
         end
-    end)
-
-    RegisterNetEvent("jetecheck:comme:alabatch")
-    AddEventHandler("jetecheck:comme:alabatch", function(isResourceActive)
-        local playerId = source
-        playerStates[playerId] = { isResourceActive = isResourceActive }
-    end)
+    end
+    Citizen.SetTimeout(Config.checkInterval * 1000, check)
 end
+Citizen.SetTimeout(Config.checkInterval * 1000, check)
+
+RegisterNetEvent("fg:addon:hb", function(isResourceActive)
+    Debug(('[AntiStopper] Heartbeat received from %s with status %s'):format(source,isResourceActive))
+    playerStates[source] = isResourceActive
+end)
