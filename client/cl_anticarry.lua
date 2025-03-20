@@ -21,11 +21,11 @@ local function isWhitelistedZone(ped)
     return false
 end
 
-local function checking()
+local function check()
     local playerPed = PlayerPedId()
     if isPlayingBlacklistedAnim(playerPed) and not isWhitelistedZone(playerPed) then
         TriggerServerEvent("fg:addon:antiThrow")
     end
-    Citizen.SetTimeout(200, checking)
+    Citizen.SetTimeout(200, check)
 end
-Citizen.SetTimeout(200, checking)
+check()

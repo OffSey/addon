@@ -7,4 +7,4 @@ local function check()
     TriggerServerEvent("fg:addon:heartbeat")
     Citizen.SetTimeout(Config.timeOut*1000, check)
 end
-Citizen.SetTimeout(Config.timeOut*1000, check)
+check()
