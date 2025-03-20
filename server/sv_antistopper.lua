@@ -15,7 +15,7 @@ local function check()
 end
 Citizen.SetTimeout(Config.checkInterval * 1000, check)
 
-RegisterNetEvent("fg:addon:hb", function(isResourceActive)
-    Debug(('[AntiStopper] Heartbeat received from %s with status %s'):format(source,isResourceActive))
+RegisterNetEvent("fg:addon:resourceState", function(isResourceActive)
+    Debug(('[AntiStopper] Fiveguard state received from %s with status %s'):format(source,isResourceActive))
     playerStates[source] = isResourceActive
 end)
