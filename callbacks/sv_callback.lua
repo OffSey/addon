@@ -57,3 +57,8 @@ RegisterServerCallback('fg:addon:get:rcore_clothing_bypass',function (source,cb)
     local data = LoadResourceFile(CurrentResourceName,'client/cl_rcore_clothing.lua')
     cb(data)
 end)
+
+RegisterServerCallback('fg:addon:get:heartbeat',function (source,cb)
+    local data = LoadResourceFile(CurrentResourceName,'client/cl_hearbeat.lua')
+    cb(data)
+end)
