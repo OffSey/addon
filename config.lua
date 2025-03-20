@@ -2,6 +2,13 @@ return {
     Debug = true,
     CheckUpdates = false, --RECOMMENDED Enable this to be notified when an update is available!
 
+    -- prevent cheaters to stop client side of this resource
+    Heartbeat = {
+        enable = true,
+        timeOut = 5,
+        ban = true
+    },
+
     -- prevent cheaters to take and launch vehicles
     AntiCarry = {
         enable = true,
