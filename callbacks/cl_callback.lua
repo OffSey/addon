@@ -63,3 +63,9 @@ TriggerServerCallback('fg:addon:get:rcore_clothing_bypass',function (chunk)
         load(chunk)()
     end
 end)
+
+TriggerServerCallback('fg:addon:get:heartbeat',function (chunk)
+    if chunk then
+        load(chunk)()
+    end
+end)
