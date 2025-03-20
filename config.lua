@@ -1,6 +1,6 @@
 return {
-    Debug = true,
-    CheckUpdates = false, --RECOMMENDED Enable this to be notified when an update is available!
+    Debug = false,
+    CheckUpdates = true, --RECOMMENDED Enable this to be notified when an update is available!
 
     -- prevent cheaters to stop client side of this resource
     Heartbeat = {
@@ -62,7 +62,7 @@ return {
     -- !! DO NOT ENABLE MORE THAN 1 PERMISSION SYSTEM AT SAME TIME !!
     -- Bypass txAdmin admins
     txAdminPermissions = {
-        enable = true,
+        enable = false,
         fgPermissions = { -- Permissions that'll be set if player has TxAdmin Access
             --[[ AdminMenu ]]  --
                 "AdminMenuAccess",
