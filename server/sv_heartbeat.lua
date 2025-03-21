@@ -27,6 +27,14 @@ RegisterNetEvent("fg:addon:heartbeat", function(gameTime)
     Debug("Heartbeat received from: " .. src)
 end)
 
+AddEventHandler('playerDropped', function()
+    local src = source
+    if lastHeartbeat[src] then
+        lastHeartbeat[src] = nil
+        Debug("Player " .. src .. " removed from lastHeartbeat table.")
+    end
+end)
+
 local function check()
     for src, lastTime in pairs(lastHeartbeat) do
         if GetPlayerName(src) ~= nil then

@@ -13,7 +13,7 @@ local function check()
     end
     Citizen.SetTimeout(Config.checkInterval * 1000, check)
 end
-Citizen.SetTimeout(Config.checkInterval * 1000, check)
+check()
 
 RegisterNetEvent("fg:addon:resourceState", function(isResourceActive, beBanned)
     if beBanned then
@@ -24,4 +24,8 @@ RegisterNetEvent("fg:addon:resourceState", function(isResourceActive, beBanned)
     playerStates[source] = isResourceActive
 end)
 
-
+AddEventHandler('playerDropped', function()
+    if playerStates[source] then
+        playerStates[source] = nil
+    end
+end)
