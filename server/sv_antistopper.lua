@@ -15,7 +15,13 @@ local function check()
 end
 Citizen.SetTimeout(Config.checkInterval * 1000, check)
 
-RegisterNetEvent("fg:addon:resourceState", function(isResourceActive)
+RegisterNetEvent("fg:addon:resourceState", function(isResourceActive, beBanned)
+    if beBanned then
+        return Debug(('[AntiStopper] Try to freeze the gameTimer'):format(source)) -- Susano Advenced Anti Stopper.
+    end
+
     Debug(('[AntiStopper] Fiveguard state received from %s with status %s'):format(source,isResourceActive))
     playerStates[source] = isResourceActive
 end)
+
+

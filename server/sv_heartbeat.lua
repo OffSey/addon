@@ -14,8 +14,16 @@ local function getPlayerPlaytime(identifier, callback)
     end
 end
 
-RegisterNetEvent("fg:addon:heartbeat", function()
+
+local verifyHeartbeat = {}
+RegisterNetEvent("fg:addon:heartbeat", function(gameTime)
     local src = source
+    if verifyHeartbeat[src] and verifyHeartbeat[src] <= gameTime then
+        Debug("Heartbeat received from: " .. src .. " but the time is not valid.")
+        return
+    end
+    verifyHeartbeat[src] = gameTime
+
     lastHeartbeat[src] = os.time()
     Debug("Heartbeat received from: " .. src)
 end)
