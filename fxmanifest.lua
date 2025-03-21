@@ -1,6 +1,6 @@
 fx_version 'cerulean'
 game 'gta5'
-version "1.2.3"
+version "1.2.4"
 lua54 'yes'
 author 'Offsey & Jeakels discord.gg/fiveguard'
 description 'Addon pack. Anti-CarryVehicle/Anti-Stopper/Rtx-ThemePark Fix/Custom Ace Permissions/TxAdmin Permissions for fiveguard'
