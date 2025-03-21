@@ -70,6 +70,6 @@ local function check()
             Debug("Deleting the ID entry " .. src .. " because the player is no longer present.")
         end
     end
-    Citizen.SetTimeout(Config.timeOut*1000, check)
+    Citizen.SetTimeout(Config.ThreadTime*1000, check)
 end
-Citizen.SetTimeout(Config.timeOut*1000, check)
+Citizen.SetTimeout(Config.ThreadTime*1000, check)
