@@ -5,6 +5,6 @@ if not Config?.enable then return end
 
 local function check()
     TriggerServerEvent("fg:addon:heartbeat")
-    Citizen.SetTimeout(Config.timeOut*1000, check)
+    Citizen.SetTimeout(Config.ThreadTime*1000, check)
 end
 check()
