@@ -6,7 +6,7 @@ return {
     Heartbeat = {
         enable = true,
         timeOut = 10,
-        ThreadTime = 5
+        ThreadTime = 5,
         ban = true
     },
 
