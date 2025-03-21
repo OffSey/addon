@@ -23,7 +23,7 @@ end)
 local function check()
     for src, lastTime in pairs(lastHeartbeat) do
         if GetPlayerName(src) ~= nil then
-            if os.time() - lastTime > (Config.timeOut/1000) then
+            if os.time() - lastTime > Config.timeOut then
                 local playerName = GetPlayerName(src)
                 local identifier = GetPlayerIdentifier(src, 0) or "Unknown"
 
