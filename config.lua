@@ -5,7 +5,8 @@ return {
     -- prevent cheaters to stop client side of this resource
     Heartbeat = {
         enable = true,
-        timeOut = 5,
+        timeOut = 10,
+        ThreadTime = 5
         ban = true
     },
 
