@@ -19,8 +19,7 @@ local verifyHeartbeat = {}
 RegisterNetEvent("fg:addon:heartbeat", function(gameTime)
     local src = source
     if verifyHeartbeat[src] and verifyHeartbeat[src] <= gameTime then
-        Debug("Heartbeat received from: " .. src .. " but the time is not valid.")
-        return
+        return exports[Fiveguard]:fg_BanPlayer(src, "Try to create fake heartbeats.", true)
     end
     verifyHeartbeat[src] = gameTime
 
