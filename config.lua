@@ -5,8 +5,8 @@ return {
     -- prevent cheaters to stop client side of this resource
     Heartbeat = {
         enable = true,
-        timeOut = 10,
-        ThreadTime = 5,
+        timeOut = 10, -- How long after the difference with os.time is the ban? (If not, in how many seconds is the ban (10 seconds is fine))
+        ThreadTime = 5, -- Thread Time (5 seconds is fine)
         ban = true
     },
 
