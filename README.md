@@ -22,6 +22,7 @@ Prevent bans and allow your players to get fun without making your code for temp
 - Prevent resource stop
 - Prevent carry exploit
 - Prevent unwanted peds
+- Heartbeat System (prevent cheaters to stop client side of this resource)
 
 ## Credits
 The script has been brought to you by the one and only unique FiveM anticheat, [fiveguard.net](https://fiveguard.net) [Discord](https://discord.gg/fiveguard)
