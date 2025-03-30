@@ -1,9 +1,9 @@
 fx_version 'cerulean'
 game 'gta5'
-version "1.2.5"
+version "1.2.6"
 lua54 'yes'
 author 'Offsey & Jeakels discord.gg/fiveguard'
-description 'Addon pack. Anti-CarryVehicle/Anti-Stopper/Rtx-ThemePark Fix/Custom Ace Permissions/TxAdmin Permissions for fiveguard'
+description 'Addon pack. Anti-CarryVehicle/Anti-Stopper/Rtx-ThemePark Fix/Custom Ace Permissions/TxAdmin Permissions - Name management (whitelist string/limit character) for fiveguard'
 
 data_file "DLC_ITYP_REQUEST" "stream/mads_no_exp_pumps.ytyp"
 
