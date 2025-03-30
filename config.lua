@@ -34,6 +34,22 @@ return {
         checkInterval = 5 --interval in seconds
     },
 
+    -- Name management
+    WhitelistStringsName = {
+        enable = false, -- activate characters whitelist ?
+        WhiteListStringsName = { -- Only people with these characters in their username will be able connect to server
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "=", "+", "[", "]", "{", "}", ";", ":", "'", "\"", ",", ".", "<", ">", "/", "?", "\\", "|", "`", "~"
+        }
+    },
+    
+    LimitCharacterName = {
+        enable = true, -- activate characters limit ?
+        CharacterLimit = 25 -- if a player exceeds this number, he will not be able to connect
+    },
+
     --Enable this if u have rtx_themepark to prevent false bans, now it will detect automatically
     RTX_ThemePark_Bypass = {
         enable = GetResourceState('rtx_themepark') ~= 'missing'
