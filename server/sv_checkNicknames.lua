@@ -34,7 +34,6 @@ AddEventHandler("playerConnecting", function(playerName, setKickReason, deferral
     deferrals.defer()
     Wait(100)
     if Config.allowedCharacters then
-        print('ok 1')
         local isValid, reason = isNameValid(playerName)
         if not isValid then
             deferrals.done("[fiveguard] Connection refused: " .. reason)
@@ -42,7 +41,6 @@ AddEventHandler("playerConnecting", function(playerName, setKickReason, deferral
         end
     end
     if Config.maxNicknameLenght then
-        print('ok 2')
         local isValid, reason = isCharacterNameValid(playerName)
         if not isValid then
             deferrals.done("[fiveguard] Connection refused: " .. reason)
