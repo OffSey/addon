@@ -214,25 +214,6 @@ local function checkVersion()
     end, 'GET')
 end
 
-AddEventHandler("playerConnecting", function(playerName, setKickReason, deferrals)
-    deferrals.defer()
-    Wait(100)
-
-    local isValid, reason = isNameValid(playerName)
-    if not isValid then
-        deferrals.done("[fiveguard] Connection refused: " .. reason)
-        return
-    end
-
-    local isValid, reason = isCharacterNameValid(playerName)
-    if not isValid then
-        deferrals.done("[fiveguard] Connection refused: " .. reason)
-        return
-    end
-
-    deferrals.done()
-end)
-
 Citizen.CreateThread(function()
     if Config.txAdminPermissions.enable or Config.AcePermissions.enable or Config.FrameworkPermissions.enable then
         while not PermsReady do Wait(0) end
