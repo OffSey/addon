@@ -9,7 +9,8 @@ local cooldownTime = 10000
 RegisterNetEvent('fg:addon:antiThrow')
 AddEventHandler('fg:addon:antiThrow', function()
     if isRecording then return end
-
+    local source = source
+        
     isRecording = true
     ::noRecord::
     if Config.recordPlayer then
