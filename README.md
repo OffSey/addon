@@ -27,3 +27,7 @@ Prevent bans and allow your players to get fun without making your code for temp
 ## Credits
 The script has been brought to you by the one and only unique FiveM anticheat, [fiveguard.net](https://fiveguard.net) [Discord](https://discord.gg/fiveguard)
 Create by OffSey and Jeakels. And thanks to the contributors for help.
+
+The script was also made possible by the Elite Script team.
+Discord: https://discord.gg/b8jpP82MqJ
+Tebex: https://elitedevelopment.tebex.io/
