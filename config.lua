@@ -67,7 +67,8 @@ return {
             'A_C_Chickenhawk',
             'A_C_Chimp',
             'A_C_Chimp_02'
-        }
+        },
+        EnableCrahingPrevent = true
     },
 
     -- !! DO NOT ENABLE MORE THAN 1 PERMISSION SYSTEM AT SAME TIME !!
