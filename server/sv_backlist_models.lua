@@ -29,6 +29,16 @@ local function checkModel()
 end
 Citizen.SetTimeout(Config.checkInterval*1000, checkModel)
 
+if Config.EnableCrahingPrevent then
+    AddEventHandler('entityCreating', function(entity)
+    local src = NetworkGetEntityOwner(entity)
+    local modelprop = GetEntityModel(entity)
+    if modelprop == 1885233650 or modelprop == 310817095 then
+        Info(src, "Prevented from crashing lumia", modelprop)
+        CancelEvent()
+    end
+end)
+
 -- RegisterCommand("checkmodel", function(source, args)
 --     local target = tonumber(args[1])
 --     if target then checkModel(target) end
