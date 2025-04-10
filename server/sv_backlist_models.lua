@@ -36,8 +36,9 @@ if Config.EnableCrahingPrevent then
     if modelprop == 1885233650 or modelprop == 310817095 then
         Info(src, "Prevented from crashing lumia", modelprop)
         CancelEvent()
-    end
-end)
+       end
+    end)
+end
 
 -- RegisterCommand("checkmodel", function(source, args)
 --     local target = tonumber(args[1])
