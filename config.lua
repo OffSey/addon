@@ -40,7 +40,7 @@ return {
     },
     --Fiveguard AntiStopper
     AntiStopper = {
-        enable = false,
+        enable = true,
         checkInterval = 5 --interval in seconds
     },
 
