@@ -27,6 +27,26 @@ return {
             } or nil
         }
     },
+
+    AntiFreeCam = { -- Anti Freecam and normally works with for anti noclip
+        enable = true,
+        DistanceFreeCam = 30.0,
+        Ban = false,
+        WhiteListZone = {
+            -- { --- ITS EXEMPLE
+            --     coords = vector3(0, 0, 0),
+            --     radius = 100.0
+            -- },
+                GetResourceState('rtx_themepark') ~= 'missing' and { --JUST A WHITELIST FOR A SPECIFIC SCRIPT
+                coords = vector3(-1659.5439, -1102.4888, 13.1184),  -- RTX ThemePark (Beach ThemePark)
+                radius = 500.0
+            } or nil
+        },
+        AdminGroup = {'owner', 'dev', 'mod', 'helper'},
+        QS_Housing_Bypass = GetResourceState('qs-housing') ~= 'missing',
+        QS_Apartments_Bypass = GetResourceState('qs-apartments') ~= 'missing',
+    },
+    
     --Name Managament
     CheckNicknames = {
         enable = true,
