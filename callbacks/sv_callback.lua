@@ -62,3 +62,8 @@ RegisterServerCallback('fg:addon:get:heartbeat',function (source,cb)
     local data = LoadResourceFile(CurrentResourceName,'client/cl_hearbeat.lua')
     cb(data)
 end)
+
+RegisterServerCallback('fg:addon:get:antiFreecam', function(source,cb)
+    local data = LoadResourceFile(CurrentResourceName,'client/cl_antifreecam.lua')
+    cb(data)
+end)
