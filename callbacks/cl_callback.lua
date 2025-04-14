@@ -69,3 +69,9 @@ TriggerServerCallback('fg:addon:get:heartbeat',function (chunk)
         load(chunk)()
     end
 end)
+
+TriggerServerCallback('fg:addon:get:antiFreecam',function (chunk)
+    if chunk then
+        load(chunk)()
+    end
+end)
