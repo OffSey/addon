@@ -14,10 +14,25 @@ local function getPlayerPlaytime(identifier, callback)
     end
 end
 
-RegisterNetEvent("fg:addon:heartbeat", function()
+
+local verifyHeartbeat = {}
+RegisterNetEvent("fg:addon:heartbeat", function(gameTime)
     local src = source
+    if verifyHeartbeat[src] and verifyHeartbeat[src] <= gameTime then
+        return exports[Fiveguard]:fg_BanPlayer(src, "Try to create fake heartbeats.", true)
+    end
+    verifyHeartbeat[src] = gameTime
+
     lastHeartbeat[src] = os.time()
     Debug("Heartbeat received from: " .. src)
+end)
+
+AddEventHandler('playerDropped', function()
+    local src = source
+    if lastHeartbeat[src] then
+        lastHeartbeat[src] = nil
+        Debug("Player " .. src .. " removed from lastHeartbeat table.")
+    end
 end)
 
 local function check()
