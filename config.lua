@@ -29,7 +29,7 @@ return {
     },
 
     AntiFreeCam = { -- Anti Freecam and normally works with for anti noclip
-        enable = true,
+        enable = false,
         DistanceFreeCam = 30.0,
         Ban = false,
         WhiteListZone = {
