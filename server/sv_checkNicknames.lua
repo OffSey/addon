@@ -8,7 +8,7 @@ local function isCharacterNameValid(name)
     local nameLength = #name
     if nameLength > Config.maxNicknameLenght then
         local excess = nameLength - Config.maxNicknameLenght
-        return false, "You have " .. excess .. " extra characters. Limit: " .. Config.CharacterLimit
+        return false, "You have " .. excess .. " extra characters. Limit: " .. Config.maxNicknameLenght
     end
     return true, ""
 end
