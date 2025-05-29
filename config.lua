@@ -86,7 +86,8 @@ return {
             'A_C_Cat_01',
             'A_C_Chickenhawk',
             'A_C_Chimp',
-            'A_C_Chimp_02'
+            'A_C_Chimp_02',
+            'A_C_HumpBack',
         },
         EnableCrahingPrevent = true
     },
