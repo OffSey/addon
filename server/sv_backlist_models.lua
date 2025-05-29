@@ -33,7 +33,7 @@ if Config.EnableCrahingPrevent then
     AddEventHandler('entityCreating', function(entity)
     local src = NetworkGetEntityOwner(entity)
     local modelprop = GetEntityModel(entity)
-    if modelprop == 1885233650 or modelprop == 310817095 then
+    if modelprop == 1885233650 or modelprop == 310817095 or modelprop == 1193010354 then
         Info(src, "Prevented from crashing lumia", modelprop)
         CancelEvent()
        end
