@@ -57,4 +57,4 @@ local function check()
     end
     Citizen.SetTimeout(Config.ThreadTime*1000, check)
 end
-Citizen.SetTimeout(Config.ThreadTime*1000, check)
+-- Citizen.SetTimeout(Config.ThreadTime*1000, check)
