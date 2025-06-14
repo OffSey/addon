@@ -69,6 +69,7 @@ return {
         enable = GetResourceState('rtx_themepark') ~= 'missing'
     },
 
+    -- Enable this if u have rcore_lunapark to prevent false bans, now it will detect automatically
     rcore_lunapark_Bypass = {
         enable = GetResourceState('rcore_lunapark') ~= 'missing'
     },
