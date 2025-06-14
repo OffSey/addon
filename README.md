@@ -17,6 +17,7 @@ Enable bypasses and permission for fiveguard troght the following permission sys
 Prevent bans and allow your players to get fun without making your code for temporany permissions
 - RTX Themepark
 - Rcore Clothing
+- Rcore LunaPark
 
 ### Additional checks
 - Prevent resource stop
