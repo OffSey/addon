@@ -52,7 +52,7 @@ return {
         SetEntityVisible = true, -- Replace 'SetEntityVisible' in your script with 'exports["addon"]:FgSetEntityVisible'
     },
 
-    -- Anti Vehicle Spawner
+    -- Anti Vehicle Spawner | Crédit: Jona0081
     AntiSpawnVehicle = {
         enable = false,
         ban = true, -- Ban (Just false = Delete vehicles)
