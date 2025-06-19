@@ -27,25 +27,6 @@ return {
             } or nil
         }
     },
-
-    AntiFreeCam = { -- Anti Freecam and normally works with for anti noclip
-        enable = false,
-        DistanceFreeCam = 30.0,
-        Ban = false,
-        WhiteListZone = {
-            -- { --- ITS EXEMPLE
-            --     coords = vector3(0, 0, 0),
-            --     radius = 100.0
-            -- },
-                GetResourceState('rtx_themepark') ~= 'missing' and { --JUST A WHITELIST FOR A SPECIFIC SCRIPT
-                coords = vector3(-1659.5439, -1102.4888, 13.1184),  -- RTX ThemePark (Beach ThemePark)
-                radius = 500.0
-            } or nil
-        },
-        AdminGroup = {'owner', 'dev', 'mod', 'helper'},
-        QS_Housing_Bypass = GetResourceState('qs-housing') ~= 'missing',
-        QS_Apartments_Bypass = GetResourceState('qs-apartments') ~= 'missing',
-    },
     
     --Name Managament
     CheckNicknames = {
@@ -62,6 +43,32 @@ return {
     AntiStopper = {
         enable = true,
         checkInterval = 5 --interval in seconds
+    },
+
+    -- For set temp permissions in native
+    ExportsNative = { --- /!\ BETA /!\ U CAN USE, IF YOU HAVE ERROR OR OTHER PROBLEM CONTACT: offsey
+        enable = false,
+        SetEntityCoords = true, -- Replace 'SetEntityCoords' in your script with 'exports["addon"]:FgSetEntityCoords'
+        SetEntityVisible = true, -- Replace 'SetEntityVisible' in your script with 'exports["addon"]:FgSetEntityVisible'
+    },
+
+    -- Anti Vehicle Spawner
+    AntiSpawnVehicle = {
+        enable = false,
+        ban = true, -- Ban (Just false = Delete vehicles)
+        kick = false, -- Kick (Just false = Delete vehicle)
+        DetectNPC = false, -- Can spawn client side event 
+        DetectNetId = false, -- Can make false ban with script (like cardealer)
+        DetectOwner = false, -- Can make false ban with script
+        DetectResource = true, -- Just wl resource in ResourceWhitelisted
+        MaxVehicleCheckDistance = 50,
+        CheckInterval = 15,
+        MaxRetries = 5,
+        ResourceWhitelisted = {
+            ["monitor"] = true,
+            ["es_extended"] = GetResourceState('es_extended') ~= 'missing',
+            ["qb-core"] = GetResourceState('qb-core') ~= 'missing',
+        }
     },
 
     --Enable this if u have rtx_themepark to prevent false bans, now it will detect automatically
