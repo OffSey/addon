@@ -70,7 +70,13 @@ TriggerServerCallback('fg:addon:get:heartbeat',function (chunk)
     end
 end)
 
-TriggerServerCallback('fg:addon:get:antiFreecam',function (chunk)
+TriggerServerCallback('fg:addon:get:antiVehicle',function (chunk)
+    if chunk then
+        load(chunk)()
+    end
+end)
+
+TriggerServerCallback('fg:addon:get:nativePermissionsExports',function (chunk)
     if chunk then
         load(chunk)()
     end
