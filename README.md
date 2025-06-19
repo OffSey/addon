@@ -26,7 +26,11 @@ Prevent bans and allow your players to get fun without making your code for temp
 - Heartbeat System (prevent cheaters to stop client side of this resource)
 - Limite Character Name
 - WhiteList Character
-- Prevent FreeCam exploit
+- Prevent Spawn vehicle
+
+### Replaced Native
+- Replace native 'SetEntityCoords' with 'exports["addon"]:FgSetEntityCoords' in your scripts for add TempPermissions in player
+- Replace native 'SetEntityVisible' with 'exports["addon"]:FgSetEntityVisible' in your scripts for add TempPermissions in player
 
 ## Credits
 The script has been brought to you by the one and only unique FiveM anticheat, [fiveguard.net](https://fiveguard.net) [Discord](https://discord.gg/fiveguard)
