@@ -92,13 +92,13 @@ RegisterNetEvent("fg:addon:checkVehicle", function(netId)
     if DoesEntityExist(entity) then
         local scriptName = GetEntityScript(entity)
 
-        if scriptName == nil then
-            DeleteEntity(entity)
-            if Config.Ban or Config.Kick then
-                TriggerServerEvent("fg:addon:playerDroped", "Vehicle spawned with no script source.")
-            end
-            return
-        end
+        -- if scriptName == nil then
+        --     DeleteEntity(entity)
+        --     if Config.Ban or Config.Kick then
+        --         TriggerServerEvent("fg:addon:playerDroped", "Vehicle spawned with no script source.")
+        --     end
+        --     return
+        -- end
 
         if not Config.ResourceWhitelisted[scriptName] then
             if Config.Ban or Config.Kick then
