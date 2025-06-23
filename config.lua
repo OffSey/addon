@@ -71,6 +71,11 @@ return {
         }
     },
 
+    -- Anti Cheat Explosions Undetected | Crédit: Jona0081
+    AntiExplosions = {
+        enable = true,
+    },
+
     --Enable this if u have rtx_themepark to prevent false bans, now it will detect automatically
     RTX_ThemePark_Bypass = {
         enable = GetResourceState('rtx_themepark') ~= 'missing'
