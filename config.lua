@@ -55,8 +55,8 @@ return {
     -- Anti Vehicle Spawner | Crédit: Jona0081
     AntiSpawnVehicle = {
         enable = false,
-        ban = true, -- Ban (Just false = Delete vehicles)
-        kick = false, -- Kick (Just false = Delete vehicle)
+        Ban = true, -- Ban (Just false = Delete vehicles)
+        Kick = false, -- Kick (Just false = Delete vehicle)
         DetectNPC = false, -- Can spawn client side event 
         DetectNetId = false, -- Can make false ban with script (like cardealer)
         DetectOwner = false, -- Can make false ban with script
