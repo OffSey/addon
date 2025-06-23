@@ -37,9 +37,9 @@ function FgIsVehicleValid(vehicle)
 
     local scriptName = GetEntityScript(vehicle)
     
-    if Config.DetectResource and scriptName == nil then
-        return false, "Unknown script (nil) detected on the vehicle"
-    end
+    -- if Config.DetectResource and scriptName == nil then
+    --     return false, "Unknown script (nil) detected on the vehicle"
+    -- end
     
     if Config.DetectResource and not Config.ResourceWhitelisted[scriptName] then
         return false, "Script not whitelisted: " .. scriptName
