@@ -75,6 +75,7 @@ return {
     -- Anti Cheat Explosions Undetected | Crédit: Jona0081
     AntiExplosions = {
         enable = true,
+        Ban = false,
     },
 
     --Enable this if u have rtx_themepark to prevent false bans, now it will detect automatically
