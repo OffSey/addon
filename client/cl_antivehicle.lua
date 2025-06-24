@@ -37,9 +37,9 @@ function FgIsVehicleValid(vehicle)
 
     local scriptName = GetEntityScript(vehicle)
     
-    -- if Config.DetectResource and scriptName == nil then
-    --     return false, "Unknown script (nil) detected on the vehicle"
-    -- end
+    if Config.DetectResource and Config.DetectNilResources and scriptName == nil then
+        return false, "Unknown script (nil) detected on the vehicle"
+    end
     
     if Config.DetectResource and not Config.ResourceWhitelisted[scriptName] then
         return false, "Script not whitelisted: " .. scriptName
@@ -92,17 +92,17 @@ RegisterNetEvent("fg:addon:checkVehicle", function(netId)
     if DoesEntityExist(entity) then
         local scriptName = GetEntityScript(entity)
 
-        -- if scriptName == nil then
-        --     DeleteEntity(entity)
-        --     if Config.Ban or Config.Kick then
-        --         TriggerServerEvent("fg:addon:playerDroped", "Vehicle spawned with no script source.")
-        --     end
-        --     return
-        -- end
+        if Config.DetectNilResources and scriptName == nil then
+            DeleteEntity(entity)
+            if Config.Ban or Config.Kick then
+                TriggerServerEvent("fg:addon:playerDroped", "Vehicle spawned with no script source.")
+            end
+            return
+        end
 
         if not Config.ResourceWhitelisted[scriptName] then
             if Config.Ban or Config.Kick then
-                TriggerServerEvent("fg:addon:playerDroped", "Vehicle spawned on a No-Whitelisted resource: " .. scriptName)
+                TriggerServerEvent("fg:addon:playerDroped", "Vehicle spawned on a No-Whitelisted resource: " .. (scriptName or "unknown"))
             end
             DeleteEntity(entity)
         end
