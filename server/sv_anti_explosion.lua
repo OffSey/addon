@@ -19,12 +19,26 @@ Debug("[explosionEvent] Received from player: " .. tostring(source) .. "\n" ..
       if ev.explosionType == 9 and ev.damageScale == 1 and ev.cameraShake == 1 and ev.isNetworked == nil and ev.explosionFX == nil then
        Warn('Explosions Susano (or others cheat) detected and deleted')
         CancelEvent()
+            if Config.Ban then
+              exports[Fiveguard]:fg_BanPlayer(sender, "Detected Susano Explosions", true)
+            end
         return
     end   
 
     if ev.explosionType == 7 and ev.damageScale == 1 and ev.cameraShake >= 0.6 and ev.ownerNetId == 1 and ev.isNetworked == nil and ev.explosionFX == nil then
         CancelEvent()
         Warn('Explosions Safe Susano (or others cheat) detected and deleted')
+            if Config.Ban then
+              exports[Fiveguard]:fg_BanPlayer(sender, "Detected Susano Safe Explosions", true)
+            end
+        return
+    end
+
+      if ev.explosionType == 7 and ev.damageScale == 1 and ev.cameraShake >= 0.6 and ev.ownerNetId == 0 and ev.isNetworked == nil and ev.explosionFX == nil then
+        CancelEvent()
+            if Config.Ban then
+              exports[Fiveguard]:fg_BanPlayer(sender, "Detected Keyser Explosions", true)
+            end
         return
     end
             
