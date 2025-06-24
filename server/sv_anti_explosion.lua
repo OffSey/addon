@@ -16,9 +16,10 @@ Debug("[explosionEvent] Received from player: " .. tostring(source) .. "\n" ..
       "  - Networked: " .. tostring(ev.isNetworked) .. "\n" ..
       "  - Explosion FX: " .. tostring(ev.explosionFX))
 
-    if ev.explosionType == 9 and ev.damageScale == 1 and ev.cameraShake == 1 and ev.isNetworked == nil and ev.explosionFX == nil then
-        Warn('Explosions Susano (or others cheat) detected and deleted')
+    if ev.explosionType == 7 and ev.damageScale == 1 and ev.cameraShake >= 0.6 and ev.ownerNetId == 1 and ev.isNetworked == nil and ev.explosionFX == nil then
         CancelEvent()
+        Warn('Explosions Susano (or others cheat) detected and deleted')
         return
     end
+            
 end)
