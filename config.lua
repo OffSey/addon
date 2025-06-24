@@ -57,6 +57,7 @@ return {
         enable = false,
         Ban = true, -- Ban (Just false = Delete vehicles)
         Kick = false, -- Kick (Just false = Delete vehicle)
+        DetectNilResources = true -- Can make false ban, disable if you have false ban
         DetectNPC = false, -- Can spawn client side event 
         DetectNetId = false, -- Can make false ban with script (like cardealer)
         DetectOwner = false, -- Can make false ban with script
