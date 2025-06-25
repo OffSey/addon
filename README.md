@@ -28,6 +28,7 @@ Prevent bans and allow your players to get fun without making your code for temp
 - WhiteList Character
 - Prevent Spawn vehicle
 - Prevent Explosions From Some Cheats
+- Prevent Weapon exploit (with distance) and give weapon
 
 ### Replaced Native
 - Replace native 'SetEntityCoords' with 'exports["addon"]:FgSetEntityCoords' in your scripts for add TempPermissions in player
