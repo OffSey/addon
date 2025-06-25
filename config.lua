@@ -72,6 +72,19 @@ return {
         }
     },
 
+    -- Anti GiveWeapon and others detection |For dist detection Credit: locutor404 (remake by offsey for addon)
+    WeaponDetection = { 
+        enable = true,
+        AntiGiveWeapon = false, -- /!\ BETA | WORK WITH FRAMEWORK: ESX, QbCore (for moment) and works with inventory (no weapon wheel)
+        AntiGiveWeaponBan = true, -- If false, the weapon will just be removed from the hands 
+        DetectPunchDist = true, 
+        MaxPunchDist = 10.0,
+        DetectStunGunDist = true,
+        MaxStunGunDist = 10.0,
+        DetectExploitPunchDist = true,
+        MaxExploitPunchDist = 10.0,
+    },
+
     -- Anti Cheat Explosions Undetected | Crédit: Jona0081
     AntiExplosions = {
         enable = true,
