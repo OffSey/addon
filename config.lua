@@ -91,9 +91,9 @@ return {
         Ban = false,
     },
 
-    --Enable this if u have rtx_themepark to prevent false bans, now it will detect automatically
+    --Enable this if u have rtx_themepark or rtx_themepark_dlc to prevent false bans, now it will detect automatically
     RTX_ThemePark_Bypass = {
-        enable = GetResourceState('rtx_themepark') ~= 'missing'
+        enable = GetResourceState('rtx_themepark') ~= 'missing' or GetResourceState('rtx_themepark_dlc') ~= 'missing'
     },
 
     -- Enable this if u have rcore_lunapark to prevent false bans, now it will detect automatically
