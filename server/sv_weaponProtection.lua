@@ -14,7 +14,6 @@ local function CheckWeaponDistance(sender, ev, expectedHash, maxDist, reason, ex
     if not weaponHash or weaponHash ~= expectedHash then return end
     if extraCond and not extraCond(ev) then return end
 
-    local maxDist2 = maxDist*maxDist
     local attackerPed = GetPlayerPed(sender)
     if attackerPed == 0 then return end
 
@@ -26,7 +25,7 @@ local function CheckWeaponDistance(sender, ev, expectedHash, maxDist, reason, ex
             local victimEnt = NetworkGetEntityFromNetworkId(netId)
             local victimCoords = GetEntityCoords(victimEnt)
             if DoesEntityExist(victimEnt) then
-                if Vdist2(attackerCoords.x,attackerCoords.y,attackerCoords.z, victimCoords.x,victimCoords.y,victimCoords.z) > maxDist2 then
+                if #(attackerCoords - victimCoords) > maxDist then
                     BanPlayer(sender, reason, false)
                 end
             end
