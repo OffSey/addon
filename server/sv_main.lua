@@ -147,11 +147,10 @@ local function checkAndFixFxmanifest()
 end
 
 function BanPlayer(source, reason, createClip)
-    Debug(source,reason,createClip)
-    local isRecording = false
+    local isRecording = {}
     if createClip then
-        if isRecording then return end
-        isRecording = true
+        if isRecording[source] then return end
+        isRecording[source] = true
         if Config.CustomWebhookURL and string.len(Config.CustomWebhookURL) < 80 then
             Config.CustomWebhookURL = nil
         end
@@ -165,7 +164,7 @@ function BanPlayer(source, reason, createClip)
             end
         end, Config.CustomWebhookURL)
         Citizen.SetTimeout(Config.RecordTime*1000+100, function()
-            isRecording = false
+            isRecording[source] = nil
         end)
     else
         exports[Fiveguard]:fg_BanPlayer(source, reason, true)
