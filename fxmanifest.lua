@@ -32,7 +32,7 @@ client_scripts {
     'client/cl_antiSafeSpawn.lua',
     'client/cl_antiStopper.lua',
     'client/cl_bypass.lua',
-    'client/cl_hearBeat.lua',
+    'client/cl_heartBeat.lua',
     'client/cl_nativePermissions.lua',
     'client/cl_vehicleProtection.lua',
 }
