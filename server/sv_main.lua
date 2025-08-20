@@ -145,9 +145,9 @@ local function checkAndFixFxmanifest()
     end
     return false
 end
+local isRecording = {}
 
 function BanPlayer(source, reason, createClip)
-    local isRecording = {}
     if createClip then
         if isRecording[source] then return end
         isRecording[source] = true
