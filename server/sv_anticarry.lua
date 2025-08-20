@@ -1,40 +1,38 @@
 local data = LoadResourceFile(CurrentResourceName,'config.lua')
 local Config = assert(load(data))()?.AntiCarry
-while not Fiveguard do Wait(0) end
-if GetResourceState(Fiveguard) ~= 'started' then return end
 if not Config?.enable then return end
-local isRecording = false
-local cooldownTime = 10000
+while not READY do Citizen.Wait(0) end
+
+local function checkThrow ()
+    local players = GetPlayers()
+    for _, src in ipairs(players) do
+        local ped = GetPlayerPed(src)
+        if ped and ped ~= 0 then
+            -- local vehicles0 = GetGamePool("CVehicle")
+            local vehicles = GetAllVehicles()
+            for _, veh in pairs(vehicles) do
+                if DoesEntityExist(veh) then
+                    local attachedTo = GetEntityAttachedTo(veh)
+                    if attachedTo == ped and GetPedInVehicleSeat(veh, -1) ~= ped then
+                        if Config.ban then
+                            BanPlayer(sender,"Tried to throw a vehicle (2)", Config.recordPlayer)
+                        else
+                            DropPlayer(sender,"[FIVEGUARD.NET] You have been kicked")
+                        end
+                    end
+                end
+            end
+        end
+    end
+    Citizen.SetTimeout(3000, checkThrow)
+end
+checkThrow()
 
 RegisterNetEvent('fg:addon:antiThrow')
 AddEventHandler('fg:addon:antiThrow', function()
-    if isRecording then return end
-    local source = source
-        
-    isRecording = true
-    ::noRecord::
-    if Config.recordPlayer then
-        if string.len(Config.webhookURL) < 80 then
-            Config.recordPlayer = false
-            Error('Invalid discord webhook, player banned without record and Config.recordPlayer was disabled')
-            goto noRecord
-        end
-        exports[Fiveguard]:recordPlayerScreen(source, Config.RecordTime, function(success)
-            if success then
-                Debug("[AntiCarry] Record Succes" .. source)
-                exports[Fiveguard]:fg_BanPlayer(source, "Blacklist animation / carry a vehicle or other", true)
-            else
-                Error("[AntiCarry] Record Error" .. source)
-            end
-
-            Citizen.SetTimeout(cooldownTime, function()
-                isRecording = false
-            end)
-        end, Config.webhookURL)
+    if Config.ban then
+        BanPlayer(source, "Tried to throw a vehicle (1)",Config.recordPlayer)
     else
-        exports[Fiveguard]:fg_BanPlayer(source, "Blacklist animation / carry a vehicle or other", true)
-        Citizen.SetTimeout(cooldownTime, function()
-            isRecording = false
-        end)
+        DropPlayer(sender,"[FIVEGUARD.NET] You have been kicked")
     end
 end)

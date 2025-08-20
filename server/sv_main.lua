@@ -1,170 +1,17 @@
 local data = LoadResourceFile(CurrentResourceName,'config.lua')
 local Config = assert(load(data))()
+READY = false
+while not Fiveguard do Citizen.Wait(0) end
 
----@param ... any
-function Debug(...)
-    if Config.Debug then
-        print('[^5DEBUG^0]',...)
-    end
-end
-
----@param ... any
-function Error(...)
-    print('[^1ERROR^0]^1',...,'^0')
-end
-
----@param ... any
-function Warn(...)
-    print('[^3WARNING^0]', ...,'^0')
-end
-
----@param ... any
-function Info(...)
-    print('[^2INFO^0]', ...,'^0')
-end
-
----@return string | nil
-local function getFiveguardName()
-    local resources = GetNumResources()
-    for i = 0, resources - 1 do
-        local resource = GetResourceByFindIndex(i)
-        local files = GetNumResourceMetadata(resource, 'ac')
-        for j = 0, files, 1 do
-            local x = GetResourceMetadata(resource, 'ac', j)
-            if x ~= nil then
-                if string.find(x, "fg") then
-                    return resource
-                end
-            end
-        end
-    end
-end
-
-Fiveguard = getFiveguardName()
-
-if not Fiveguard then
-    local attempts = 0
-    while attempts < 20 do
-        if Fiveguard then
-            break
-        else
-            getFiveguardName()
-            attempts += 1
-        end
-        Wait(100)
-    end
-    for _, cfg in pairs(Config) do
-        if type(cfg) == "table" then
-            if cfg.enable then
-                cfg.enable = false
-            end
-        end
-    end
-    Error('This is an addon for fiveguard, seems like you dont have it, purchase it now on https://fiveguard.net/#pricing')
-else
-    local attempts = 1
-    Debug('Fiveguard is: ^3'..Fiveguard..'^0')
-    SetConvar('ac', Fiveguard)
-    ::recheckFG::
-    if GetResourceState(Fiveguard) == 'started' then
-        Info('Fiveguard linked ^2successfully^0!')
-    else
-        StartResource(Fiveguard)
-        Error('Seems like you didn\'t start ^3'..Fiveguard..'^1 before this resource\nMake sure to start ^3'..Fiveguard..'^1 as first resource in your server.cfg for better compatibility with your scripts!')
-        Info('Trying to start ^3'..Fiveguard..'^0 (attempt: '..attempts..')^0')
-        attempts += 1
-        if attempts < 3 then goto recheckFG end
-        for _, cfg in pairs(Config) do
-            if type(cfg) == "table" then
-                if cfg.enable then
-                    cfg.enable = false
-                end
-            end
-        end
-        Error('Failed to start ^3'..Fiveguard..'^1 (attempts: '..attempts..')')
-    end
-end
-
-if Config.txAdminPermissions.enable or Config.AcePermissions.enable or Config.FrameworkPermissions.enable then
-    local PermsTable = {}
-    if IsPrincipalAceAllowed(CurrentResourceName,'fg_addon') then
-        Debug(CurrentResourceName..' already have perms')
-    else
-        ExecuteCommand("add_ace fg.addon command allow")
-        ExecuteCommand(("add_principal resource.%s fg.addon"):format(CurrentResourceName))
-    end
-    if (Config.txAdminPermissions.enable and Config.AcePermissions.enable) or (Config.AcePermissions.enable and Config.FrameworkPermissions.enable) or (Config.txAdminPermissions.enable and Config.FrameworkPermissions.enable) then
-        Config.txAdminPermissions.enable = false
-        Config.FrameworkPermissions.enable = false
-        Config.AcePermissions.enable = true
-        Error('Do not use multple permission system at same time!^0\nPermission configored to use ACE')
-        PermsReady = true
-    else
-        PermsReady = true
-    end
-    ---@param source number|string
-    ---@param group string
-    ---@param enable boolean
-    function SetPermission(source, group, enable)
-        Debug('[SetPermission]', source, group, enable, PermsTable[source]?.group)
-        if not group or type(group) ~= "string" then return Error('Group not valid or not exist') end
-        if group == 'user' then return Debug(("Ignored player: [^5%s^0] ^5%s^0 since he's: ^5%s^0"):format(source, GetPlayerName(source), group)) end
-        -- local identifier = GetPlayerIdentifier(source, 0) or PermsTable[source]?.identifier
-        Debug('[SetPermission]', json.encode(PermsTable[source], {indent=true}))
-        if source ~= 0 then
-            if enable then
-                -- if IsPlayerAceAllowed(source, group) then --removed since cfx break logic
-                --     return Warn(("Player: [^5%s^0] ^5%s^0 already have permissions for fg.^5%s^0, ignored"):format(source, GetPlayerName(source), group))
-                -- end
-                if PermsTable[source] and PermsTable[source]?.group ~= group then
-                    local oldGroup = PermsTable[source]?.group
-                    ExecuteCommand(("remove_principal player.%s fg.%s"):format(source, oldGroup))
-                    PermsTable[source] = nil
-                    ExecuteCommand(("add_principal player.%s fg.%s"):format(source, group))
-                    PermsTable[source] = { group = group }
-                    return Info(("Permissions for player: [^5%s^0] ^5%s^0 was registered with the group ^5%s^0, overriding permissions to ^5%s^0"):format(source, GetPlayerName(source), oldGroup, group))
-                elseif PermsTable[source] and PermsTable[source]?.group == group then
-                    Warn(("Player: [^5%s^0] ^5%s^0 already have permissions for fg.^5%s^0, ignored"):format(source, GetPlayerName(source), group))
-                else
-                    ExecuteCommand(("add_principal player.%s fg.%s"):format(source, group))
-                    PermsTable[source] = { group = group }
-                    return Info(("Permissions ^2granted^0 to player: [^5%s^0] ^5%s^0 Group: ^5%s^0"):format(source, GetPlayerName(source), group))
-                end
-            else
-                -- if not IsPlayerAceAllowed(source, group) then --removed since cfx break logic
-                --     return Warn(("Player: [^5%s^0] ^5%s^0 already don't have permissions for fg.^5%s^0, ignored"):format(source, GetPlayerName(source), group))
-                -- end
-                ExecuteCommand(("remove_principal player.%s fg.%s"):format(source, group))
-                PermsTable[source] = nil
-                return Debug(("Permissions ^1removed^0 from player: [^5%s^0] ^5%s^0 Group: ^5%s^0"):format(source, GetPlayerName(source), group))
-            end
-        else
-            return Error(("Invalid player: [^5%s^0] ^5%s^0"):format(source, GetPlayerName(source)))
-        end
-    end
-    AddEventHandler('onResourceStop', function(res)
-        if CurrentResourceName ~= res then return end
-        for source, v in pairs(PermsTable) do
-            if PermsTable[source]?.group then
-                ExecuteCommand(("remove_principal player.%s fg.%s"):format(source, v.group))
-                PermsTable[source] = nil
-            end
-        end
-        ExecuteCommand(("remove_principal resource.%s fg.addon"):format(CurrentResourceName))
-        ExecuteCommand("remove_ace fg.addon command allow")
-    end)
-end
-
-local forbiddenPatterns = {
+local function checkResourceNames()
+    local forbiddenPatterns = {
     "fg",
     "ac",
     "anticheat",
     "fiveguard",
     "security",
     "guard",
-}
-
-local function checkResourceNames()
+    }
     local resourceName = string.lower(CurrentResourceName)
     for i = 1, #forbiddenPatterns do
         local pattern = string.lower(forbiddenPatterns[i])
@@ -185,7 +32,6 @@ local function checkVersion()
         if error ~= 200 then
             return Error(('Version check failed, Error: %s'):format(error))
         end
-
         local response = json.decode(result)
         local latestVersion = response.version:match('%d+%.%d+%.%d+')
 		if not latestVersion or latestVersion == currentVersion then return end
@@ -203,35 +49,191 @@ local function checkVersion()
                     symbols = symbols..'^0'
                     print(symbols)
                     print(('New update available! ^0\nCurrent Version: ^1%s^0.\nNew Version: ^2%s^0.\nNote of changes: ^5%s^0.\n\n^5Download it now on the OffSey github^0.'):format(currentVersion,latestVersion,response.news))
+                    print('Download it now from https://github.com/OffSey/addon/archive/refs/heads/main.zip')
                     print(symbols)
                     return
                 elseif current == minimum then
                     print('^1You are using the lastest version!^0')
                 return
+                elseif current > minimum then
+                    print(('^4You are using a version that is more recent than github!^0'):format())
+                    return
                 end
             end
         end
     end, 'GET')
 end
 
-Citizen.CreateThread(function()
-    if Config.txAdminPermissions.enable or Config.AcePermissions.enable or Config.FrameworkPermissions.enable then
-        while not PermsReady do Wait(0) end
+local CORRECT_FXMANIFEST = [[
+fx_version 'cerulean'
+game 'gta5'
+version "1.4.1"
+lua54 'yes'
+author 'Offsey & Jeakels discord.gg/fiveguard'
+description 'Addon pack for fiveguard'
+
+data_file "DLC_ITYP_REQUEST" "stream/mads_no_exp_pumps.ytyp"
+
+shared_script 'shared.lua'
+
+server_scripts {
+    'server/sv_main.lua',
+    'server/sv_antiCarry.lua',
+    'server/sv_antiExplosion.lua',
+    'server/sv_antiPedManipulation.lua',
+    'server/sv_antiStopper.lua',
+    'server/sv_backlistModels.lua',
+    'server/sv_bypass.lua',
+    'server/sv_checkNicknames.lua',
+    'server/sv_easyPermissions.lua',
+    'server/sv_heartBeat.lua',
+    'server/sv_nativePermissions.lua',
+    'server/sv_vehicleProtection.lua',
+    'server/sv_weaponProtection.lua',
+}
+
+client_scripts {
+    'client/cl_main.lua',
+    'client/cl_antiCarry.lua',
+    'client/cl_antiPedManipulation.lua',
+    'client/cl_antiSafeSpawn.lua',
+    'client/cl_antiStopper.lua',
+    'client/cl_bypass.lua',
+    'client/cl_hearBeat.lua',
+    'client/cl_nativePermissions.lua',
+    'client/cl_vehicleProtection.lua',
+}
+
+file 'config.lua'
+file 'xss.lua'
+file 'bypassNative.lua'
+]]
+
+local function checkAndFixFxmanifest()
+    local function simple_hash(s)
+        if not s then return nil end
+        local h1, h2 = 0, 0
+        for i = 1, #s do
+            local b = s:byte(i)
+            h1 = (h1 + b) % 0x100000000
+            h2 = (h2 * 31 + b) % 0x100000000
+        end
+        return string.format("%08x%08x", h1, h2)
     end
-    local string = '============= Fiveguard Addon ============='
+    local fxPath = "fxmanifest.lua"
+    local currentContent = LoadResourceFile(CurrentResourceName, fxPath)
+
+    local correctHash = simple_hash(CORRECT_FXMANIFEST)
+    local currentHash = simple_hash(currentContent)
+
+    if currentHash ~= correctHash then
+        Warn("You've modified fxmanifest.lua, overwriting it with the correct version...")
+
+        local resPath = GetResourcePath(CurrentResourceName)
+        local fullPath = resPath .. "/" .. fxPath
+
+        local file = io.open(fullPath, "w")
+        if file then
+            file:write(CORRECT_FXMANIFEST)
+            file:close()
+            Info("fxmanifest.lua successfully restored, restart "..CurrentResourceName.."to start!")
+            ExecuteCommand("refresh")
+        else
+            print("Unable to open fxmanifest.lua! Check permissions.")
+        end
+        return true
+    end
+    return false
+end
+
+function BanPlayer(source, reason, createClip)
+    Debug(source,reason,createClip)
+    local isRecording = false
+    if createClip then
+        if isRecording then return end
+        isRecording = true
+        if Config.CustomWebhookURL and string.len(Config.CustomWebhookURL) < 80 then
+            Config.CustomWebhookURL = nil
+        end
+        exports[Fiveguard]:recordPlayerScreen(source, Config.RecordTime*1000, function(success)
+            if success then
+                Debug("[fiveguard] Record Success" .. source)
+                exports[Fiveguard]:fg_BanPlayer(source, reason, true)
+            else
+                Error("[fiveguard] Record Error" .. source)
+                exports[Fiveguard]:fg_BanPlayer(source, reason, true)
+            end
+        end, Config.CustomWebhookURL)
+        Citizen.SetTimeout(Config.RecordTime*1000+100, function()
+            isRecording = false
+        end)
+    else
+        exports[Fiveguard]:fg_BanPlayer(source, reason, true)
+    end
+end
+
+Citizen.CreateThread(function()
+    if checkAndFixFxmanifest() then
+        READY = false
+        return
+    end
+    print([[
+                                          dddddddd            dddddddd                                   
+               AAA                        d::::::d            d::::::d                                   
+              A:::A                       d::::::d            d::::::d                                   
+             A:::::A                      d::::::d            d::::::d                                   
+            A:::::::A                     d:::::d             d:::::d                                    
+           A:::::::::A            ddddddddd:::::d     ddddddddd:::::d    ooooooooooo   nnnn  nnnnnnnn    
+          A:::::A:::::A         dd::::::::::::::d   dd::::::::::::::d  oo:::::::::::oo n:::nn::::::::nn  
+         A:::::A A:::::A       d::::::::::::::::d  d::::::::::::::::d o:::::::::::::::on::::::::::::::nn 
+        A:::::A   A:::::A     d:::::::ddddd:::::d d:::::::ddddd:::::d o:::::ooooo:::::onn:::::::::::::::n
+       A:::::A     A:::::A    d::::::d    d:::::d d::::::d    d:::::d o::::o     o::::o  n:::::nnnn:::::n
+      A:::::AAAAAAAAA:::::A   d:::::d     d:::::d d:::::d     d:::::d o::::o     o::::o  n::::n    n::::n
+     A:::::::::::::::::::::A  d:::::d     d:::::d d:::::d     d:::::d o::::o     o::::o  n::::n    n::::n
+    A:::::AAAAAAAAAAAAA:::::A d:::::d     d:::::d d:::::d     d:::::d o::::o     o::::o  n::::n    n::::n
+   A:::::A             A:::::Ad::::::ddddd::::::ddd::::::ddddd::::::ddo:::::ooooo:::::o  n::::n    n::::n
+  A:::::A               A:::::Ad:::::::::::::::::d d:::::::::::::::::do:::::::::::::::o  n::::n    n::::n
+ A:::::A                 A:::::Ad:::::::::ddd::::d  d:::::::::ddd::::d oo:::::::::::oo   n::::n    n::::n
+AAAAAAA                   AAAAAAAddddddddd   ddddd   ddddddddd   ddddd   ooooooooooo     nnnnnn    nnnnnn
+                                                By OffSey, Jeakels and contributors. Powered by ^3five^0guard]])
+    local string = '\n========== Fiveguard Addon =========='
     for key, value in pairs(Config) do
         if type(value) == "table" then
             if value.enable then
-                string = string .. '\n' .. key .. ' is ^2enabled^0'
+                string = ('%s\n| %s is ^2enabled^0 |'):format(string, key:len()<=13 and key ..'\t\t' or key .. '\t')
             else
-                string = string .. '\n' .. key .. ' is ^1disabled^0'
+                string = ('%s\n| %s is ^1disabled^0|'):format(string, key:len()<=13 and key ..'\t\t' or key .. '\t')
             end
         end
     end
-    string = string .. '\n==========================================='
+    string = string .. '\n====================================='
     checkResourceNames()
     if Config.CheckUpdates then
         Citizen.SetTimeout(2000, checkVersion)
     end
-    print(string)
+    string = string ..'\n'
+    local attempts = 1
+    Debug('Fiveguard is: ^3'..Fiveguard..'^0')
+    SetConvar('ac', Fiveguard)
+    ::recheckFG::
+    if GetResourceState(Fiveguard) == 'started' then
+        READY = true
+        Info('Fiveguard linked ^2successfully^0!')
+        print(string)
+    else
+        StartResource(Fiveguard)
+        Error('Seems like you didn\'t start ^3'..Fiveguard..'^1 before this resource\nMake sure to start ^3'..Fiveguard..'^1 as first resource in your server.cfg for better compatibility with your scripts!')
+        Info('Trying to start ^3'..Fiveguard..'^0 (attempt: '..attempts..')^0')
+        attempts += 1
+        if attempts < 3 then goto recheckFG end
+        Error(('Failed to start ^3%s^1 (attempts: %s)'):format(Fiveguard,attempts))
+        for _, cfg in pairs(Config) do
+            if type(cfg) == "table" then
+                if cfg.enable then
+                    cfg.enable = false
+                    READY = false
+                end
+            end
+        end
+    end
 end)
