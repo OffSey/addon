@@ -1,8 +1,7 @@
 local data = LoadResourceFile(CurrentResourceName, 'config.lua')
 local Config = assert(load(data))()?.CheckNicknames
-while not Fiveguard do Wait(0) end
-if GetResourceState(Fiveguard) ~= 'started' then return end
 if not Config?.enable then return end
+while not READY do Citizen.Wait(0) end
 
 local function isCharacterNameValid(name)
     local nameLength = #name

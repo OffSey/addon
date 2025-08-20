@@ -1,8 +1,7 @@
 local data = LoadResourceFile(CurrentResourceName,'config.lua')
 local Config = assert(load(data))()?.AntiExplosions
-while not Fiveguard do Wait(0) end
-if GetResourceState(Fiveguard) ~= 'started' then return end
 if not Config?.enable then return end
+while not READY do Citizen.Wait(0) end
 
 AddEventHandler("explosionEvent", function(sender, ev)
 Debug("[explosionEvent] Received from player: " .. tostring(source) .. "\n" ..
@@ -16,30 +15,36 @@ Debug("[explosionEvent] Received from player: " .. tostring(source) .. "\n" ..
       "  - Networked: " .. tostring(ev.isNetworked) .. "\n" ..
       "  - Explosion FX: " .. tostring(ev.explosionFX))
 
-      if ev.explosionType == 9 and ev.damageScale == 1 and ev.cameraShake == 1 and ev.isNetworked == nil and ev.explosionFX == nil then
-       Warn('Explosions Susano (or others cheat) detected and deleted')
+    if ev.explosionType == 9 and ev.damageScale == 1 and ev.cameraShake == 1 and ev.isNetworked == nil and ev.explosionFX == nil then
         CancelEvent()
-            if Config.Ban then
-              exports[Fiveguard]:fg_BanPlayer(sender, "Detected Susano Explosions", true)
-            end
+        Warn('Explosions Susano (or others cheat) detected and deleted')
+        if Config.ban then
+            BanPlayer(sender,"Detected Susano Explosions", Config.recordPlayer)
+        end
         return
-    end   
+    end
 
     if ev.explosionType == 7 and ev.damageScale == 1 and ev.cameraShake >= 0.6 and ev.ownerNetId == 1 and ev.isNetworked == nil and ev.explosionFX == nil then
         CancelEvent()
         Warn('Explosions Safe Susano (or others cheat) detected and deleted')
-            if Config.Ban then
-              exports[Fiveguard]:fg_BanPlayer(sender, "Detected Susano Safe Explosions", true)
+            if Config.ban then
+                BanPlayer(sender,"Detected Susano Safe Explosions", Config.recordPlayer)
             end
         return
     end
 
-      if ev.explosionType == 7 and ev.damageScale == 1 and ev.cameraShake >= 0.6 and ev.ownerNetId == 0 and ev.isNetworked == nil and ev.explosionFX == nil then
+    if ev.explosionType == 7 and ev.damageScale == 1 and ev.cameraShake >= 0.6 and ev.ownerNetId == 0 and ev.isNetworked == nil and ev.explosionFX == nil then
         CancelEvent()
-            if Config.Ban then
-              exports[Fiveguard]:fg_BanPlayer(sender, "Detected Keyser Explosions", true)
+            if Config.ban then
+                BanPlayer(sender,"Detected Keyser Explosions", Config.recordPlayer)
             end
         return
     end
-            
+    --thanks to https://discord.com/users/589401992305311756
+    if ev.explosionType == 7 and ev.f104 == 0 then
+        CancelEvent()
+        if Config.ban then
+            BanPlayer(sender,"Detected Unnetworked Explosions", Config.recordPlayer)
+        end
+    end
 end)

@@ -1,11 +1,7 @@
 local data = LoadResourceFile(CurrentResourceName,'config.lua')
 local Config = assert(load(data))()?.AntiStopper
-while not Fiveguard do Wait(0) end
 if not Config?.enable then return end
-
-AddEventHandler("playerSpawned", function()
-    TriggerServerEvent("fg:addon:resourceState", GetResourceState(Fiveguard) == "started")
-end)
+while not READY do Citizen.Wait(0) end
 
 local function check()
     TriggerServerEvent("fg:addon:resourceState", GetResourceState(Fiveguard) == "started")

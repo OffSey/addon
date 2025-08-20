@@ -1,7 +1,7 @@
 local data = LoadResourceFile(CurrentResourceName,'config.lua')
 local Config = assert(load(data))()?.AntiCarry
-while not Fiveguard do Wait(0) end
 if not Config?.enable then return end
+while not READY do Citizen.Wait(0) end
 
 local function isPlayingBlacklistedAnim(ped)
     if IsEntityPlayingAnim(ped, 'anim@mp_rollarcoaster', 'hands_up_idle_a_player_one', 3) then
@@ -12,9 +12,10 @@ end
 
 local function isWhitelistedZone(ped)
     local playerCoords = GetEntityCoords(ped)
+    local rq = Config.whitelistedZones[i].radius * Config.whitelistedZones[i].radius
     for i = 1, #Config.whitelistedZones do
-        local distance = #(playerCoords - zone.coords)
-        if distance <= Config.whitelistedZones[i].radius then
+        local distance = Vdist2(playerCoords, zone.coords)
+        if distance <= rq then
             return true
         end
     end
