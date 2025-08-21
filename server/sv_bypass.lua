@@ -136,14 +136,21 @@ end
 
 do
     for startEvent, value in pairs(Config.onServerTrigger) do
-        if startEvent == value.endEvent then
+        if type(value) ~= "table" then return Error("Can't load bypasses config") end
+        if value.endEvent == false then
+            setAutoBypass(startEvent, nil, value.bypass, false)
+        elseif startEvent == value.endEvent and value.endEvent then
             setAutoBypass(startEvent, nil, value.bypass, true)
         else
             setAutoBypass(startEvent, value.endEvent, value.bypass)
         end
     end
     for startEvent, value in pairs(Config.onClientTrigger) do
-        if startEvent == value.endEvent then
+        if type(value) ~= "table" then return Error("Can't load bypasses config") end
+        if value.endEvent == false then
+            RegisterNetEvent(('fg:addon:%s'):format(startEvent))
+            setAutoBypass('fg:addon:'..startEvent, nil, value.bypass, false)
+        elseif value.endEvent and value.endEvent then
             RegisterNetEvent(('fg:addon:%s'):format(startEvent))
             setAutoBypass('fg:addon:'..startEvent, nil, value.bypass, true)
         else
