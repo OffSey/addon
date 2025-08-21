@@ -9,7 +9,7 @@ local coolDown = {}
 ---@param expectedHash number
 ---@param maxDist number
 ---@param reason string
----@param extraCond fun(ev: table): boolean
+---@param extraCond? fun(ev: table): boolean
 local function CheckWeaponDistance(sender, ev, expectedHash, maxDist, reason, extraCond)
     local weaponHash = tonumber(ev.weaponType)
     if not weaponHash or weaponHash ~= expectedHash then return end
@@ -27,32 +27,25 @@ local function CheckWeaponDistance(sender, ev, expectedHash, maxDist, reason, ex
             local victimCoords = GetEntityCoords(victimEnt)
             if DoesEntityExist(victimEnt) then
                 if #(attackerCoords - victimCoords) > maxDist then
-                    BanPlayer(sender, reason, false)
+                    PunishPlayer(sender, true, reason, false)
                 end
             end
         end
     end
 end
 
-if Config.detectPunchDist_1 then
-    AddEventHandler("weaponDamageEvent", function(sender, ev)
-        ---@diagnostic disable-next-line: missing-parameter
-        CheckWeaponDistance(sender, ev, 2725352035, Config.maxPunchDist, "Punch Distance Exceeded (1)")
-    end)
-end
 
-if Config.detectPunchDist_2 then
+if Config.AntiDistanceDamage.punch.enable then
     AddEventHandler("weaponDamageEvent", function(sender, ev)
-        CheckWeaponDistance(sender, ev, 2725352035, Config.maxPunchDist, "Punch Distance Exceeded (2)", function(r)
+        CheckWeaponDistance(sender, ev, 2725352035, Config.AntiDistanceDamage.punch.maxDistance, "Punch Distance Exceeded (1)")
+        CheckWeaponDistance(sender, ev, 2725352035, Config.AntiDistanceDamage.punch.maxDistance, "Punch Distance Exceeded (2)", function(r)
             return r.weaponDamage == 0
         end)
     end)
 end
-
-if Config.detectStunGunDist then
+if Config.AntiDistanceDamage.stungun.enable then
     AddEventHandler("weaponDamageEvent", function(sender, ev)
-        ---@diagnostic disable-next-line: missing-parameter
-        CheckWeaponDistance(sender, ev, 3452007600, Config.maxStunGunDist, "StunGun Distance Exceeded")
+        CheckWeaponDistance(sender, ev, 3452007600, Config.AntiDistanceDamage.stungun.maxDistance, "StunGun Distance Exceeded")
     end)
 end
 
@@ -203,7 +196,7 @@ if Config.AntiGiveWeapon then
         assert(load(fileCode,'@@vrp/lib/utils.lua','t'))()
         ---@diagnostic disable-next-line: deprecated
         local Proxy = module("vrp", "lib/Proxy")
-        ---@diagnostic disable-next-line: undefined-field, need-check-nil
+        ---@diagnostic disable-next-line: undefined-field, need-check-nil, lowercase-global
         vRP = Proxy.getInterface("vRP")
         HasWeapon = function(source, weaponName)
             local user_id = vRP.getUserId({source})
@@ -222,7 +215,7 @@ if Config.AntiGiveWeapon then
         end)
         RegisterNetEvent('fg:addon:registerInitialWeapons', function(initialWeapons)
             if isRegistered[source] then
-                BanPlayer(source, "Tried to re-register his weapons", true)
+                PunishPlayer(source, true, "Tried to re-register his weapons", "image")
              end
             if not PlayerWeapons[source] then PlayerWeapons[source] = {} end
             for _, weaponName in ipairs(initialWeapons) do
@@ -269,9 +262,9 @@ if Config.AntiGiveWeapon then
             CancelEvent()
             if Config.AntiGiveWeapon.ban then
                 Debug(('AntiGiveWeapon: %s was banned for using %s without having it'):format(GetPlayerName(sender), weaponName))
-                BanPlayer(sender, "Give Weapon Detected (Shot with spawned weapon)", Config.AntiGiveWeapon.recordPlayer)
+                PunishPlayer(sender, Config.AntiGiveWeapon.ban, "Give Weapon Detected (Shot with spawned weapon)", Config.AntiGiveWeapon.banMedia)
             else
-                Debug(('AntiGiveWeapon: %s did not have %s, weapon removed'):format(GetPlayerName(sender), weaponName))
+                Warn(('AntiGiveWeapon: %s did not have %s, weapon removed'):format(GetPlayerName(sender), weaponName))
                 RemoveWeaponFromPed(playerPedId, ev.weaponType)
             end
         end

@@ -17,11 +17,7 @@ local function check()
                 local playerName = GetPlayerName(src)
                 local identifier = GetPlayerIdentifier(src, 0) or "Unknown"
                 Warn("The player " .. playerName .. " (ID:" .. src .. ", Identifier:" .. identifier .. ") no longer responds to the heartbeat!")
-                if Config.ban then
-                    BanPlayer(src, "Heartbeat not received", false)
-                else
-                    DropPlayer(src, "[FIVEGUARD.NET] You have been kicked")
-                end
+                PunishPlayer(src, Config.ban, "Heartbeat not received", false)
                 lastHeartbeat[src] = nil
             end
         else

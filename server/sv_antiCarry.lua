@@ -14,11 +14,7 @@ local function checkThrow ()
                 if DoesEntityExist(veh) then
                     local attachedTo = GetEntityAttachedTo(veh)
                     if attachedTo == ped and GetPedInVehicleSeat(veh, -1) ~= ped then
-                        if Config.ban then
-                            BanPlayer(sender,"Tried to throw a vehicle (2)", Config.recordPlayer)
-                        else
-                            DropPlayer(sender,"[FIVEGUARD.NET] You have been kicked")
-                        end
+                        PunishPlayer(sender, Config.ban, "Tried to throw a vehicle (2)", Config.banMedia)
                     end
                 end
             end
@@ -30,9 +26,5 @@ checkThrow()
 
 RegisterNetEvent('fg:addon:antiThrow')
 AddEventHandler('fg:addon:antiThrow', function()
-    if Config.ban then
-        BanPlayer(source, "Tried to throw a vehicle (1)",Config.recordPlayer)
-    else
-        DropPlayer(sender,"[FIVEGUARD.NET] You have been kicked")
-    end
+    PunishPlayer(source, Config.ban, "Tried to throw a vehicle (1)",Config.banMedia)
 end)
