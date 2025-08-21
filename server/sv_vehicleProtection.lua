@@ -6,16 +6,19 @@ while not READY do Citizen.Wait(0) end
 AddEventHandler('entityCreated', function(entity)
     if not DoesEntityExist(entity) then return end
 
-    local model = GetEntityModel(entity)
     local entityType = GetEntityType(entity)
-    local populationType = GetEntityPopulationType(entity)
     if entityType ~= 2 then return end
-    if not Config.detectNPC then
-        if populationType == 5 then return end
-    end
+
+    local model = GetEntityModel(entity)
+    local populationType = GetEntityPopulationType(entity)
     local owner = NetworkGetEntityOwner(entity)
     local netId = NetworkGetNetworkIdFromEntity(entity)
-    if Config.preventUnnetworkedEnity then
+    local scriptName = GetEntityScript(entity)
+
+    if not Config.detectNPC and populationType == 5 then
+        return
+    end
+    if Config.preventUnNetworkedEnity then
         if not netId or netId == 0 then
             DeleteEntity(entity)
             Debug(owner, "Spawned Unnetworked Entity")
@@ -24,25 +27,31 @@ AddEventHandler('entityCreated', function(entity)
     end
     if Config.preventLaunchPlayer then
         local modelsToDelete = {
-            [-1809822327] = true,
-            [-1177863319] = true,
-            [1728666326] = true,
+            [-1809822327] = true, -- Cargoplane
+            [-1177863319] = true, -- Tug
+            [1728666326] = true,  -- Large vehicle exploit
         }
-        
+
         if modelsToDelete[model] then
+            PunishPlayer(owner, true, "Tried to launch a player","image")
             DeleteEntity(entity)
-            Debug(owner, "Tried to launch a player")
-            TriggerEvent('fg:addon:dropMe','Tried to launch a player')
             return
         end
     end
-    TriggerClientEvent("fg:addon:checkVehicle", owner, netId)
+    if Config.preventNilResources and scriptName == nil then
+        PunishPlayer(owner, true, "Spawned vehicle with an invalid resource (1)",false)
+        DeleteEntity(entity)
+        return
+    end
+    if Config.preventUnauthorizedResource and scriptName and not Config.resourceWhitelisted[scriptName] then
+        PunishPlayer(owner, true, "Spawned vehicle from non-whitelisted script: " .. tostring(scriptName) .. " (1)","image")
+        DeleteEntity(entity)
+        return
+    end
+    -- TriggerClientEvent("fg:addon:checkVehicle", owner, netId)
 end)
 
-RegisterNetEvent("fg:addon:dropMe", function(reason)
-    if Config.ban then
-        BanPlayer(source, reason, Config.recordPlayer)
-    elseif Config.kick then
-        DropPlayer(source, '[FIVEGUARD.NET] You have been kicked')
-    end
+RegisterNetEvent("fg:addon:punish", function(reason)
+    Debug(GetInvokingResource())
+    PunishPlayer(source, Config.ban, reason, Config.banMedia)
 end)
