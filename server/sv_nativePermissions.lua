@@ -64,26 +64,30 @@ local B_CATEGORY = {
     ["BypassSpoofedWeapons"] = "Misc"
 }
 
-if Config.SetEntityCoords then
-    RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function(bol,resName)
-        Debug(resName)
+RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function(bol,resName)
+    Debug(resName)
+    if Config.SetEntityCoords then
         local result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY["BypassTeleport"], "BypassTeleport", bol, false)
         if not result then
             Error(("[Addon] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY["BypassTeleport"],"BypassTeleport",source,GetPlayerName(source),errorText))
         else
             Debug(("[Addon] temporany Permission ^5\"%s.%s\"^0 was %s succesfully!\nPlayer changed: ^5[%s] %s^0"):format(B_CATEGORY["BypassTeleport"],"BypassTeleport",state == true and"^2granted^0" or "^1removed^0",source,GetPlayerName(source)))
         end
-    end)
-end
+    else
+        Warn("Can't give/remove BypassTeleport since the option is disabled ")
+    end
+end)
 
-if Config.SetEntityVisible then
-    RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function(bol,resName)
-        Debug(resName)
+RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function(bol,resName)
+    Debug(resName)
+    if Config.SetEntityVisible then
         local result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY["BypassInvisible"], "BypassInvisible", bol, false)
         if not result then
             Error(("[Addon] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format("Client","BypassInvisible",source,GetPlayerName(source),errorText))
         else
             Debug(("[Addon] temporany Permission ^5\"%s.%s\"^0 was %s succesfully!\nPlayer changed: ^5[%s] %s^0"):format("Client","BypassInvisible",state == true and"^2granted^0" or "^1removed^0",source,GetPlayerName(source)))
         end
-    end)
-end
+    else
+        Warn("Can't give/remove BypassInvisible since the option is disabled ")
+    end
+end)

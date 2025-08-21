@@ -20,6 +20,8 @@ if IsDuplicityVersion() then
         exports[Fiveguard]:SetTempPermission(source,"Client","BypassInvisible",not toogle)
         return setEntityVisible(entity,toogle,...)
     end
+    exports("SafeSetEntityVisible", SetEntityVisible)
+    exports("SafeSetEntityCoords", SetEntityCoords)
 else
     local setEntityCoords = SetEntityCoords
     SetEntityCoords = function (entity,...)
@@ -37,4 +39,6 @@ else
         TriggerServerEvent("fg:addon:SetTempPermission:BypassInvisible",not toogle,a1)
         return setEntityVisible(entity,toogle,...)
     end
+    exports("SafeSetEntityVisible", SetEntityVisible)
+    exports("SafeSetEntityCoords", SetEntityCoords)
 end
