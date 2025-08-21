@@ -102,6 +102,7 @@ client_scripts {
     'client/cl_heartBeat.lua',
     'client/cl_nativePermissions.lua',
     'client/cl_vehicleProtection.lua',
+    'client/cl_weaponProtection.lua',
 }
 
 file 'config.lua'
@@ -148,8 +149,9 @@ end
 local isRecording = {}
 
 function BanPlayer(source, reason, createClip)
+    Debug(source, reason, createClip)
     if createClip then
-        if isRecording[source] then return end
+        if isRecording[source] then Debug(("Ignoring player ban since it's getting banned"):format())return end
         isRecording[source] = true
         if Config.CustomWebhookURL and string.len(Config.CustomWebhookURL) < 80 then
             Config.CustomWebhookURL = nil
@@ -170,6 +172,9 @@ function BanPlayer(source, reason, createClip)
         exports[Fiveguard]:fg_BanPlayer(source, reason, true)
     end
 end
+AddEventHandler('playerDropped', function()
+    isRecording[source] = nil
+end)
 
 Citizen.CreateThread(function()
     if checkAndFixFxmanifest() then
