@@ -1,10 +1,9 @@
 return {
     Debug = true,
     CheckUpdates = false, --RECOMMENDED Enable this to be notified when an update is available!
-    -- Record clip before banning settings
-    CustomWebhookURL = "https://discord.com/api/webhooks/URL", -- Discord webhook URL to ban with a videoclip (store recorded clips)
+    -- custom storage for video or images, if not configured will be used the default screenshot webhook url on your fiveguard config
+    CustomWebhookURL = "https://discord.com/api/webhooks/URL", -- Discord webhook URL to store video or images
     RecordTime = 5, -- in seconds
-
     -- prevent cheaters to stop client side of this resource
     Heartbeat = {
         enable = true,
@@ -17,7 +16,7 @@ return {
     AntiCarry = {
         enable = true,
         ban = true,
-        recordPlayer = true, -- send a clip in your whebhook before player get banned
+        banMedia = "video", -- ("video" or "image" or false) | send a defined media in your whebhook before player get banned
         whitelistedZones = {
             -- { -- EXAMPLE
             --     coords = vector3(0, 0, 0),
@@ -29,7 +28,6 @@ return {
             } or nil
         }
     },
-
     --Name Managament
     CheckNicknames = {
         enable = true,
@@ -47,12 +45,11 @@ return {
         ban = true,
         checkInterval = 5 --interval in seconds
     },
-
-    -- For set temp permissions in native
-    ExportsNative = { --- /!\ BETA /!\ U CAN USE, IF YOU HAVE ERROR OR OTHER PROBLEM CONTACT: offsey
+    -- Allows players to get a bypass directly by native execution
+    ExportsNative = {
         enable = true,
-        SetEntityCoords = true, -- Replace 'SetEntityCoords' in your script with 'exports["addon"]:FgSetEntityCoords'
-        SetEntityVisible = true, -- Replace 'SetEntityVisible' in your script with 'exports["addon"]:FgSetEntityVisible'
+        SetEntityCoords = true, -- It enable also 'exports["addon"]:SafeSetEntityCoords' if needed
+        SetEntityVisible = true -- It enable also 'exports["addon"]:SafeSetEntityVisible' if needed
     },
 
     AntiPedManipulation = {
@@ -60,23 +57,24 @@ return {
         maxBucketUsed = 15000,
         ban = true
     },
+
     AntiSafeSpawn = {
         enable = true,
-        -- Add here all the coords of where vehicle gets spawned with "EntityCreation" (e.g. cardealer showroom) to avoid false vehicle deletion
-        whitelistedZones = {
-            { coords =  vec3(-47.500000, -1097.199951, 25.400000), radius = 2.0 },
-        },
+        whitelistedZones = { -- Add here all the coords of where vehicle gets spawned with "EntityCreation" (e.g. cardealer showroom) to avoid false vehicle deletion
+            { coords =  vec3(-47.500000, -1097.199951, 25.400000), radius = 2.0 }
+        }
     },
+
     -- Anti Vehicle Spawner | Crédit: Jona0081
     AntiSpawnVehicle = {
         enable = true,
-        ban = true, -- Ban (false = Delete vehicles)
-        recordPlayer = true,
-        detectNilResources = true, -- Can make false ban, disable if you have false ban
-        detectNPC = true,--false, -- Can spawn client side event 
-        preventUnnetworkedEnity = true, -- Can make false ban with script (like cardealer)
-        detectOwner = false, -- Can make false ban with script
-        detectResource = true, -- Just wl resource in ResourceWhitelisted
+        ban = true, -- Ban (false = delete vehicle only)
+        banMedia = "image",
+        detectNPC = false,              -- Can spawn client side event 
+        preventInvalidOwner = false,    -- !!Can make false ban
+        preventNilResources = false,    -- !!Can make false ban
+        preventUnNetworkedEnity = false,-- !!Can make false ban
+        preventUnauthorizedResource = true, -- Just wl resource in ResourceWhitelisted
         maxVehicleCheckDistance = 50,
         checkInterval = 5,
         maxRetries = 5,
@@ -89,32 +87,34 @@ return {
             ["esx_vehicleshop"] = GetResourceState('esx_vehicleshop') ~= 'missing',
             ["esx_garages"] = GetResourceState('esx_garages') ~= 'missing',
             ["qb-vehicleshop"] = GetResourceState('qb-vehicleshop') ~= 'missing',
-            ["qb-garages"] = GetResourceState('qb-garages') ~= 'missing',
-            ["addon"] = true
+            ["qb-garages"] = GetResourceState('qb-garages') ~= 'missing'
         }
     },
-
     -- Anti GiveWeapon and others detection |For dist detection Credit: locutor404 (remake by offsey for addon)
     WeaponProtection = {
         enable = true,
-        AntiGiveWeapon = { -- /!\ BETA | WORK WITH FRAMEWORK: ESX, QbCore (for moment) and works with inventory (no weapon wheel)
+        AntiGiveWeapon = {
             enable = true,
             relaxed = false,-- determinate if check every shot or no
-            ban = true,-- If false, the weapon will just be removed from the hands 
-            recordPlayer = true,
+            ban = true,     -- (false = weapon removed only)
+            banMedia = "image"
         },
-        detectPunchDist_1 = true, -- if enabled detect and ban
-        detectPunchDist_2 = true, -- if enabled detect and ban
-        maxPunchDist = 16.0,
-        detectStunGunDist = true, -- if enabled detect and ban
-        maxStunGunDist = 13.0
+        AntiDistanceDamage = {
+            punch = {
+                enable = true,
+                maxDistance = 16
+            },
+            stungun = {
+                enable = true,
+                maxDistance = 13
+            }
+        }
     },
-
     -- Anti Cheat Explosions Undetected | Crédit: Jona0081
     AntiExplosions = {
         enable = true,
-        ban = true,
-        recordPlayer = true,
+        ban = true, -- (false = kick)
+        banMedia = "image"
     },
 
     Bypasses = {
@@ -131,7 +131,7 @@ return {
             ["rcore_clothing:onClothingShopOpened"] = {
                 endEvent = "rcore_clothing:onClothingShopClosed",
                 bypass = "BypassStealOutfit"
-            },
+            }
         },
 
         onServerTrigger = {
@@ -158,15 +158,14 @@ return {
             ["wasabi_police:sendToJail"] = {
                 endEvent = false,
                 bypass = "BypassTeleport"
-            },
+            }
         }
     },
-
     -- Check for a specified time if a player have a model, if true he will be banned/kicked
     BlacklistedModels = {
         enable = true,
-        ban = true, --if false player is kicked
-        recordPlayer = true,
+        ban = true, -- (false = kick)
+        banMedia = "image",
         checkInterval = 10, --in seconds
         blacklist = { -- a list of ped/animal models that player can't use
             "a_c_fish",
@@ -176,7 +175,7 @@ return {
             'A_C_Chickenhawk',
             'A_C_Chimp',
             'A_C_Chimp_02',
-            'A_C_HumpBack',
+            'A_C_HumpBack'
         },
         enableCrahingPrevent = true
     },
@@ -248,7 +247,7 @@ return {
             customFramework = {
                 enable = false, -- enable this only if u have a custom settings and u know what u are doing
                 customEvent = '', -- name of the events that's triggered when a player get/lose a group
-                invokerResource = '', -- name of the resource that's triggers the event (security check)
+                invokerResource = '' -- name of the resource that's triggers the event (security check)
             },
             groups = {
                 ['god'] = {
@@ -422,7 +421,7 @@ return {
                     "BypassExplosion",
                     "BypassClearTasks",
                     "BypassParticle"
-                },
+                }
             }
         },
     
@@ -549,8 +548,8 @@ return {
                     "BypassExplosion",
                     "BypassClearTasks",
                     "BypassParticle"
-                },
+                }
             }
         }
-    },
+    }
 }
