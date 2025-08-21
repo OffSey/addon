@@ -147,9 +147,10 @@ local function checkAndFixFxmanifest()
 end
 local isRecording = {}
 
-function BanPlayer(source, reason, createClip)
-    Debug(source, reason, createClip)
-    if createClip then
+function PunishPlayer(source, ban, reason, mediaType)
+    Debug(source, reason, mediaType)
+    if not ban then return DropPlayer(source,"[FIVEGUARD.NET] You have been kicked") end
+    if tostring(mediaType) == "video" then
         if isRecording[source] then Debug(("Ignoring player ban since it's getting banned"):format())return end
         isRecording[source] = true
         if Config.CustomWebhookURL and string.len(Config.CustomWebhookURL) < 80 then
@@ -157,6 +158,7 @@ function BanPlayer(source, reason, createClip)
         end
         exports[Fiveguard]:recordPlayerScreen(source, Config.RecordTime*1000, function(success)
             if success then
+                reason = reasoun .. "(video)[" ..success.."]"
                 Debug("[fiveguard] Record Success" .. source)
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             else
@@ -167,6 +169,17 @@ function BanPlayer(source, reason, createClip)
         Citizen.SetTimeout(Config.RecordTime*1000+100, function()
             isRecording[source] = nil
         end)
+    elseif tostring(mediaType) == "image" then
+        exports[Fiveguard]:screenshotPlayer(source, function(success)
+            if success then
+                reason = reasoun .. "(image)[" ..success.."]"
+                Debug("[fiveguard] Screenshot Success" .. source)
+                exports[Fiveguard]:fg_BanPlayer(source, reason, true)
+            else
+                Error("[fiveguard] Screenshot Error" .. source)
+                exports[Fiveguard]:fg_BanPlayer(source, reason, true)
+            end
+        end, Config.CustomWebhookURL)
     else
         exports[Fiveguard]:fg_BanPlayer(source, reason, true)
     end

@@ -7,11 +7,7 @@ local playerStates = {}
 local function check()
     for playerId, state in pairs(playerStates) do
         if not state then
-            if Config.ban then
-                BanPlayer(playerId, "Stopped Fiveguard", false)
-            else
-                DropPlayer(sender,"[FIVEGUARD.NET] You have been kicked")
-            end
+            PunishPlayer(playerId, Config.ban, "Stopped Fiveguard", false)
         end
     end
     Citizen.SetTimeout(Config.checkInterval * 1000, check)

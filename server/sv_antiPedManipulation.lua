@@ -27,10 +27,6 @@ AddEventHandler('entityCreated', function(entity)
 
     lastDetection = currentTime
 
+    PunishPlayer(owner, Config.ban, "Tried to spawn a ped", "image")
     DeleteEntity(entity)
-    if Config.ban then
-        BanPlayer(owner, "Tried to spawn a ped",false)
-    else
-        DropPlayer(tostring(owner), "Something weird... isnt it?")
-    end
 end)

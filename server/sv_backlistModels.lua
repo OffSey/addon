@@ -12,14 +12,7 @@ local function checkModel()
         for j = 1, #Config.blacklist do
             local blockedModel = Config.blacklist[j]
             if model == GetHashKey(blockedModel) then
-                if Config.ban then
-                    BanPlayer(source, "Blacklisted model detected: " .. blockedModel, Config.recordPlayer)
-                else
-                    ---@diagnostic disable-next-line: param-type-mismatch
-                    DropPlayer(source,"[FIVEGUARD.NET] You have been kicked")
-                    ---@diagnostic disable-next-line: param-type-mismatch
-                    Info(("Player: [^5%s^0] ^5%s^0 was kicked for using a blacklisted model: ^3" .. blockedModel):format(source, GetPlayerName(source)))
-                end
+                PunishPlayer(source, Config.ban, "Blacklisted model detected: " .. blockedModel, Config.banMedia)
                 break
             end
         end
