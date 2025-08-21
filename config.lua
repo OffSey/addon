@@ -3,7 +3,7 @@ return {
     CheckUpdates = false, --RECOMMENDED Enable this to be notified when an update is available!
     -- Record clip before banning settings
     CustomWebhookURL = "https://discord.com/api/webhooks/URL", -- Discord webhook URL to ban with a videoclip (store recorded clips)
-    RecordTime = 5, -- in seconds
+    RecordTime = 1, -- in seconds
 
     -- prevent cheaters to stop client side of this resource
     Heartbeat = {
@@ -60,26 +60,25 @@ return {
         maxBucketUsed = 15000,
         ban = true
     },
-
     AntiSafeSpawn = {
         enable = true,
+        -- Add here all the coords of where vehicle gets spawned with "EntityCreation" (e.g. cardealer showroom) to avoid false vehicle deletion
         whitelistedZones = {
-            { coords =  vec3(-47.500000, -1097.199951, 25.400000), radius = 20.0 },   -- dealership preview
-            { coords = vector3(100.0, 100.0, 100.0), radius = 5.0 },    -- rent vehicle preview
+            { coords =  vec3(-47.500000, -1097.199951, 25.400000), radius = 2.0 },
         },
     },
     -- Anti Vehicle Spawner | Crédit: Jona0081
     AntiSpawnVehicle = {
         enable = true,
-        ban = true, -- Ban (Just false = Delete vehicles)
+        ban = true, -- Ban (false = Delete vehicles)
         recordPlayer = true,
         detectNilResources = true, -- Can make false ban, disable if you have false ban
-        detectNPC = false, -- Can spawn client side event 
+        detectNPC = true,--false, -- Can spawn client side event 
         preventUnnetworkedEnity = true, -- Can make false ban with script (like cardealer)
         detectOwner = false, -- Can make false ban with script
         detectResource = true, -- Just wl resource in ResourceWhitelisted
         maxVehicleCheckDistance = 50,
-        checkInterval = 15,
+        checkInterval = 5,
         maxRetries = 5,
         resourceWhitelisted = {
             ["monitor"] = true,
@@ -91,6 +90,7 @@ return {
             ["esx_garages"] = GetResourceState('esx_garages') ~= 'missing',
             ["qb-vehicleshop"] = GetResourceState('qb-vehicleshop') ~= 'missing',
             ["qb-garages"] = GetResourceState('qb-garages') ~= 'missing',
+            ["addon"] = true
         }
     },
 
@@ -123,42 +123,42 @@ return {
             ["jg-advancedgarages:client:open-garage"] = {
                 endEvent = "jg-advancedgarages:client:store-vehicle",
                 bypass = "BypassVehicleModifier"
-            } and GetResourceState('jg-advancedgarages') ~= 'missing' or nil,
+            },
             ["jg-dealerships:client:open-showroom"] = {
                 endEvent = "__ox_cb_jg-dealerships:server:exit-showroom",
                 bypass = { "BypassInvisible", "BypassTeleport", "BypassVehicleModifier" }
-            } and GetResourceState('jg-dealerships') ~= 'missing' or nil,
+            },
             ["rcore_clothing:onClothingShopOpened"] = {
                 endEvent = "rcore_clothing:onClothingShopClosed",
                 bypass = "BypassStealOutfit"
-            } and GetResourceState('rcore_clothing') ~= 'missing' or nil,
+            },
         },
 
         onServerTrigger = {
             ["lsrp_lunapark:Freefall:attachPlayer"] = {
                 endEvent = "lsrp_lunapark:Freefall:detachPlayer",
                 bypass = "BypassNoclip",
-            } and GetResourceState('rcore_lunapark') ~= 'missing' or nil,
+            },
             ["lsrp_lunapark:RollerCoaster:attachPlayer"] = {
                 endEvent = "lsrp_lunapark:RollerCoaster:detachPlayer",
                 bypass = "BypassNoclip"
-            } and GetResourceState('rcore_lunapark') ~= 'missing' or nil,
+            },
             ["lsrp_lunapark:Wheel:attachPlayer"] = {
                 endEvent = "lsrp_lunapark:Wheel:detachPlayer",
                 bypass = "BypassNoclip",
-            } and GetResourceState('rcore_lunapark') ~= 'missing' or nil,
+            },
             ["rcore_prison:server:prologStarted"] = {
                 endEvent = "rcore_prison:server:prologFinished",
                 bypass = "BypassStealOutfit"
-            } and GetResourceState('rcore_prison') ~= 'missing' or nil,
+            },
             ["rtx_themepark:Global:UsingAttractionPlayer"] = {
                 endEvent = "rtx_themepark:Global:UsingAttractionPlayer",
                 bypass = { "BypassNoclip", "BypassSpoofedWeapons", "BypassBulletproofTires" }
-            } and (GetResourceState('rtx_themepark') ~= 'missing' or GetResourceState('rtx_themepark_dlc') ~= 'missing') or nil,
+            },
             ["wasabi_police:sendToJail"] = {
                 endEvent = false,
                 bypass = "BypassTeleport"
-            } and GetResourceState('wasabi_police') ~= 'missing' or nil,
+            },
         }
     },
 
