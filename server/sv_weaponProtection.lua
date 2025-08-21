@@ -201,7 +201,9 @@ if Config.AntiGiveWeapon then
         frameworkDetected = 'vRP'
         local fileCode = LoadResourceFile('vrp','lib/utils.lua')
         assert(load(fileCode,'@@vrp/lib/utils.lua','t'))()
+        ---@diagnostic disable-next-line: deprecated
         local Proxy = module("vrp", "lib/Proxy")
+        ---@diagnostic disable-next-line: undefined-field, need-check-nil
         vRP = Proxy.getInterface("vRP")
         HasWeapon = function(source, weaponName)
             local user_id = vRP.getUserId({source})
