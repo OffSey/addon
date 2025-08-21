@@ -28,7 +28,7 @@ local function checkModel()
 end
 checkModel()
 
-if Config.enableCrahingPrevent then
+if Config.enableCrashingPrevent then
     AddEventHandler('entityCreating', function(entity)
         local src = NetworkGetEntityOwner(entity)
         local modelprop = GetEntityModel(entity)
