@@ -2,6 +2,7 @@ local data = LoadResourceFile(CurrentResourceName, 'config.lua')
 local Config = assert(load(data))()?.WeaponProtection
 if not Config?.enable then return end
 while not READY do Citizen.Wait(0) end
+local coolDown = {}
 
 ---@param sender string
 ---@param ev table
@@ -173,51 +174,95 @@ if Config.AntiGiveWeapon then
 
     local HasWeapon = function() return false end
     if GetResourceState('ox_inventory') == 'started' then
-        HasWeapon = function(playerId, weaponName)
-            return exports.ox_inventory:GetItemCount(playerId, weaponName) > 0
+        HasWeapon = function(source, weaponName)
+            return exports.ox_inventory:GetItemCount(source, weaponName) > 0
         end
     elseif GetResourceState('es_extended') == 'started' then
         frameworkDetected = 'es_extended'
         local ESX = exports.es_extended:getSharedObject()
-        HasWeapon = function(playerId, weaponName)
-            local xPlayer = ESX.GetPlayerFromId(playerId)
+        HasWeapon = function(source, weaponName)
+            local xPlayer = ESX.GetPlayerFromId(source)
             return xPlayer and xPlayer.hasItem(weaponName, 1)
         end
     elseif GetResourceState('qbx_core') == 'started' then
         frameworkDetected = 'qbx_core'
-        HasWeapon = function(playerId, weaponName)
-            local Player = exports.qbx_core:GetPlayer(playerId)
+        HasWeapon = function(source, weaponName)
+            local Player = exports.qbx_core:GetPlayer(source)
             return Player and Player.PlayerData.items?[weaponName]?.amount >= 1
         end
     elseif GetResourceState('qb-core') == 'started' then
         frameworkDetected = 'qb-core'
         local QBCore = exports['qb-core']:GetCoreObject()
-        HasWeapon = function(playerId, weaponName)
-            local Player = QBCore.Functions.GetPlayer(playerId)
+        HasWeapon = function(source, weaponName)
+            local Player = QBCore.Functions.GetPlayer(source)
             return Player and Player.Functions.GetItemByName(weaponName)
         end
+    elseif GetResourceState('vRP') == 'started' then
+        frameworkDetected = 'vRP'
+        local fileCode = LoadResourceFile('vrp','lib/utils.lua')
+        assert(load(fileCode,'@@vrp/lib/utils.lua','t'))()
+        local Proxy = module("vrp", "lib/Proxy")
+        vRP = Proxy.getInterface("vRP")
+        HasWeapon = function(source, weaponName)
+            local user_id = vRP.getUserId({source})
+            if user_id == nil then return end
+            return vRP.getInventoryItemAmount({user_id, weaponName}) >= 1
+        end
+    else
+        local PlayerWeapons = {}
+        local isRegistered = {}
+        AddEventHandler('playerJoining', function()
+            PlayerWeapons[source] = {}
+        end)
+        AddEventHandler('playerDropped', function()
+            PlayerWeapons[source] = nil
+            isRegistered[source] = nil
+        end)
+        RegisterNetEvent('fg:addon:registerInitialWeapons', function(initialWeapons)
+            if isRegistered[source] then
+                BanPlayer(source, "Tried to re-register his weapons", true)
+             end
+            if not PlayerWeapons[source] then PlayerWeapons[source] = {} end
+            for _, weaponName in ipairs(initialWeapons) do
+                print(string.format("Registered starting weapon '%s' for player %s", weaponName, GetPlayerName(source)))
+                PlayerWeapons[source][weaponName] = true
+            end
+        end)
+        exports("giveWeapon", function(targetId, weaponName)
+            if not PlayerWeapons[targetId] then PlayerWeapons[targetId] = {} end
+            PlayerWeapons[targetId][weaponName] = true
+            local targetPedId = GetPlayerPed(targetId)
+            GiveWeaponToPed(targetPedId, weaponName)
+        end)
+        exports("removeWeapon", function(targetId, weaponName)
+            if PlayerWeapons[targetId] then
+                PlayerWeapons[targetId][weaponName] = nil
+            end
+            local targetPedId = GetPlayerPed(targetId)
+            RemoveWeaponFromPed(targetPedId,  weaponName)
+        end)
+        HasWeapon = function (source, weaponName)
+            if PlayerWeapons[source] and PlayerWeapons[source][weaponName] then
+                return true
+            end
+            return false
+        end
     end
-
     if frameworkDetected then Debug('Framework For Weapon Detection : ^3' .. frameworkDetected .. '^0') end
-
     AddEventHandler('weaponDamageEvent', function(sender, ev)
         if ev.weaponType == GetHashKey("WEAPON_UNARMED") or ev.damageType ~= 3 then return end
         local weaponName = weaponHash[ev.weaponType]
         if not weaponName then return end
-
         if Config.AntiGiveWeapon.relaxed then
             local now = GetGameTimer()
-            if serv_cooldown2[sender] and now < serv_cooldown2[sender] then
+            if coolDown[sender] and now < coolDown[sender] then
                 return
             end
-            serv_cooldown2[sender] = now + 3000
+            coolDown[sender] = now + 3000
         end
-
         local playerPedId = GetPlayerPed(sender)
         local hasWeapon = HasWeapon(sender, weaponName)
-
         Debug(('AntiGiveWeapon: %s fired with %s - %s'):format(GetPlayerName(sender) or "unknown", weaponName, hasWeapon and "present in inventory" or "missing / spawned"))
-
         if not hasWeapon then
             CancelEvent()
             if Config.AntiGiveWeapon.ban then
