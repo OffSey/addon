@@ -3,7 +3,7 @@ return {
     CheckUpdates = false, --RECOMMENDED Enable this to be notified when an update is available!
     -- Record clip before banning settings
     CustomWebhookURL = "https://discord.com/api/webhooks/URL", -- Discord webhook URL to ban with a videoclip (store recorded clips)
-    RecordTime = 1, -- in seconds
+    RecordTime = 5, -- in seconds
 
     -- prevent cheaters to stop client side of this resource
     Heartbeat = {
