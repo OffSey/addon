@@ -24,14 +24,14 @@ end
 
 local function isVehicleValid(vehicle)
     local netId = NetworkGetNetworkIdFromEntity(vehicle)
+    local owner = NetworkGetEntityOwner(vehicle)
+    local scriptName = GetEntityScript(vehicle)
     if Config.detectNetId and (not netId or netId == 0) then
         return false, "Invalid netId"
     end
-    local owner = NetworkGetEntityOwner(vehicle)
     if Config.detectOwner then
         if not owner or owner == -1 then return false, "Invalid Owner" end
     end
-    local scriptName = GetEntityScript(vehicle)
     if Config.detectResource and Config.detectNilResources and scriptName == nil then
         return false, "Unknown script (nil) detected on the vehicle"
     end
