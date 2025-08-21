@@ -197,11 +197,17 @@ if Config.AntiGiveWeapon then
         ---@diagnostic disable-next-line: deprecated
         local Proxy = module("vrp", "lib/Proxy")
         ---@diagnostic disable-next-line: undefined-field, need-check-nil, lowercase-global
-        vRP = Proxy.getInterface("vRP")
-        HasWeapon = function(source, weaponName)
-            local user_id = vRP.getUserId({source})
-            if user_id == nil then return end
-            return vRP.getInventoryItemAmount({user_id, weaponName}) >= 1
+        local vRP = Proxy.getInterface("vRP")
+        HasWeapon = function(source, weaponName) --todo: check if work on most vrp versions
+            local amount = 0
+            local ok, user_id = pcall(function() return vRP.getUserId({source}) end)
+            if ok and user_id then
+                amount = vRP.getInventoryItemAmount(user_id, weaponName)
+            elseif vRP.users_by_source?[source] then
+                amount = vRP.users_by_source[source]:getItemAmount(weaponName)
+            else return false
+            end
+            return amount and amount >= 1
         end
     else
         local PlayerWeapons = {}
@@ -219,7 +225,7 @@ if Config.AntiGiveWeapon then
              end
             if not PlayerWeapons[source] then PlayerWeapons[source] = {} end
             for _, weaponName in ipairs(initialWeapons) do
-                print(string.format("Registered starting weapon '%s' for player %s", weaponName, GetPlayerName(source)))
+                print(string.format("Registered starting weapon '%s' for player %s", weaponName, GetPlayerName(tostring(source))))
                 PlayerWeapons[source][weaponName] = true
             end
         end)
@@ -227,7 +233,7 @@ if Config.AntiGiveWeapon then
             if not PlayerWeapons[targetId] then PlayerWeapons[targetId] = {} end
             PlayerWeapons[targetId][weaponName] = true
             local targetPedId = GetPlayerPed(targetId)
-            GiveWeaponToPed(targetPedId, weaponName)
+            GiveWeaponToPed(targetPedId, weaponName,0,false,false)
         end)
         exports("removeWeapon", function(targetId, weaponName)
             if PlayerWeapons[targetId] then
