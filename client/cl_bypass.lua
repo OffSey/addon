@@ -33,6 +33,7 @@ end
 do
     for startEvent, value in pairs(Config.onClientTrigger) do
         if type(value) ~= "table" then return Error("Can't load bypasses config") end
+        if not value.enable then goto continue end
         if value.endEvent == false then
             setAutoBypass(startEvent, nil, value.bypass, false)
         elseif startEvent == value.endEvent then
@@ -40,6 +41,7 @@ do
         else
             setAutoBypass(startEvent, value.endEvent, value.bypass)
         end
+        ::continue::
     end
 end
 
