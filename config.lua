@@ -16,7 +16,7 @@ return {
     AntiCarry = {
         enable = true,
         ban = true,
-        banMedia = "video", -- ("video" or "image" or false) | send a defined media in your whebhook before player get banned
+        banMedia = "image", -- "video" or "video" or "false"
         whitelistedZones = {
             -- { -- EXAMPLE
             --     coords = vector3(0, 0, 0),
@@ -69,7 +69,7 @@ return {
     AntiSpawnVehicle = {
         enable = true,
         ban = true, -- Ban (false = delete vehicle only)
-        banMedia = "image",
+        banMedia = "image", -- "image" or "video" or "false"
         detectNPC = false,              -- Can spawn client side event 
         preventInvalidOwner = false,    -- !!Can make false ban
         preventNilResources = false,    -- !!Can make false ban
@@ -97,7 +97,7 @@ return {
             enable = true,
             relaxed = false,-- determinate if check every shot or no
             ban = true,     -- (false = weapon removed only)
-            banMedia = "image"
+            banMedia = "image" -- "image" or "video" or "false"
         },
         AntiDistanceDamage = {
             punch = {
@@ -114,48 +114,81 @@ return {
     AntiExplosions = {
         enable = true,
         ban = true, -- (false = kick)
-        banMedia = "image"
+        banMedia = "image" -- "image" or "video" or "false"
     },
 
     Bypasses = {
         enable = true, -- master switch
         onClientTrigger = {
+            --[[ ["put:here:the:event:to:get:bypass"] = {
+                enable = true or false,
+
+                --if the event is different:
+                endEvent = "put:here:the:event:to:remove:bypass",
+                --if the event is the same (first arg must be boolean):
+                endEvent = "put:here:the:event:to:get:bypass",
+                --if there's no END event (it will bypass for 5 seconds):
+                endEvent = false,
+                
+                bypass = "bypassName" or {"bypass","names"}
+            }, ]]
             ["jg-advancedgarages:client:open-garage"] = {
+                enable = GetResourceState("jg-advancedgarages") ~= "missing",
                 endEvent = "jg-advancedgarages:client:store-vehicle",
                 bypass = "BypassVehicleModifier"
             },
             ["jg-dealerships:client:open-showroom"] = {
+                enable = GetResourceState("jg-dealerships") ~= "missing",
                 endEvent = "__ox_cb_jg-dealerships:server:exit-showroom",
                 bypass = { "BypassInvisible", "BypassTeleport", "BypassVehicleModifier" }
             },
             ["rcore_clothing:onClothingShopOpened"] = {
+                enable = GetResourceState("rcore_clothing") ~= "missing",
                 endEvent = "rcore_clothing:onClothingShopClosed",
                 bypass = "BypassStealOutfit"
             }
         },
 
         onServerTrigger = {
+            --[[ ["put:here:the:event:to:get:bypass"] = {
+                enable = true or false,
+
+                --if the event is different:
+                endEvent = "put:here:the:event:to:remove:bypass",
+                --if the event is the same (first arg must be boolean):
+                endEvent = "put:here:the:event:to:get:bypass",
+                --if there's no END event (it will bypass for 5 seconds):
+                endEvent = false,
+                
+                bypass = "bypassName" or {"bypass","names"}
+            }, ]]
             ["lsrp_lunapark:Freefall:attachPlayer"] = {
+                enable = GetResourceState("lsrp_lunapark") ~= "missing",
                 endEvent = "lsrp_lunapark:Freefall:detachPlayer",
                 bypass = "BypassNoclip",
             },
             ["lsrp_lunapark:RollerCoaster:attachPlayer"] = {
+                enable = GetResourceState("lsrp_lunapark") ~= "missing",
                 endEvent = "lsrp_lunapark:RollerCoaster:detachPlayer",
                 bypass = "BypassNoclip"
             },
             ["lsrp_lunapark:Wheel:attachPlayer"] = {
+                enable = GetResourceState("v") ~= "missing",
                 endEvent = "lsrp_lunapark:Wheel:detachPlayer",
                 bypass = "BypassNoclip",
             },
             ["rcore_prison:server:prologStarted"] = {
+                enable = GetResourceState("rcore_prison") ~= "missing",
                 endEvent = "rcore_prison:server:prologFinished",
                 bypass = "BypassStealOutfit"
             },
             ["rtx_themepark:Global:UsingAttractionPlayer"] = {
+                enable = GetResourceState("rtx_themepark") ~= "missing",
                 endEvent = "rtx_themepark:Global:UsingAttractionPlayer",
                 bypass = { "BypassNoclip", "BypassSpoofedWeapons", "BypassBulletproofTires" }
             },
             ["wasabi_police:sendToJail"] = {
+                enable = GetResourceState("wasabi_police") ~= "missing",
                 endEvent = false,
                 bypass = "BypassTeleport"
             }
@@ -165,7 +198,7 @@ return {
     BlacklistedModels = {
         enable = true,
         ban = true, -- (false = kick)
-        banMedia = "image",
+        banMedia = "image", -- "image" or "video" or "false"
         checkInterval = 10, --in seconds
         blacklist = { -- a list of ped/animal models that player can't use
             "a_c_fish",
