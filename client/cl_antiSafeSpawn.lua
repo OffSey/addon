@@ -13,13 +13,12 @@ local function check_veh()
                 local inWhitelistZone = false
                 for i=1, #Config.whitelistedZones do
                     local zone = Config.whitelistedZones[i]
-                    local rq = zone.radius * zone.radius
-                    if Vdist2(pos.x,pos.y,pos.z, zone.coords.x,zone.coords.y,zone.coords.z) <= rq then
+                    if #(pos-zone.coords) <= zone.radius then
                         inWhitelistZone = true
                         break
                     end
                 end
-                Debug('inWhitelistZone',inWhitelistZone)
+                Debug('[AntiSafeSpawn] inWhitelistZone',inWhitelistZone)
                 if not inWhitelistZone then
                     DeleteEntity(veh)
                 end
