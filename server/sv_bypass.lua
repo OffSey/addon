@@ -17,7 +17,6 @@ local B_CATEGORY = {
     ["PlayerSelectorAccess"] = "AdminMenu",
     ["BanListAndUnbanAccess"] = "AdminMenu",
     ["ModelChangerAccess"] = "AdminMenu",
-
     -- Client
     ["BypassSpectate"] = "Client",
     ["BypassGodMode"] = "Client",
@@ -38,24 +37,20 @@ local B_CATEGORY = {
     ["BlipsBypass"] = "Client",
     ["BypassCbScanner"] = "Client",
     ["BypassSpoofedBulletShot"] = "Client",
-
     -- Weapon
     ["BypassWeaponDmgModifier"] = "Weapon",
     ["BypassInfAmmo"] = "Weapon",
     ["BypassNoReload"] = "Weapon",
     ["BypassRapidFire"] = "Weapon",
-
     -- Vehicle
     ["BypassVehicleFixAndGodMode"] = "Vehicle",
     ["BypassVehicleHandlingEdit"] = "Vehicle",
     ["BypassVehicleModifier"] = "Vehicle",
     ["BypassBulletproofTires"] = "Vehicle",
     ["BypassVehiclePlateChanger"] = "Vehicle",
-
     -- Blacklist
     ["BypassModelChanger"] = "Blacklist",
     ["BypassWeaponBlacklist"] = "Blacklist",
-
     -- Misc
     ["FGCommands"] = "Misc",
     ["BypassVPN"] = "Misc",
@@ -139,7 +134,7 @@ do
         if type(value) ~= "table" then return Error("Can't load bypasses config") end
         if value.endEvent == false then
             setAutoBypass(startEvent, nil, value.bypass, false)
-        elseif startEvent == value.endEvent and value.endEvent then
+        elseif startEvent == value.endEvent then
             setAutoBypass(startEvent, nil, value.bypass, true)
         else
             setAutoBypass(startEvent, value.endEvent, value.bypass)
@@ -150,7 +145,7 @@ do
         if value.endEvent == false then
             RegisterNetEvent(('fg:addon:%s'):format(startEvent))
             setAutoBypass('fg:addon:'..startEvent, nil, value.bypass, false)
-        elseif value.endEvent and value.endEvent then
+        elseif startEvent == value.endEvent then
             RegisterNetEvent(('fg:addon:%s'):format(startEvent))
             setAutoBypass('fg:addon:'..startEvent, nil, value.bypass, true)
         else
