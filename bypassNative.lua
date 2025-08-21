@@ -24,17 +24,17 @@ else
     local setEntityCoords = SetEntityCoords
     SetEntityCoords = function (entity,...)
         print('CL>>SetEntityCoords',entity,...)
-        TriggerServerEvent("fg:addn:SetTempPermission:BypassTeleport",true,a1)
+        TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport",true,a1)
         setEntityCoords(entity,...)
-        Citizen.SetTimeout(100,function ()
-            TriggerServerEvent("fg:addn:SetTempPermission:BypassTeleport",false,a1)
+        Citizen.SetTimeout(1000,function ()
+            TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport",false,a1)
         end)
         return
     end
     local setEntityVisible = SetEntityVisible
     SetEntityVisible = function (entity,toogle,...)
         print('CL>>SetEntityVisible',entity,toogle,...)
-        TriggerServerEvent("fg:addn:SetTempPermission:BypassInvisible",not toogle,a1)
+        TriggerServerEvent("fg:addon:SetTempPermission:BypassInvisible",not toogle,a1)
         return setEntityVisible(entity,toogle,...)
     end
 end
