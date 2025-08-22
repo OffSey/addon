@@ -1,6 +1,6 @@
 local a1 = GetCurrentResourceName()
 if a1 == CurrentResourceName then return end
-print("addon loaded into "..a1)
+print("[^2INFO^0] the module ^5bypassNative^0 by addon is loaded into "..tostring(a1).." successfully!")
 if IsDuplicityVersion() then
     local setEntityCoords = SetEntityCoords
     SetEntityCoords = function (entity,...)

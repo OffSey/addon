@@ -212,17 +212,17 @@ Citizen.CreateThread(function()
  A:::::A                 A:::::Ad:::::::::ddd::::d  d:::::::::ddd::::d oo:::::::::::oo   n::::n    n::::n
 AAAAAAA                   AAAAAAAddddddddd   ddddd   ddddddddd   ddddd   ooooooooooo     nnnnnn    nnnnnn
                                                 By OffSey, Jeakels and contributors. Powered by ^3five^0guard]])
-    local string = '\n========== Fiveguard Addon =========='
+    local string = '\n|======== Fiveguard Addon ========|'
     for key, value in pairs(Config) do
         if type(value) == "table" then
             if value.enable then
-                string = ('%s\n| %s is ^2enabled^0 |'):format(string, key:len()<=13 and key ..'\t\t' or key .. '\t')
+                string = ('%s\n| %s ^2enabled^0  |'):format(string, key:len()<=13 and key ..'\t\t' or key .. '\t')
             else
-                string = ('%s\n| %s is ^1disabled^0|'):format(string, key:len()<=13 and key ..'\t\t' or key .. '\t')
+                string = ('%s\n| %s ^1disabled^0 |'):format(string, key:len()<=13 and key ..'\t\t' or key .. '\t')
             end
         end
     end
-    string = string .. '\n====================================='
+    string = string .. '\n|=================================|'
     checkResourceNames()
     if Config.CheckUpdates then
         Citizen.SetTimeout(2000, checkVersion)
