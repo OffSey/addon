@@ -9,13 +9,12 @@ return {
         enable = true,
         timeOut = 60, -- How long after the difference with os.time is the ban? (If not, in how many seconds is the ban (60 seconds is fine, 60 is fine for not false ban))
         threadTime = 5, -- Thread Time (5 seconds is fine)
-        ban = true -- If false player will kicked insted
+        ban = true -- If false player will be kicked
     },
-
     -- prevent cheaters to take and launch vehicles
     AntiCarry = {
         enable = true,
-        ban = true,
+        ban = true, -- If false player will be kicked
         banMedia = "image", -- "video" or "video" or "false"
         whitelistedZones = {
             -- { -- EXAMPLE
@@ -42,7 +41,7 @@ return {
     --Fiveguard AntiStopper
     AntiStopper = {
         enable = true,
-        ban = true,
+        ban = true, -- If false player will be kicked
         checkInterval = 5 --interval in seconds
     },
     -- Allows players to get a bypass directly by native execution
@@ -55,7 +54,7 @@ return {
     AntiPedManipulation = {
         enable = not GetConvarBool("onesync_population", true),
         maxBucketUsed = 15000,
-        ban = true
+        ban = true -- If false player will be kicked
     },
 
     AntiSafeSpawn = {
@@ -64,7 +63,6 @@ return {
             { coords =  vec3(-47.500000, -1097.199951, 25.400000), radius = 2.0 }
         }
     },
-
     -- Anti Vehicle Spawner | Crédit: Jona0081
     AntiSpawnVehicle = {
         enable = true,
@@ -74,10 +72,10 @@ return {
         preventInvalidOwner = false,    -- !!Can make false ban
         preventNilResources = false,    -- !!Can make false ban
         preventUnNetworkedEnity = false,-- !!Can make false ban
-        preventUnauthorizedResource = true, -- Just wl resource in ResourceWhitelisted
         maxVehicleCheckDistance = 50,
         checkInterval = 5,
         maxRetries = 5,
+        preventUnauthorizedResource = false, -- If enabled, whitelist your resources below
         resourceWhitelisted = {
             ["monitor"] = true,
             ["es_extended"] = GetResourceState('es_extended') ~= 'missing',
@@ -113,7 +111,7 @@ return {
     -- Anti Cheat Explosions Undetected | Crédit: Jona0081
     AntiExplosions = {
         enable = true,
-        ban = true, -- (false = kick)
+        ban = true, -- If false player will be kicked
         banMedia = "image" -- "image" or "video" or "false"
     },
 
@@ -146,6 +144,11 @@ return {
                 enable = GetResourceState("rcore_clothing") ~= "missing",
                 endEvent = "rcore_clothing:onClothingShopClosed",
                 bypass = "BypassStealOutfit"
+            },
+            ["ik-jobgarage:openUI"] = {
+                enable = GetResourceState("ik-jobgarage") ~= "missing",
+                endEvent = "ik-jobgarage:server:SaveCarData",
+                bypass = "BypassInvisible"
             }
         },
 
@@ -197,7 +200,7 @@ return {
     -- Check for a specified time if a player have a model, if true he will be banned/kicked
     BlacklistedModels = {
         enable = true,
-        ban = true, -- (false = kick)
+        ban = true,-- If false player will be kicked
         banMedia = "image", -- "image" or "video" or "false"
         checkInterval = 10, --in seconds
         blacklist = { -- a list of ped/animal models that player can't use
