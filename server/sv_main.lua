@@ -193,7 +193,7 @@ Citizen.CreateThread(function()
         READY = false
         return
     end
-    print([[
+    print(([[
                                           dddddddd            dddddddd                                   
                AAA                        d::::::d            d::::::d                                   
               A:::A                       d::::::d            d::::::d                                   
@@ -211,7 +211,7 @@ Citizen.CreateThread(function()
   A:::::A               A:::::Ad:::::::::::::::::d d:::::::::::::::::do:::::::::::::::o  n::::n    n::::n
  A:::::A                 A:::::Ad:::::::::ddd::::d  d:::::::::ddd::::d oo:::::::::::oo   n::::n    n::::n
 AAAAAAA                   AAAAAAAddddddddd   ddddd   ddddddddd   ddddd   ooooooooooo     nnnnnn    nnnnnn
-                                                By OffSey, Jeakels and contributors. Powered by ^3five^0guard]])
+version %s                                   By OffSey, Jeakels and contributors. Powered by ^3five^0guard]]):format(GetResourceMetadata(CurrentResourceName, "version", 0)))
     local string = '\n|======== Fiveguard Addon ========|'
     for key, value in pairs(Config) do
         if type(value) == "table" then
