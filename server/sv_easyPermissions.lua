@@ -39,7 +39,7 @@ if Config.txAdminPermissions.enable or Config.AcePermissions.enable or Config.Fr
                     PermsTable[source] = { group = group }
                     return Info(("Permissions for player: [^5%s^0] ^5%s^0 was registered with the group ^5%s^0, overriding permissions to ^5%s^0"):format(source, GetPlayerName(source), oldGroup, group))
                 elseif PermsTable[source] and PermsTable[source]?.group == group then
-                    Warn(("Player: [^5%s^0] ^5%s^0 already have permissions for fg.^5%s^0, ignored"):format(source, GetPlayerName(source), group))
+                    Warn(("Player: [^5%s^0] ^5%s^0 already have ^5%s^0 group permissions, ignored"):format(source, GetPlayerName(source), group))
                 else
                     ExecuteCommand(("add_principal player.%s fg.%s"):format(source, group))
                     PermsTable[source] = { group = group }
