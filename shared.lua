@@ -1,4 +1,5 @@
 CurrentResourceName = GetCurrentResourceName()
+Resources = {}
 local data = LoadResourceFile(CurrentResourceName,'config.lua')
 local Config = assert(load(data))()
 ---@param ... any
@@ -28,6 +29,7 @@ Citizen.CreateThread(function ()
     local resources = GetNumResources()
     for i = 0, resources - 1 do
         local resource = GetResourceByFindIndex(i)
+        Resources[resource] = true
         local files = GetNumResourceMetadata(resource, 'ac')
         for j = 0, files, 1 do
             local x = GetResourceMetadata(resource, 'ac', j)
