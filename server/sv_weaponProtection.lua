@@ -48,149 +48,144 @@ if Config.AntiDistanceDamage.stungun.enable then
         CheckWeaponDistance(sender, ev, 3452007600, Config.AntiDistanceDamage.stungun.maxDistance, "StunGun Distance Exceeded")
     end)
 end
-
 if Config.AntiGiveWeapon then
     local frameworkDetected
     local weaponHash <const> = {
-        [-1768145561] = "WEAPON_SPECIALCARBINE_MK2",
-        [487013001] = "WEAPON_PUMPSHOTGUN",
-        [-1075685676] = "WEAPON_PISTOL_MK2",
-        [-1238556825] = "WEAPON_RAYMINIGUN",
-        [-1834847097] = "WEAPON_DAGGER",
-        [-102323637] = "WEAPON_BOTTLE",
-        [-618237638] = "WEAPON_EMPLAUNCHER",
-        [453432689] = "WEAPON_PISTOL",
-        [940833800] = "WEAPON_STONE_HATCHET",
-        [-1716589765] = "WEAPON_PISTOL50",
-        [-1716189206] = "WEAPON_KNIFE",
-        [1853742572] = "WEAPON_PRECISIONRIFLE",
-        [-1076751822] = "WEAPON_SNSPISTOL",
-        [1198879012] = "WEAPON_FLAREGUN",
-        [-1355376991] = "WEAPON_RAYPISTOL",
-        [-1813897027] = "WEAPON_GRENADE",
-        [1737195953] = "WEAPON_NIGHTSTICK",
-        [406929569] = "WEAPON_FERTILIZERCAN",
-        [1593441988] = "WEAPON_COMBATPISTOL",
-        [465894841] = "WEAPON_PISTOLXM3",
-        [1432025498] = "WEAPON_PUMPSHOTGUN_MK2",
-        [100416529] = "WEAPON_SNIPERRIFLE",
-        [-135142818] = "WEAPON_ACIDPACKAGE",
-        [-1168940174] = "WEAPON_HAZARDCAN",
-        [-581044007] = "WEAPON_MACHETE",
-        [1171102963] = "WEAPON_STUNGUN_MP",
-        [-1063057011] = "WEAPON_SPECIALCARBINE",
-        [-1951375401] = "WEAPON_FLASHLIGHT",
-        [727643628] = "WEAPON_CERAMICPISTOL",
-        [584646201] = "WEAPON_APPISTOL",
-        [-1045183535] = "WEAPON_REVOLVER",
-        [-72657034] = "GADGET_PARACHUTE",
-        [883325847] = "WEAPON_PETROLCAN",
-        [-1600701090] = "WEAPON_BZGAS",
-        [-2084633992] = "WEAPON_CARBINERIFLE",
-        [-608341376] = "WEAPON_COMBATMG_MK2",
-        [-538741184] = "WEAPON_SWITCHBLADE",
-        [125959754] = "WEAPON_COMPACTLAUNCHER",
-        [600439132] = "WEAPON_BALL",
-        [2024373456] = "WEAPON_SMG_MK2",
-        [-1169823560] = "WEAPON_PIPEBOMB",
-        [615608432] = "WEAPON_MOLOTOV",
-        [-494615257] = "WEAPON_ASSAULTSHOTGUN",
-        [-1420407917] = "WEAPON_PROXMINE",
-        [205991906] = "WEAPON_HEAVYSNIPER",
-        [2017895192] = "WEAPON_SAWNOFFSHOTGUN",
-        [-598887786] = "WEAPON_MARKSMANPISTOL",
-        [-270015777] = "WEAPON_ASSAULTSMG",
-        [-22923932] = "WEAPON_RAILGUNXM3",
-        [-37975472] = "WEAPON_SMOKEGRENADE",
-        [-1654528753] = "WEAPON_BULLPUPSHOTGUN",
-        [1317494643] = "WEAPON_HAMMER",
-        [1672152130] = "WEAPON_HOMINGLAUNCHER",
-        [1834241177] = "WEAPON_RAILGUN",
-        [-86904375] = "WEAPON_CARBINERIFLE_MK2",
-        [-1810795771] = "WEAPON_POOLCUE",
-        [1305664598] = "WEAPON_GRENADELAUNCHER_SMOKE",
-        [94989220] = "WEAPON_COMBATSHOTGUN",
-        [1119849093] = "WEAPON_MINIGUN",
-        [-853065399] = "WEAPON_BATTLEAXE",
-        [-1568386805] = "WEAPON_GRENADELAUNCHER",
-        [-1357824103] = "WEAPON_ADVANCEDRIFLE",
-        [736523883] = "WEAPON_SMG",
-        [-1312131151] = "WEAPON_RPG",
-        [-879347409] = "WEAPON_REVOLVER_MK2",
-        [-771403250] = "WEAPON_HEAVYPISTOL",
-        [1785463520] = "WEAPON_MARKSMANRIFLE_MK2",
-        [419712736] = "WEAPON_WRENCH",
-        [-952879014] = "WEAPON_MARKSMANRIFLE",
-        [137902532] = "WEAPON_VINTAGEPISTOL",
-        [-619010992] = "WEAPON_MACHINEPISTOL",
-        [-1746263880] = "WEAPON_DOUBLEACTION",
-        [177293209] = "WEAPON_HEAVYSNIPER_MK2",
-        [2132975508] = "WEAPON_BULLPUPRIFLE",
-        [171789620] = "WEAPON_COMBATPDW",
-        [2144741730] = "WEAPON_COMBATMG",
-        [-1660422300] = "WEAPON_MG",
-        [1627465347] = "WEAPON_GUSENBERG",
-        [911657153] = "WEAPON_STUNGUN",
-        [-1121678507] = "WEAPON_MINISMG",
-        [-947031628] = "WEAPON_HEAVYRIFLE",
-        [984333226] = "WEAPON_HEAVYSHOTGUN",
-        [1649403952] = "WEAPON_COMPACTRIFLE",
-        [-1074790547] = "WEAPON_ASSAULTRIFLE",
-        [-1853920116] = "WEAPON_NAVYREVOLVER",
-        [2138347493] = "WEAPON_FIREWORK",
-        [1233104067] = "WEAPON_FLARE",
-        [961495388] = "WEAPON_ASSAULTRIFLE_MK2",
-        [-2009644972] = "WEAPON_SNSPISTOL_MK2",
-        [-102973651] = "WEAPON_HATCHET",
-        [-2066285827] = "WEAPON_BULLPUPRIFLE_MK2",
-        [324215364] = "WEAPON_MICROSMG",
-        [1703483498] = "WEAPON_CANDYCANE",
-        [317205821] = "WEAPON_AUTOSHOTGUN",
-        [350597077] = "WEAPON_TECPISTOL",
-        [-1786099057] = "WEAPON_BAT",
-        [-275439685] = "WEAPON_DBSHOTGUN",
-        [-1658906650] = "WEAPON_MILITARYRIFLE",
-        [-656458692] = "WEAPON_KNUCKLE",
-        [126349499] = "WEAPON_SNOWBALL",
-        [1198256469] = "WEAPON_RAYCARBINE",
-        [-774507221] = "WEAPON_TACTICALRIFLE",
-        [101631238] = "WEAPON_FIREEXTINGUISHER",
-        [1470379660] = "WEAPON_GADGETPISTOL",
-        [741814745] = "WEAPON_STICKYBOMB",
-        [1141786504] = "WEAPON_GOLFCLUB",
-        [-2067956739] = "WEAPON_CROWBAR"
+        [GetHashKey("WEAPON_SPECIALCARBINE_MK2")] = "WEAPON_SPECIALCARBINE_MK2",
+        [GetHashKey("WEAPON_PUMPSHOTGUN")] = "WEAPON_PUMPSHOTGUN",
+        [GetHashKey("WEAPON_PISTOL_MK2")] = "WEAPON_PISTOL_MK2",
+        [GetHashKey("WEAPON_RAYMINIGUN")] = "WEAPON_RAYMINIGUN",
+        [GetHashKey("WEAPON_DAGGER")] = "WEAPON_DAGGER",
+        [GetHashKey("WEAPON_BOTTLE")] = "WEAPON_BOTTLE",
+        [GetHashKey("WEAPON_EMPLAUNCHER")] = "WEAPON_EMPLAUNCHER",
+        [GetHashKey("WEAPON_PISTOL")] = "WEAPON_PISTOL",
+        [GetHashKey("WEAPON_STONE_HATCHET")] = "WEAPON_STONE_HATCHET",
+        [GetHashKey("WEAPON_PISTOL50")] = "WEAPON_PISTOL50",
+        [GetHashKey("WEAPON_KNIFE")] = "WEAPON_KNIFE",
+        [GetHashKey("WEAPON_PRECISIONRIFLE")] = "WEAPON_PRECISIONRIFLE",
+        [GetHashKey("WEAPON_SNSPISTOL")] = "WEAPON_SNSPISTOL",
+        [GetHashKey("WEAPON_FLAREGUN")] = "WEAPON_FLAREGUN",
+        [GetHashKey("WEAPON_RAYPISTOL")] = "WEAPON_RAYPISTOL",
+        [GetHashKey("WEAPON_GRENADE")] = "WEAPON_GRENADE",
+        [GetHashKey("WEAPON_NIGHTSTICK")] = "WEAPON_NIGHTSTICK",
+        [GetHashKey("WEAPON_FERTILIZERCAN")] = "WEAPON_FERTILIZERCAN",
+        [GetHashKey("WEAPON_COMBATPISTOL")] = "WEAPON_COMBATPISTOL",
+        [GetHashKey("WEAPON_PISTOLXM3")] = "WEAPON_PISTOLXM3",
+        [GetHashKey("WEAPON_PUMPSHOTGUN_MK2")] = "WEAPON_PUMPSHOTGUN_MK2",
+        [GetHashKey("WEAPON_SNIPERRIFLE")] = "WEAPON_SNIPERRIFLE",
+        [GetHashKey("WEAPON_ACIDPACKAGE")] = "WEAPON_ACIDPACKAGE",
+        [GetHashKey("WEAPON_HAZARDCAN")] = "WEAPON_HAZARDCAN",
+        [GetHashKey("WEAPON_MACHETE")] = "WEAPON_MACHETE",
+        [GetHashKey("WEAPON_STUNGUN_MP")] = "WEAPON_STUNGUN_MP",
+        [GetHashKey("WEAPON_SPECIALCARBINE")] = "WEAPON_SPECIALCARBINE",
+        [GetHashKey("WEAPON_FLASHLIGHT")] = "WEAPON_FLASHLIGHT",
+        [GetHashKey("WEAPON_CERAMICPISTOL")] = "WEAPON_CERAMICPISTOL",
+        [GetHashKey("WEAPON_APPISTOL")] = "WEAPON_APPISTOL",
+        [GetHashKey("WEAPON_REVOLVER")] = "WEAPON_REVOLVER",
+        [GetHashKey("GADGET_PARACHUTE")] = "GADGET_PARACHUTE",
+        [GetHashKey("WEAPON_PETROLCAN")] = "WEAPON_PETROLCAN",
+        [GetHashKey("WEAPON_BZGAS")] = "WEAPON_BZGAS",
+        [GetHashKey("WEAPON_CARBINERIFLE")] = "WEAPON_CARBINERIFLE",
+        [GetHashKey("WEAPON_COMBATMG_MK2")] = "WEAPON_COMBATMG_MK2",
+        [GetHashKey("WEAPON_SWITCHBLADE")] = "WEAPON_SWITCHBLADE",
+        [GetHashKey("WEAPON_COMPACTLAUNCHER")] = "WEAPON_COMPACTLAUNCHER",
+        [GetHashKey("WEAPON_BALL")] = "WEAPON_BALL",
+        [GetHashKey("WEAPON_SMG_MK2")] = "WEAPON_SMG_MK2",
+        [GetHashKey("WEAPON_PIPEBOMB")] = "WEAPON_PIPEBOMB",
+        [GetHashKey("WEAPON_MOLOTOV")] = "WEAPON_MOLOTOV",
+        [GetHashKey("WEAPON_ASSAULTSHOTGUN")] = "WEAPON_ASSAULTSHOTGUN",
+        [GetHashKey("WEAPON_PROXMINE")] = "WEAPON_PROXMINE",
+        [GetHashKey("WEAPON_HEAVYSNIPER")] = "WEAPON_HEAVYSNIPER",
+        [GetHashKey("WEAPON_SAWNOFFSHOTGUN")] = "WEAPON_SAWNOFFSHOTGUN",
+        [GetHashKey("WEAPON_MARKSMANPISTOL")] = "WEAPON_MARKSMANPISTOL",
+        [GetHashKey("WEAPON_ASSAULTSMG")] = "WEAPON_ASSAULTSMG",
+        [GetHashKey("WEAPON_RAILGUNXM3")] = "WEAPON_RAILGUNXM3",
+        [GetHashKey("WEAPON_SMOKEGRENADE")] = "WEAPON_SMOKEGRENADE",
+        [GetHashKey("WEAPON_BULLPUPSHOTGUN")] = "WEAPON_BULLPUPSHOTGUN",
+        [GetHashKey("WEAPON_HAMMER")] = "WEAPON_HAMMER",
+        [GetHashKey("WEAPON_HOMINGLAUNCHER")] = "WEAPON_HOMINGLAUNCHER",
+        [GetHashKey("WEAPON_RAILGUN")] = "WEAPON_RAILGUN",
+        [GetHashKey("WEAPON_CARBINERIFLE_MK2")] = "WEAPON_CARBINERIFLE_MK2",
+        [GetHashKey("WEAPON_POOLCUE")] = "WEAPON_POOLCUE",
+        [GetHashKey("WEAPON_GRENADELAUNCHER_SMOKE")] = "WEAPON_GRENADELAUNCHER_SMOKE",
+        [GetHashKey("WEAPON_COMBATSHOTGUN")] = "WEAPON_COMBATSHOTGUN",
+        [GetHashKey("WEAPON_MINIGUN")] = "WEAPON_MINIGUN",
+        [GetHashKey("WEAPON_BATTLEAXE")] = "WEAPON_BATTLEAXE",
+        [GetHashKey("WEAPON_GRENADELAUNCHER")] = "WEAPON_GRENADELAUNCHER",
+        [GetHashKey("WEAPON_ADVANCEDRIFLE")] = "WEAPON_ADVANCEDRIFLE",
+        [GetHashKey("WEAPON_SMG")] = "WEAPON_SMG",
+        [GetHashKey("WEAPON_RPG")] = "WEAPON_RPG",
+        [GetHashKey("WEAPON_REVOLVER_MK2")] = "WEAPON_REVOLVER_MK2",
+        [GetHashKey("WEAPON_HEAVYPISTOL")] = "WEAPON_HEAVYPISTOL",
+        [GetHashKey("WEAPON_MARKSMANRIFLE_MK2")] = "WEAPON_MARKSMANRIFLE_MK2",
+        [GetHashKey("WEAPON_WRENCH")] = "WEAPON_WRENCH",
+        [GetHashKey("WEAPON_MARKSMANRIFLE")] = "WEAPON_MARKSMANRIFLE",
+        [GetHashKey("WEAPON_VINTAGEPISTOL")] = "WEAPON_VINTAGEPISTOL",
+        [GetHashKey("WEAPON_MACHINEPISTOL")] = "WEAPON_MACHINEPISTOL",
+        [GetHashKey("WEAPON_DOUBLEACTION")] = "WEAPON_DOUBLEACTION",
+        [GetHashKey("WEAPON_HEAVYSNIPER_MK2")] = "WEAPON_HEAVYSNIPER_MK2",
+        [GetHashKey("WEAPON_BULLPUPRIFLE")] = "WEAPON_BULLPUPRIFLE",
+        [GetHashKey("WEAPON_COMBATPDW")] = "WEAPON_COMBATPDW",
+        [GetHashKey("WEAPON_COMBATMG")] = "WEAPON_COMBATMG",
+        [GetHashKey("WEAPON_MG")] = "WEAPON_MG",
+        [GetHashKey("WEAPON_GUSENBERG")] = "WEAPON_GUSENBERG",
+        [GetHashKey("WEAPON_STUNGUN")] = "WEAPON_STUNGUN",
+        [GetHashKey("WEAPON_MINISMG")] = "WEAPON_MINISMG",
+        [GetHashKey("WEAPON_HEAVYRIFLE")] = "WEAPON_HEAVYRIFLE",
+        [GetHashKey("WEAPON_HEAVYSHOTGUN")] = "WEAPON_HEAVYSHOTGUN",
+        [GetHashKey("WEAPON_COMPACTRIFLE")] = "WEAPON_COMPACTRIFLE",
+        [GetHashKey("WEAPON_ASSAULTRIFLE")] = "WEAPON_ASSAULTRIFLE",
+        [GetHashKey("WEAPON_NAVYREVOLVER")] = "WEAPON_NAVYREVOLVER",
+        [GetHashKey("WEAPON_FIREWORK")] = "WEAPON_FIREWORK",
+        [GetHashKey("WEAPON_FLARE")] = "WEAPON_FLARE",
+        [GetHashKey("WEAPON_ASSAULTRIFLE_MK2")] = "WEAPON_ASSAULTRIFLE_MK2",
+        [GetHashKey("WEAPON_SNSPISTOL_MK2")] = "WEAPON_SNSPISTOL_MK2",
+        [GetHashKey("WEAPON_HATCHET")] = "WEAPON_HATCHET",
+        [GetHashKey("WEAPON_BULLPUPRIFLE_MK2")] = "WEAPON_BULLPUPRIFLE_MK2",
+        [GetHashKey("WEAPON_MICROSMG")] = "WEAPON_MICROSMG",
+        [GetHashKey("WEAPON_CANDYCANE")] = "WEAPON_CANDYCANE",
+        [GetHashKey("WEAPON_AUTOSHOTGUN")] = "WEAPON_AUTOSHOTGUN",
+        [GetHashKey("WEAPON_TECPISTOL")] = "WEAPON_TECPISTOL",
+        [GetHashKey("WEAPON_BAT")] = "WEAPON_BAT",
+        [GetHashKey("WEAPON_DBSHOTGUN")] = "WEAPON_DBSHOTGUN",
+        [GetHashKey("WEAPON_MILITARYRIFLE")] = "WEAPON_MILITARYRIFLE",
+        [GetHashKey("WEAPON_KNUCKLE")] = "WEAPON_KNUCKLE",
+        [GetHashKey("WEAPON_SNOWBALL")] = "WEAPON_SNOWBALL",
+        [GetHashKey("WEAPON_RAYCARBINE")] = "WEAPON_RAYCARBINE",
+        [GetHashKey("WEAPON_TACTICALRIFLE")] = "WEAPON_TACTICALRIFLE",
+        [GetHashKey("WEAPON_FIREEXTINGUISHER")] = "WEAPON_FIREEXTINGUISHER",
+        [GetHashKey("WEAPON_GADGETPISTOL")] = "WEAPON_GADGETPISTOL",
+        [GetHashKey("WEAPON_STICKYBOMB")] = "WEAPON_STICKYBOMB",
+        [GetHashKey("WEAPON_GOLFCLUB")] = "WEAPON_GOLFCLUB",
+        [GetHashKey("WEAPON_CROWBAR")] = "WEAPON_CROWBAR"
     }
-
-    local function toUnsigned32(n)
-        return (n < 0) and (n + 4294967296) or n
-    end
 
     local HasWeapon = function() return false end
     if GetResourceState('ox_inventory') == 'started' then
         HasWeapon = function(source, weaponName)
             return exports.ox_inventory:GetItemCount(source, weaponName) > 0
         end
-    elseif GetResourceState('es_extended') == 'started' then
+    elseif not frameworkDetected and GetResourceState('es_extended') == 'started' then
         frameworkDetected = 'es_extended'
         local ESX = exports.es_extended:getSharedObject()
         HasWeapon = function(source, weaponName)
             local xPlayer = ESX.GetPlayerFromId(source)
             return xPlayer and xPlayer.hasItem(weaponName, 1)
         end
-    elseif GetResourceState('qbx_core') == 'started' then
+    elseif not frameworkDetected and GetResourceState('qbx_core') == 'started' then
         frameworkDetected = 'qbx_core'
         HasWeapon = function(source, weaponName)
             local Player = exports.qbx_core:GetPlayer(source)
             return Player and Player.PlayerData.items?[weaponName]?.amount >= 1
         end
-    elseif GetResourceState('qb-core') == 'started' then
+    elseif not frameworkDetected and GetResourceState('qb-core') == 'started' then
         frameworkDetected = 'qb-core'
         local QBCore = exports['qb-core']:GetCoreObject()
         HasWeapon = function(source, weaponName)
             local Player = QBCore.Functions.GetPlayer(source)
             return Player and Player.Functions.GetItemByName(weaponName)
         end
-    elseif GetResourceState('vRP') == 'started' then
+    elseif not frameworkDetected and GetResourceState('vrp') == 'started' then
         frameworkDetected = 'vRP'
         local fileCode = LoadResourceFile('vrp','lib/utils.lua')
         assert(load(fileCode,'@@vrp/lib/utils.lua','t'))()
@@ -199,15 +194,9 @@ if Config.AntiGiveWeapon then
         ---@diagnostic disable-next-line: undefined-field, need-check-nil, lowercase-global
         local vRP = Proxy.getInterface("vRP")
         HasWeapon = function(source, weaponName) --todo: check if work on most vrp versions
-            local amount = 0
-            local ok, user_id = pcall(function() return vRP.getUserId({source}) end)
-            if ok and user_id then
-                amount = vRP.getInventoryItemAmount(user_id, weaponName)
-            elseif vRP.users_by_source?[source] then
-                amount = vRP.users_by_source[source]:getItemAmount(weaponName)
-            else return false
-            end
-            return amount and amount >= 1
+            local user_id = vRP.getUserId(source)
+            if user_id then return vRP.getInventoryItemAmount(user_id, weaponName) > 0 end
+            return Error(("Incompatible vRP version, disable AntiGiveWeapon in addon's config"):format(source))
         end
     else
         local PlayerWeapons = {}
@@ -249,7 +238,7 @@ if Config.AntiGiveWeapon then
             return false
         end
     end
-    if frameworkDetected then Debug('Framework For Weapon Detection : ^3' .. frameworkDetected .. '^0') end
+    if frameworkDetected then Debug('Framework For Weapon Detection: ^3' .. frameworkDetected .. '^0') end
     AddEventHandler('weaponDamageEvent', function(sender, ev)
         if ev.weaponType == GetHashKey("WEAPON_UNARMED") or ev.damageType ~= 3 then return end
         local weaponName = weaponHash[ev.weaponType]
@@ -263,8 +252,8 @@ if Config.AntiGiveWeapon then
         end
         local playerPedId = GetPlayerPed(sender)
         local hasWeapon = HasWeapon(sender, weaponName)
-        Debug(('AntiGiveWeapon: %s fired with %s - %s'):format(GetPlayerName(sender) or "unknown", weaponName, hasWeapon and "present in inventory" or "missing / spawned"))
-        if not hasWeapon then
+        Debug(('AntiGiveWeapon: %s fired with %s - %s'):format(GetPlayerName(sender) or "unknown", weaponName, hasWeapon == true and "present in inventory" or "missing / spawned"))
+        if hasWeapon == false then
             CancelEvent()
             if Config.AntiGiveWeapon.ban then
                 Debug(('AntiGiveWeapon: %s was banned for using %s without having it'):format(GetPlayerName(sender), weaponName))
