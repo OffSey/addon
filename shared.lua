@@ -22,35 +22,51 @@ function Info(...)
 end
 
 local pros = promise.new()
-Citizen.CreateThread(function ()
+
+Citizen.CreateThread(function()
     local attempts = 0
     local found = nil
-    ::recheck::
-    local resources = GetNumResources()
-    for i = 0, resources - 1 do
-        local resource = GetResourceByFindIndex(i)
-        Resources[resource] = true
-        local files = GetNumResourceMetadata(resource, 'ac')
-        for j = 0, files, 1 do
-            local x = GetResourceMetadata(resource, 'ac', j)
-            if x ~= nil then
-                if string.find(x, "fg") then
+
+    while attempts < 5 and not found do
+        local resources = GetNumResources()
+
+        for i = 0, resources - 1 do
+            local resource = GetResourceByFindIndex(i)
+            Resources[resource] = true
+
+            local files = GetNumResourceMetadata(resource, "ac")
+            for j = 0, files - 1 do
+                local x = GetResourceMetadata(resource, "ac", j)
+                if x:find("fg") then
                     found = resource
+                    break
                 end
             end
+
+            if found then break end
+        end
+
+        if not found then
+            attempts = attempts + 1
+            Citizen.Wait(0)
         end
     end
-    if not found then
-        attempts += 1
-        if attempts > 4 then
-            print('not found')
-            pros:reject(nil)
-        else
-            goto recheck
-        end
-    else
+
+    if found then
         pros:resolve(found)
+    else
+        pros:reject("Fiveguard not found! Get it on https://discord.gg/gpXNsFe2PE (Fiveguard Italy)")
     end
 end)
 
-Fiveguard = Citizen.Await(pros)
+do
+    local success, result = pcall(function()
+        return Citizen.Await(pros)
+    end)
+
+    if success then
+        Fiveguard = result
+    else
+        Error(result)
+    end
+end
