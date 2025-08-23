@@ -64,10 +64,10 @@ local function checkVersion()
     end, 'GET')
 end
 
-local CORRECT_FXMANIFEST_A = [[
+local CORRECT_FXMANIFEST = [[
 fx_version 'cerulean'
 game 'gta5'
-version "1.5"
+version "1.4.1"
 lua54 'yes'
 author 'Offsey & Jeakels discord.gg/fiveguard'
 description 'Addon pack for fiveguard'
@@ -77,7 +77,6 @@ data_file "DLC_ITYP_REQUEST" "stream/mads_no_exp_pumps.ytyp"
 shared_script 'shared.lua'
 
 server_scripts {
-    'server/sv_resourceManager.js',
     'server/sv_main.lua',
     'server/sv_antiCarry.lua',
     'server/sv_antiExplosion.lua',
@@ -109,29 +108,6 @@ file 'config.lua'
 file 'xss.lua'
 file 'bypassNative.lua'
 ]]
-local CORRECT_FXMANIFEST_FG = [[
-fx_version 'bodacious'
-game 'gta5'
-
-server_script 'sv-resource-obfuscated.lua'
-server_script 'sv-resource-obfuscated.js'
-client_script 'cl-resource-obfuscated.lua'
-file 'shared_fg-obfuscated.lua'
-file 'ai_module_fg-obfuscated.lua'
-file 'ai_module_fg-obfuscated.js'
-file 'vrp_shared-obfuscated.lua'
-
-ac 'fg'
-
-ui_page 'index.html'
-files {
-    '*.html',
-    'script-obfuscated.js',
-    '*.css'
-}
-
-lua54 'yes'
-]]
 
 local function checkAndFixFxmanifest()
     local function simple_hash(s)
@@ -145,15 +121,12 @@ local function checkAndFixFxmanifest()
         return string.format("%08x%08x", h1, h2)
     end
     local fxPath = "fxmanifest.lua"
-    local currentContentA = LoadResourceFile(CurrentResourceName, fxPath)
-    local currentContentFG = LoadResourceFile(Fiveguard, fxPath)
+    local currentContent = LoadResourceFile(CurrentResourceName, fxPath)
 
-    local correctHashA = simple_hash(CORRECT_FXMANIFEST_A)
-    local correctHashFG = simple_hash(CORRECT_FXMANIFEST_FG)
-    local currentHashA = simple_hash(currentContentA)
-    local currentHashFG = simple_hash(currentContentFG)
+    local correctHash = simple_hash(CORRECT_FXMANIFEST)
+    local currentHash = simple_hash(currentContent)
 
-    if currentHashA ~= correctHashA then
+    if currentHash ~= correctHash then
         Warn("You've modified fxmanifest.lua, overwriting it with the correct version...")
 
         local resPath = GetResourcePath(CurrentResourceName)
@@ -167,24 +140,6 @@ local function checkAndFixFxmanifest()
             ExecuteCommand("refresh")
         else
             print("Unable to open fxmanifest.lua! Check permissions.")
-        end
-        return true
-    end
-    if currentHashFG ~= correctHashFG then
-        Warn("You've modified fxmanifest.lua of fiveguard, overwriting it with the correct version...")
-
-        local resPath = GetResourcePath(Fiveguard)
-        local fullPath = resPath .. "/" .. fxPath
-
-        local file = io.open(fullPath, "w")
-        if file then
-            Debug("file found!")
-            -- file:write(CORRECT_FXMANIFEST_FG)
-            -- file:close()
-            -- ExecuteCommand("refresh")
-            -- ExecuteCommand("ensure "..Fiveguard)
-        else
-            print("Unable to open fiveguard's fxmanifest.lua! Check permissions.")
         end
         return true
     end
