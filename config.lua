@@ -1,5 +1,5 @@
 return {
-    Debug = true,
+    Debug = false,
     CheckUpdates = true, --RECOMMENDED Enable this to be notified when an update is available!
     -- custom storage for video or images, if not configured will be used the default screenshot webhook url on your fiveguard config
     CustomWebhookURL = "https://discord.com/api/webhooks/URL", -- Discord webhook URL to store video or images
@@ -589,4 +589,5 @@ return {
         }
     }
 }
+
 
