@@ -1,6 +1,6 @@
 fx_version 'cerulean'
 game 'gta5'
-version "1.4.1"
+version "1.5"
 lua54 'yes'
 author 'Offsey & Jeakels discord.gg/fiveguard'
 description 'Addon pack for fiveguard'
@@ -10,6 +10,7 @@ data_file "DLC_ITYP_REQUEST" "stream/mads_no_exp_pumps.ytyp"
 shared_script 'shared.lua'
 
 server_scripts {
+    'server/sv_resourceManager.js',
     'server/sv_main.lua',
     'server/sv_antiCarry.lua',
     'server/sv_antiExplosion.lua',
