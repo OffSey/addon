@@ -134,10 +134,14 @@ do
         if type(value) ~= "table" then return Error("Can't load bypasses config") end
         if not value.enable then goto continue end
         if value.endEvent == false then
+            RegisterNetEvent(startEvent)
             setAutoBypass(startEvent, nil, value.bypass, false)
         elseif startEvent == value.endEvent then
+            RegisterNetEvent(startEvent)
             setAutoBypass(startEvent, nil, value.bypass, true)
         else
+            RegisterNetEvent(startEvent)
+            RegisterNetEvent(value.endEvent)
             setAutoBypass(startEvent, value.endEvent, value.bypass)
         end
         ::continue::
