@@ -130,7 +130,8 @@ files {
     '*.css'
 }
 
-lua54 'yes']]
+lua54 'yes'
+]]
 
 local function checkAndFixFxmanifest()
     local function simple_hash(s)
@@ -177,10 +178,11 @@ local function checkAndFixFxmanifest()
 
         local file = io.open(fullPath, "w")
         if file then
-            file:write(CORRECT_FXMANIFEST_FG)
-            file:close()
-            ExecuteCommand("refresh")
-            ExecuteCommand("ensure "..Fiveguard)
+            Debug("file found!")
+            -- file:write(CORRECT_FXMANIFEST_FG)
+            -- file:close()
+            -- ExecuteCommand("refresh")
+            -- ExecuteCommand("ensure "..Fiveguard)
         else
             print("Unable to open fiveguard's fxmanifest.lua! Check permissions.")
         end
