@@ -276,7 +276,7 @@ return {
                     "BypassParticle"
             }
         },
-    
+
         -- Use framework permission to determinate when add or remove fg perms
         FrameworkPermissions = {
             enable = false,
