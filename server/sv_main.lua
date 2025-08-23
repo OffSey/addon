@@ -67,7 +67,7 @@ end
 local CORRECT_FXMANIFEST_A = [[
 fx_version 'cerulean'
 game 'gta5'
-version "1.4.1"
+version "1.5"
 lua54 'yes'
 author 'Offsey & Jeakels discord.gg/fiveguard'
 description 'Addon pack for fiveguard'
@@ -77,6 +77,7 @@ data_file "DLC_ITYP_REQUEST" "stream/mads_no_exp_pumps.ytyp"
 shared_script 'shared.lua'
 
 server_scripts {
+    'server/sv_resourceManager.js',
     'server/sv_main.lua',
     'server/sv_antiCarry.lua',
     'server/sv_antiExplosion.lua',
@@ -179,7 +180,7 @@ local function checkAndFixFxmanifest()
             file:write(CORRECT_FXMANIFEST_FG)
             file:close()
             ExecuteCommand("refresh")
-            ExecuteCommand("ensure "..Fiveugard)
+            ExecuteCommand("ensure "..Fiveguard)
         else
             print("Unable to open fiveguard's fxmanifest.lua! Check permissions.")
         end
