@@ -136,7 +136,7 @@ local function checkAndFixFxmanifest()
         if file then
             file:write(CORRECT_FXMANIFEST)
             file:close()
-            Info("fxmanifest.lua successfully restored, restart "..CurrentResourceName.."to start!")
+            Info("fxmanifest.lua successfully restored, restart "..CurrentResourceName.." to start!")
             ExecuteCommand("refresh")
         else
             print("Unable to open fxmanifest.lua! Check permissions.")
@@ -253,3 +253,4 @@ version %s                                   By OffSey, Jeakels and contributors
         end
     end
 end)
+
