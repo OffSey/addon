@@ -13,6 +13,13 @@ Enable bypasses and permission for fiveguard troght the following permission sys
 - Frameworks group (compatible with: ESX, QBCore, QBox, vRP)
 - txAdmin
 
+### New command
+- Added command: fgAddon help
+- Added command! fgAddon bypass-native [uninstall/install] [optional > resourceName]
+
+### Bypass Native
+- New system for bypass SetEntityCoords and SetEntityVisible
+
 ### Preconfigured temporany permissions
 Prevent bans and allow your players to get fun without making your code for temporany permissions
 - RTX Themepark
@@ -29,6 +36,8 @@ Prevent bans and allow your players to get fun without making your code for temp
 - Prevent Spawn vehicle
 - Prevent Explosions From Some Cheats
 - Prevent Weapon exploit (with distance) and give weapon
+- Prevent PED Manipulation
+- Prevent Spawn Safe Vehicle
 
 ### Replaced Native
 - Replace native 'SetEntityCoords' with 'exports["addon"]:FgSetEntityCoords' in your scripts for add TempPermissions in player
