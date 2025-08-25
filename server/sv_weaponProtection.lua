@@ -166,20 +166,20 @@ if Config.AntiGiveWeapon then
             return exports.ox_inventory:GetItemCount(source, weaponName) > 0
         end
     elseif not frameworkDetected and GetResourceState('es_extended') == 'started' then
-        frameworkDetected = 'es_extended'
+        frameworkDetected = 'ESX'
         local ESX = exports.es_extended:getSharedObject()
         HasWeapon = function(source, weaponName)
             local xPlayer = ESX.GetPlayerFromId(source)
             return xPlayer and xPlayer.hasItem(weaponName, 1)
         end
     elseif not frameworkDetected and GetResourceState('qbx_core') == 'started' then
-        frameworkDetected = 'qbx_core'
+        frameworkDetected = 'QBox'
         HasWeapon = function(source, weaponName)
             local Player = exports.qbx_core:GetPlayer(source)
             return Player and Player.PlayerData.items?[weaponName]?.amount >= 1
         end
     elseif not frameworkDetected and GetResourceState('qb-core') == 'started' then
-        frameworkDetected = 'qb-core'
+        frameworkDetected = 'QBCore'
         local QBCore = exports['qb-core']:GetCoreObject()
         HasWeapon = function(source, weaponName)
             local Player = QBCore.Functions.GetPlayer(source)
@@ -238,7 +238,7 @@ if Config.AntiGiveWeapon then
             return false
         end
     end
-    if frameworkDetected then Debug('Framework For Weapon Detection: ^3' .. frameworkDetected .. '^0') end
+    if frameworkDetected then Debug(("Framework For Weapon Detection: ^3%s^0"):format(frameworkDetected)) end
     AddEventHandler('weaponDamageEvent', function(sender, ev)
         if ev.weaponType == GetHashKey("WEAPON_UNARMED") or ev.damageType ~= 3 then return end
         local weaponName = weaponHash[ev.weaponType]
@@ -257,7 +257,7 @@ if Config.AntiGiveWeapon then
             CancelEvent()
             if Config.AntiGiveWeapon.ban then
                 Debug(('AntiGiveWeapon: %s was banned for using %s without having it'):format(GetPlayerName(sender), weaponName))
-                PunishPlayer(sender, Config.AntiGiveWeapon.ban, "Give Weapon Detected (Shot with spawned weapon)", Config.AntiGiveWeapon.banMedia)
+                PunishPlayer(sender, Config.AntiGiveWeapon.ban, ("Give Weapon Detected (Shot with: %s)"):format(weaponName), Config.AntiGiveWeapon.banMedia)
             else
                 Warn(('AntiGiveWeapon: %s did not have %s, weapon removed'):format(GetPlayerName(sender), weaponName))
                 RemoveWeaponFromPed(playerPedId, ev.weaponType)
