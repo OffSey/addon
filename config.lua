@@ -1,6 +1,6 @@
 return {
     Debug = true,
-    CheckUpdates = false, --RECOMMENDED Enable this to be notified when an update is available!
+    CheckUpdates = true, --RECOMMENDED Enable this to be notified when an update is available!
     -- custom storage for video or images, if not configured will be used the default screenshot webhook url on your fiveguard config
     CustomWebhookURL = "https://discord.com/api/webhooks/URL", -- Discord webhook URL to store video or images
     RecordTime = 5, -- in seconds
@@ -60,7 +60,7 @@ return {
     AntiSafeSpawn = {
         enable = true,
         whitelistedZones = { -- Add here all the coords of where vehicle gets spawned with "EntityCreation" (e.g. cardealer showroom) to avoid false vehicle deletion
-            { coords =  vec3(-47.500000, -1097.199951, 25.400000), radius = 2.0 }
+            { coords = vec3(-47.500000, -1097.199951, 25.400000), radius = 2.0 }
         }
     },
     -- Anti Vehicle Spawner | Crédit: Jona0081
