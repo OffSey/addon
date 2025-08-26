@@ -49,15 +49,21 @@ Supports:
 
 ### 🛡️ Bypasses & Temporary Permissions
 Preconfigured for:  
-- **rcore_clothing**, **lsrp_lunapark**, **rtx_themepark**  
-- **ik-jobgarage**, **jg-advancedgarages**, **jg-dealerships**  
-- **rcore_prison**, **wasabi_police**  
+- **rcore_clothing**
+- **lsrp_lunapark**
+- **rtx_themepark**  
+- **ik-jobgarage**
+- **jg-advancedgarages**
+- **jg-dealerships**  
+- **rcore_prison**
+- **wasabi_police**  
 
 ---
 
 ### 🧰 Natives with integrated bypass
 - `exports["addon"]:FgSetEntityCoords` → replaces `SetEntityCoords`
 - `exports["addon"]:FgSetEntityVisible` → replaces `SetEntityVisible`
+
 or using the commands:
 - `fgAddon help` → shows available commands  
 - `fgAddon bypass-native [install/uninstall] [resourceName]`  
