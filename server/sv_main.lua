@@ -22,47 +22,56 @@ local function checkResourceNames()
 end
 
 local function checkVersion()
-    local resource = CurrentResourceName
-    local currentVersion = GetResourceMetadata(resource, 'version', 0)
-	if currentVersion then
-		currentVersion = currentVersion:match('%d+%.%d+%.%d+')
-	end
-	if not currentVersion then return Error(("Unable to determine current resource version for '%s'"):format(resource)) end
-    PerformHttpRequest('https://raw.githubusercontent.com/OffSey/OffSey_AssetsVersions/master/addon.txt',function(error, result, headers)
+    local function parseVersion(s)
+        if not s then return nil end
+        local maj, min, pat = s:match("(%d+)%.(%d+)%.?(%d*)")
+        if not maj or not min then return nil end
+        if pat == "" then pat = "0" end
+        return tonumber(maj), tonumber(min), tonumber(pat)
+    end
+    local function tupleCompare(a1, a2, a3, b1, b2, b3)
+        if a1 ~= b1 then return (a1 < b1) and -1 or 1 end
+        if a2 ~= b2 then return (a2 < b2) and -1 or 1 end
+        if a3 ~= b3 then return (a3 < b3) and -1 or 1 end
+        return 0
+    end
+    local resource = GetCurrentResourceName()
+    local currentVersionRaw = GetResourceMetadata(resource, 'version', 0)
+    local cMaj, cMin, cPat = parseVersion(currentVersionRaw)
+    if not cMaj then
+        return Error(("Unable to determine current resource version for '%s' (got '%s')"):format(resource, tostring(currentVersionRaw)))
+    end
+    local currentVersion = ("%d.%d.%d"):format(cMaj, cMin, cPat)
+    PerformHttpRequest('https://raw.githubusercontent.com/OffSey/OffSey_AssetsVersions/master/addon.txt', function(error, result, headers)
         if error ~= 200 then
             return Error(('Version check failed, Error: %s'):format(error))
         end
         local response = json.decode(result)
-        local latestVersion = response.version:match('%d+%.%d+%.%d+')
-		if not latestVersion or latestVersion == currentVersion then return end
-
-        local cv = { string.strsplit('.', currentVersion) }
-        local lv = { string.strsplit('.', latestVersion) }
-        for i = 1, #cv do
-            local current, minimum = tonumber(cv[i]), tonumber(lv[i])
-            if current ~= minimum then
-                if current < minimum then
-                    local symbols = '^9'
-                    for cd = 1, 26+#'Fiveguard-Addon-Package' do
-                        symbols = symbols..'='
-                    end
-                    symbols = symbols..'^0'
-                    print(symbols)
-                    print(('New update available! ^0\nCurrent Version: ^1%s^0.\nNew Version: ^2%s^0.\nNote of changes: ^5%s^0.\n\n^5Download it now on the OffSey github^0.'):format(currentVersion,latestVersion,response.news))
-                    print('Download it now from https://github.com/OffSey/addon/archive/refs/heads/main.zip')
-                    print(symbols)
-                    return
-                elseif current == minimum then
-                    print('^1You are using the lastest version!^0')
-                return
-                elseif current > minimum then
-                    print(('^4You are using a version that is more recent than github!^0'):format())
-                    return
-                end
-            end
+        local latestRaw = response and response.version
+        local lMaj, lMin, lPat = parseVersion(latestRaw)
+        if not lMaj then
+            return Error(("Invalid latest version in response: '%s'"):format(tostring(latestRaw)))
+        end
+        local latestVersion = ("%d.%d.%d"):format(lMaj, lMin, lPat)
+        local cmp = tupleCompare(cMaj, cMin, cPat, lMaj, lMin, lPat)
+        if cmp < 0 then
+            local symbols = '^9' .. string.rep('=', 26 + #'Fiveguard Addon') .. '^0'
+            print(symbols)
+            print(('New update available! ^0\nCurrent Version: ^1%s^0.\nNew Version: ^2%s^0.\nNote of changes: ^5%s^0.\n\n^5Download it now on the OffSey github^0.'):
+                format(currentVersion, latestVersion, response.news or '—'))
+            print('Download it now from https://github.com/OffSey/addon/archive/refs/heads/main.zip')
+            print(symbols)
+            return
+        elseif cmp == 0 then
+            Info('You are using the latest version!')
+            return
+        else
+            Warn('You are using a version that is more recent than github!')
+            return
         end
     end, 'GET')
 end
+
 
 local CORRECT_FXMANIFEST = [[
 fx_version 'cerulean'
