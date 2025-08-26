@@ -8,7 +8,7 @@ if Config.txAdminPermissions.enable or Config.AcePermissions.enable or Config.Fr
     if (IsPrincipalAceAllowed('resource.'..CurrentResourceName,'command.add_ace')) then
         Debug(('The resource ^5%s^0 have permission to manage ACE permissions, good!'):format(CurrentResourceName))
     else
-        Error(('%s dosen\'t have permission to manage ace permission!\nAdd ^3add_ace resource.%s command allow^1 in your server.cfg'):format(CurrentResourceName,CurrentResourceName))
+        Error(("%s does not have permission to manage ace permission!\nAdd ^3add_ace resource.%s command allow^1 in your server.cfg"):format(CurrentResourceName,CurrentResourceName))
         return
     end
     if (Config.txAdminPermissions.enable and Config.AcePermissions.enable) or (Config.AcePermissions.enable and Config.FrameworkPermissions.enable) or (Config.txAdminPermissions.enable and Config.FrameworkPermissions.enable) then
