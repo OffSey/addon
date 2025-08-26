@@ -61,8 +61,8 @@ Preconfigured for:
 ---
 
 ### 🧰 Natives with integrated bypass
-- `exports["addon"]:FgSetEntityCoords` → replaces `SetEntityCoords`
-- `exports["addon"]:FgSetEntityVisible` → replaces `SetEntityVisible`
+- `exports["addon"]:SafeSetEntityCoords` → replaces `SetEntityCoords`
+- `exports["addon"]:SafeSetEntityVisible` → replaces `SetEntityVisible`
 
 or using the commands:
 - `fgAddon help` → shows available commands  
