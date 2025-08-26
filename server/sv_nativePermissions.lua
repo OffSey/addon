@@ -61,7 +61,7 @@ local B_CATEGORY = {
 
 RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function(bol,resName)
     if resName == CurrentResourceName then return end
-    if not Resources[resName] then return Warn(("%s tried to get a bypass"):format(source)) end
+    if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a bypass using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.SetEntityCoords then
         local result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY["BypassTeleport"], "BypassTeleport", bol, false)
         if not result then
@@ -76,7 +76,7 @@ end)
 
 RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function(bol,resName)
     if resName == CurrentResourceName then return end
-    if not Resources[resName] then return Warn(("%s tried to get a bypass"):format(source)) end
+    if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a bypass using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.SetEntityVisible then
         local result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY["BypassInvisible"], "BypassInvisible", bol, false)
         if not result then
