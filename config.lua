@@ -1,6 +1,6 @@
 return {
-    Debug = true,
-    CheckUpdates = true, --RECOMMENDED Enable this to be notified when an update is available!
+    Debug = false,
+    CheckUpdates = true, -- RECOMMENDED Enable this to be notified when an update is available!
     -- custom storage for video or images, if not configured will be used the default screenshot webhook url on your fiveguard config
     CustomWebhookURL = "https://discord.com/api/webhooks/URL", -- Discord webhook URL to store video or images
     RecordTime = 5, -- in seconds
@@ -27,7 +27,7 @@ return {
             } or nil
         }
     },
-    --Name Managament
+
     CheckNicknames = {
         enable = true,
         allowedCharacters = { -- Only people with these characters in their username will be able connect to server, set to false if u don't need this
@@ -38,37 +38,38 @@ return {
         },
         maxNicknameLenght = 25 -- Maximum lenght of palyer nicknames, set false to disable
     },
-    --Fiveguard AntiStopper
+    -- Detect if someone try to stop fiveguard
     AntiStopper = {
         enable = true,
         ban = true, -- If false player will be kicked
         checkInterval = 5 --interval in seconds
     },
-    -- Allows players to get a bypass directly by native execution
+    -- Allows players to get a bypass directly by native execution on installed resources
     ExportsNative = {
         enable = true,
         SetEntityCoords = true, -- It enable also 'exports["addon"]:SafeSetEntityCoords' if needed
         SetEntityVisible = true -- It enable also 'exports["addon"]:SafeSetEntityVisible' if needed
     },
 
-    AntiPedManipulation = {
+    AntiPedManipulation = { -- Credit: @somis12
         enable = not GetConvarBool("onesync_population", true),
         maxBucketUsed = 15000,
         ban = true -- If false player will be kicked
     },
 
-    AntiSafeSpawn = {
+    AntiSafeSpawn = { -- Credit: @somis12
         enable = true,
         whitelistedZones = { -- Add here all the coords of where vehicle gets spawned with "EntityCreation" (e.g. cardealer showroom) to avoid false vehicle deletion
             { coords = vec3(-47.500000, -1097.199951, 25.400000), radius = 2.0 }
         }
     },
-    -- Anti Vehicle Spawner | Crédit: Jona0081
-    AntiSpawnVehicle = {
+
+    AntiSpawnVehicle = { -- Credit: @jona0081
         enable = true,
         ban = true, -- Ban (false = delete vehicle only)
         banMedia = "image", -- "image" or "video" or "false"
         detectNPC = false,              -- Can spawn client side event 
+        preventLaunchPlayer = true,
         preventInvalidOwner = false,    -- !!Can make false ban
         preventNilResources = false,    -- !!Can make false ban
         preventUnNetworkedEnity = false,-- !!Can make false ban
@@ -88,8 +89,8 @@ return {
             ["qb-garages"] = GetResourceState('qb-garages') ~= 'missing'
         }
     },
-    -- Anti GiveWeapon and others detection |For dist detection Credit: locutor404 (remake by offsey for addon)
-    WeaponProtection = {
+
+    WeaponProtection = { -- Credit: @locutor404
         enable = true,
         AntiGiveWeapon = {
             enable = true,
@@ -108,8 +109,8 @@ return {
             }
         }
     },
-    -- Anti Cheat Explosions Undetected | Crédit: Jona0081
-    AntiExplosions = {
+
+    AntiExplosions = { -- Crédit: @jona0081
         enable = true,
         ban = true, -- If false player will be kicked
         banMedia = "image" -- "image" or "video" or "false"
@@ -197,7 +198,7 @@ return {
             }
         }
     },
-    -- Check for a specified time if a player have a model, if true he will be banned/kicked
+
     BlacklistedModels = {
         enable = true,
         ban = true,-- If false player will be kicked
@@ -276,7 +277,6 @@ return {
                     "BypassParticle"
             }
         },
-
         -- Use framework permission to determinate when add or remove fg perms
         FrameworkPermissions = {
             enable = false,
@@ -460,7 +460,6 @@ return {
                 }
             }
         },
-    
         -- Use ACE Permissions from FiveM natives
         AcePermissions = {
             enable = true, -- Group Ace Permissions // ONLY ESX FOR THE MOMENT (Soon QbCore & vRP)
