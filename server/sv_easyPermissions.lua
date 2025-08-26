@@ -99,15 +99,6 @@ if Config.AcePermissions.enable then
         end
     end)
 
-    RegisterCommand('gpp', function (source,args)
-        for group,_ in pairs(Config.AcePermissions.groups) do
-            if IsPlayerAceAllowed(source, 'has.'..group) then
-                SetPermission(source, group, true)
-                break
-            end
-        end
-    end,false)
-
     RegisterNetEvent('fg:addon:playerSpawned', function()
         Debug('[fg:addon:playerSpawned]', source)
         for group, _ in pairs(Config.AcePermissions.groups) do
