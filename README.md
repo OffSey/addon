@@ -13,7 +13,6 @@ This resource extends **Fiveguard** by allowing you to manage permissions, bypas
   - [Custom Natives](#-custom-natives)
   - [Nickname Management](#-nickname-management)
   - [Logging & Media Evidence](#-logging--media-evidence)
-- [Commands](#-commands)
 - [Credits](#-credits)
 
 ---
