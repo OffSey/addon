@@ -6,11 +6,11 @@ This resource extends **Fiveguard** by allowing you to manage permissions, bypas
 
 ## 📑 Index
 - [Installation](#-installation)
-- [Main Features](#-main-features)
+- [Main Features](#%EF%B8%8F-main-features)
   - [Permissions Management](#-permissions-management)
-  - [Anti-Cheat Systems](#-anti-cheat-systems)
-  - [Bypasses & Temporary Permissions](#-bypasses--temporary-permissions)
-  - [Custom Natives](#-custom-natives)
+  - [Security Systems](#-security-systems)
+  - [Bypasses & Temporary Permissions](#%EF%B8%8F-bypasses--temporary-permissions)
+  - [Natives with bypass](#-natives-with-integrated-bypass)
   - [Nickname Management](#-nickname-management)
   - [Logging & Media Evidence](#-logging--media-evidence)
 - [Credits](#-credits)
