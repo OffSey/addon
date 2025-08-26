@@ -71,7 +71,6 @@ local function checkVersion()
     end, 'GET')
 end
 
-
 local CORRECT_FXMANIFEST = [[
 fx_version 'cerulean'
 game 'gta5'
