@@ -27,6 +27,7 @@ local function CheckWeaponDistance(sender, ev, expectedHash, maxDist, reason, ex
             local victimCoords = GetEntityCoords(victimEnt)
             if DoesEntityExist(victimEnt) then
                 if #(attackerCoords - victimCoords) > maxDist then
+                    CancelEvent()
                     PunishPlayer(sender, true, reason, false)
                 end
             end
