@@ -57,8 +57,7 @@ local function checkVersion()
         if cmp < 0 then
             local symbols = '^9' .. string.rep('=', 26 + #'Fiveguard Addon') .. '^0'
             print(symbols)
-            print(('New update available! ^0\nCurrent Version: ^1%s^0.\nNew Version: ^2%s^0.\nNote of changes: ^5%s^0.\n\n^5Download it now on the OffSey github^0.'):
-                format(currentVersion, latestVersion, response.news or '—'))
+            print(('New update available! ^0\nCurrent Version: ^1%s^0.\nNew Version: ^2%s^0.\nNote of changes:\n^5%s^0.'):format(currentVersion, latestVersion, response.news or '—'))
             print('Download it now from https://github.com/OffSey/addon/archive/refs/heads/main.zip')
             print(symbols)
             return
@@ -168,7 +167,7 @@ function PunishPlayer(source, ban, reason, mediaType)
         end
         exports[Fiveguard]:recordPlayerScreen(source, Config.RecordTime*1000, function(success)
             if success then
-                reason = reasoun .. "(video)[" ..success.."]"
+                reason = reasoun .. "(video)[" ..tostring(success).."]"
                 Debug("[fiveguard] Record Success" .. source)
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             else
@@ -182,7 +181,7 @@ function PunishPlayer(source, ban, reason, mediaType)
     elseif tostring(mediaType) == "image" then
         exports[Fiveguard]:screenshotPlayer(source, function(success)
             if success then
-                reason = reasoun .. "(image)[" ..success.."]"
+                reason = reasoun .. "(image)[" ..tostring(success).."]"
                 Debug("[fiveguard] Screenshot Success" .. source)
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             else
