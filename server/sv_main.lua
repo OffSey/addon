@@ -159,7 +159,7 @@ function PunishPlayer(source, ban, reason, mediaType)
         end
         exports[Fiveguard]:recordPlayerScreen(source, Config.RecordTime*1000, function(success)
             if success then
-                reason = reasoun .. "(video)[" ..success.."]"
+                reason = reason .. "(video)[" ..success.."]"
                 Debug("[fiveguard] Record Success" .. source)
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             else
@@ -173,7 +173,7 @@ function PunishPlayer(source, ban, reason, mediaType)
     elseif tostring(mediaType) == "image" then
         exports[Fiveguard]:screenshotPlayer(source, function(success)
             if success then
-                reason = reasoun .. "(image)[" ..success.."]"
+                reason = reason .. "(image)[" ..success.."]"
                 Debug("[fiveguard] Screenshot Success" .. source)
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             else
@@ -254,5 +254,6 @@ version %s                                   By OffSey, Jeakels and contributors
         end
     end
 end)
+
 
 
