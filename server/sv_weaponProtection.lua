@@ -256,12 +256,9 @@ if Config.AntiGiveWeapon then
         if not weaponName then return end
         if Config.AntiGiveWeapon.relaxed then
             local now = GetGameTimer()
-            if coolDown[sender] and now < coolDown[sender] then
-                return
-            end
+            if coolDown[sender] and now < coolDown[sender] then return end
             coolDown[sender] = now + 3000
         end
-        local playerPedId = GetPlayerPed(sender)
         local hasWeapon = HasWeapon(sender, weaponName)
         Debug(("AntiGiveWeapon: %s shot with %s that's %s"):format(GetPlayerName(sender) or "unknown", weaponName, (hasWeapon == true and "^2present^0 " or "^1missing^0 ").."in inventory"))
         if hasWeapon == false then
@@ -270,9 +267,18 @@ if Config.AntiGiveWeapon then
                 Debug(('AntiGiveWeapon: %s was banned for using %s without having it'):format(GetPlayerName(sender), weaponName))
                 PunishPlayer(sender, Config.AntiGiveWeapon.ban, ("Give Weapon Detected (Shot with: %s)"):format(weaponName), Config.AntiGiveWeapon.banMedia)
             else
+                local playerPedId = GetPlayerPed(sender)
                 Warn(('AntiGiveWeapon: %s did not have %s, weapon removed'):format(GetPlayerName(sender), weaponName))
                 RemoveWeaponFromPed(playerPedId, ev.weaponType)
             end
+        end
+    end)
+end
+
+if Config.AntiGiveWeapon.relaxed then
+    AddEventHandler("playerDropped", function ()
+        if coolDown[source] then
+            coolDown[source] = nil
         end
     end)
 end
