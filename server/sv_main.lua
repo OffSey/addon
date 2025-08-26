@@ -67,7 +67,7 @@ end
 local CORRECT_FXMANIFEST = [[
 fx_version 'cerulean'
 game 'gta5'
-version "1.5"
+version "1.5.0"
 lua54 'yes'
 author 'Offsey & Jeakels discord.gg/fiveguard'
 description 'Addon pack for fiveguard'
@@ -254,4 +254,5 @@ version %s                                   By OffSey, Jeakels and contributors
         end
     end
 end)
+
 
