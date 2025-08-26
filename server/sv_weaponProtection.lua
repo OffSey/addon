@@ -158,7 +158,8 @@ if Config.AntiGiveWeapon then
         [GetHashKey("WEAPON_GADGETPISTOL")] = "WEAPON_GADGETPISTOL",
         [GetHashKey("WEAPON_STICKYBOMB")] = "WEAPON_STICKYBOMB",
         [GetHashKey("WEAPON_GOLFCLUB")] = "WEAPON_GOLFCLUB",
-        [GetHashKey("WEAPON_CROWBAR")] = "WEAPON_CROWBAR"
+        [GetHashKey("WEAPON_CROWBAR")] = "WEAPON_CROWBAR",
+        [GetHashKey("WEAPON_UNARMED")] = "WEAPON_UNARMED"
     }
     local checkResource = function (res)
         local rs = GetResourceState(res)
@@ -251,9 +252,8 @@ if Config.AntiGiveWeapon then
     end
     if frameworkDetected then Debug(("Framework For Weapon Detection: ^3%s^0"):format(frameworkDetected)) end
     AddEventHandler('weaponDamageEvent', function(sender, ev)
-        if ev.weaponType == GetHashKey("WEAPON_UNARMED") or ev.damageType ~= 3 then return end
         local weaponName = weaponHash[ev.weaponType]
-        if not weaponName then return end
+        if not weaponName or (weaponName and weaponName == "WEAPON_UNARMED") or ev.damageType ~= 3 then return end
         if Config.AntiGiveWeapon.relaxed then
             local now = GetGameTimer()
             if coolDown[sender] and now < coolDown[sender] then return end
@@ -264,11 +264,9 @@ if Config.AntiGiveWeapon then
         if hasWeapon == false then
             CancelEvent()
             if Config.AntiGiveWeapon.ban then
-                Debug(('AntiGiveWeapon: %s was banned for using %s without having it'):format(GetPlayerName(sender), weaponName))
                 PunishPlayer(sender, Config.AntiGiveWeapon.ban, ("Give Weapon Detected (Shot with: %s)"):format(weaponName), Config.AntiGiveWeapon.banMedia)
             else
                 local playerPedId = GetPlayerPed(sender)
-                Warn(('AntiGiveWeapon: %s did not have %s, weapon removed'):format(GetPlayerName(sender), weaponName))
                 RemoveWeaponFromPed(playerPedId, ev.weaponType)
             end
         end
