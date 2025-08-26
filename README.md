@@ -1,52 +1,84 @@
-# Fiveguard Addon 
-This resource will help you to manage permissions, bypasses and add some checks for your server!
+# Fiveguard Addon
 
-## Installation
-- [Download](https://github.com/OffSey/addon/archive/refs/heads/main.zip) the script
-- Extract and remove the `-main` at the end of the folder name
-- Configure it as you prefer in the config.lua file
+This resource extends **Fiveguard** by allowing you to manage permissions, bypasses, and advanced security checks for your FiveM server.  
 
-## Features
-### Permissions
-Enable bypasses and permission for fiveguard troght the following permission systems
-- Ace permissions
-- Frameworks group (compatible with: ESX, QBCore, QBox, vRP)
-- txAdmin
+---
 
-### New command
-- Added command: fgAddon help
-- Added command! fgAddon bypass-native [uninstall/install] [optional > resourceName]
+## 📑 Index
+- [Installation](#-installation)
+- [Main Features](#-main-features)
+  - [Permissions Management](#-permissions-management)
+  - [Anti-Cheat Systems](#-anti-cheat-systems)
+  - [Bypasses & Temporary Permissions](#-bypasses--temporary-permissions)
+  - [Custom Natives](#-custom-natives)
+  - [Nickname Management](#-nickname-management)
+  - [Logging & Media Evidence](#-logging--media-evidence)
+- [Commands](#-commands)
+- [Credits](#-credits)
 
-### Bypass Native
-- New system for bypass SetEntityCoords and SetEntityVisible
+---
 
-### Preconfigured temporany permissions
-Prevent bans and allow your players to get fun without making your code for temporany permissions
-- RTX Themepark
-- Rcore Clothing
-- Rcore LunaPark
+## 📥 Installation
+1. [Download](https://github.com/OffSey/addon/archive/refs/heads/main.zip) the script  
+2. Extract and remove the `-main` suffix from the folder name  
+3. Configure the `config.lua` file as needed  
 
-### Additional checks
-- Prevent resource stop
-- Prevent carry exploit
-- Prevent unwanted peds
-- Heartbeat System (prevent cheaters to stop client side of this resource)
-- Limite Character Name
-- WhiteList Character
-- Prevent Spawn vehicle
-- Prevent Explosions From Some Cheats
-- Prevent Weapon exploit (with distance) and give weapon
-- Prevent PED Manipulation
-- Prevent Spawn Safe Vehicle
+---
 
-### Replaced Native
-- Replace native 'SetEntityCoords' with 'exports["addon"]:FgSetEntityCoords' in your scripts for add TempPermissions in player
-- Replace native 'SetEntityVisible' with 'exports["addon"]:FgSetEntityVisible' in your scripts for add TempPermissions in player
+## ⚙️ Main Features
 
-## Credits
-The script has been brought to you by the one and only unique FiveM anticheat, [fiveguard.net](https://fiveguard.net) [Discord](https://discord.gg/fiveguard)
-Create by OffSey and Jeakels. And thanks to the contributors for help.
+### 🔒 Permissions Management
+Supports:  
+- **Ace Permissions** (FiveM native)  
+- **Framework Permissions** (ESX, QBCore, QBox, vRP – also custom)  
+- **txAdmin** (automatic permissions for admins)  
 
-The script was also made possible by the Elite Script team.
-- Discord: https://discord.gg/b8jpP82MqJ
-- Tebex: https://elitedevelopment.tebex.io/
+---
+
+### 🚨 Security Systems
+- **Heartbeat** → prevents client-side stop attempts  
+- **Anti Stopper** → prevents resource stopping exploits  
+- **Anti Carry** → blocks carry exploit (safe zones supported)  
+- **Anti Ped Manipulation** → prevents ped manipulation  
+- **Anti Safe Spawn** → safe vehicle spawn checks  
+- **Anti Spawn Vehicle** → prevents unauthorized spawns (resource whitelist)  
+- **Weapon Protection** → AntiGiveWeapon & AntiDistanceDamage (range check)  
+- **Anti Explosions** → blocks unauthorized explosions  
+- **Blacklisted Models** → prevents banned ped/animal models  
+
+---
+
+### 🛡️ Bypasses & Temporary Permissions
+Preconfigured for:  
+- **rcore_clothing**, **lsrp_lunapark**, **rtx_themepark**  
+- **ik-jobgarage**, **jg-advancedgarages**, **jg-dealerships**  
+- **rcore_prison**, **wasabi_police**  
+
+---
+
+### 🧰 Natives with integrated bypass
+- `exports["addon"]:FgSetEntityCoords` → replaces `SetEntityCoords`
+- `exports["addon"]:FgSetEntityVisible` → replaces `SetEntityVisible`
+or using the commands:
+- `fgAddon help` → shows available commands  
+- `fgAddon bypass-native [install/uninstall] [resourceName]`  
+
+---
+
+### 📜 Nickname Management
+- Maximum length (default: 25)  
+- Configurable allowed characters  
+
+---
+
+### 📡 Logging & Media Evidence
+- **Discord Webhook** support (screenshots or video proofs)  
+- Configurable `RecordTime` (default: 5s)  
+
+---
+
+## 🙌 Credits
+Addon developed by **OffSey** and **Jeakels** with the support of the comunity and powered by fiveguard, the best anticheat in the market!  
+
+- 🌐 [fiveguard.net](https://fiveguard.net)  
+- 💬 [Fiveguard Discord](https://discord.gg/fiveguard)
