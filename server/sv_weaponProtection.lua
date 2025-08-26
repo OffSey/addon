@@ -27,6 +27,7 @@ local function CheckWeaponDistance(sender, ev, expectedHash, maxDist, reason, ex
             local victimCoords = GetEntityCoords(victimEnt)
             if DoesEntityExist(victimEnt) then
                 if #(attackerCoords - victimCoords) > maxDist then
+                    CancelEvent()
                     PunishPlayer(sender, true, reason, false)
                 end
             end
@@ -49,7 +50,7 @@ if Config.AntiDistanceDamage.stungun.enable then
     end)
 end
 if Config.AntiGiveWeapon then
-    local frameworkDetected
+    local frameworkDetected,HasWeapon
     local weaponHash <const> = {
         [GetHashKey("WEAPON_SPECIALCARBINE_MK2")] = "WEAPON_SPECIALCARBINE_MK2",
         [GetHashKey("WEAPON_PUMPSHOTGUN")] = "WEAPON_PUMPSHOTGUN",
@@ -157,35 +158,46 @@ if Config.AntiGiveWeapon then
         [GetHashKey("WEAPON_GADGETPISTOL")] = "WEAPON_GADGETPISTOL",
         [GetHashKey("WEAPON_STICKYBOMB")] = "WEAPON_STICKYBOMB",
         [GetHashKey("WEAPON_GOLFCLUB")] = "WEAPON_GOLFCLUB",
-        [GetHashKey("WEAPON_CROWBAR")] = "WEAPON_CROWBAR"
+        [GetHashKey("WEAPON_CROWBAR")] = "WEAPON_CROWBAR",
+        [GetHashKey("WEAPON_UNARMED")] = "WEAPON_UNARMED"
     }
-
-    local HasWeapon = function() return false end
-    if GetResourceState('ox_inventory') == 'started' then
-        HasWeapon = function(source, weaponName)
-            return exports.ox_inventory:GetItemCount(source, weaponName) > 0
-        end
-    elseif not frameworkDetected and GetResourceState('es_extended') == 'started' then
-        frameworkDetected = 'es_extended'
+    local checkResource = function (res)
+        local rs = GetResourceState(res)
+        return rs == "started" or rs == "starting"
+    end
+    if not frameworkDetected and checkResource('es_extended') then
+        frameworkDetected = 'ESX'
         local ESX = exports.es_extended:getSharedObject()
         HasWeapon = function(source, weaponName)
             local xPlayer = ESX.GetPlayerFromId(source)
-            return xPlayer and xPlayer.hasItem(weaponName, 1)
+            if not xPlayer then
+                Warn(("Player %s is not loaded"):format(GetPlayerName(source)))
+                return
+            end
+            return xPlayer.hasItem(weaponName).count >= 1
         end
-    elseif not frameworkDetected and GetResourceState('qbx_core') == 'started' then
-        frameworkDetected = 'qbx_core'
+    elseif not frameworkDetected and checkResource('qbx_core') then
+        frameworkDetected = 'QBox'
         HasWeapon = function(source, weaponName)
             local Player = exports.qbx_core:GetPlayer(source)
-            return Player and Player.PlayerData.items?[weaponName]?.amount >= 1
+            if not Player then
+                Warn(("Player %s is not loaded"):format(GetPlayerName(source)))
+                return
+            end
+            return Player.PlayerData.items?[weaponName]?.amount >= 1
         end
-    elseif not frameworkDetected and GetResourceState('qb-core') == 'started' then
-        frameworkDetected = 'qb-core'
+    elseif not frameworkDetected and checkResource('qb-core') then
+        frameworkDetected = 'QBCore'
         local QBCore = exports['qb-core']:GetCoreObject()
         HasWeapon = function(source, weaponName)
             local Player = QBCore.Functions.GetPlayer(source)
-            return Player and Player.Functions.GetItemByName(weaponName)
+            if not Player then
+                Warn(("Player %s is not loaded"):format(GetPlayerName(source)))
+                return
+            end
+            return Player.Functions.GetItemByName(weaponName) and true or false
         end
-    elseif not frameworkDetected and GetResourceState('vrp') == 'started' then
+    elseif not frameworkDetected and checkResource('vrp') then
         frameworkDetected = 'vRP'
         local fileCode = LoadResourceFile('vrp','lib/utils.lua')
         assert(load(fileCode,'@@vrp/lib/utils.lua','t'))()
@@ -196,7 +208,7 @@ if Config.AntiGiveWeapon then
         HasWeapon = function(source, weaponName) --todo: check if work on most vrp versions
             local user_id = vRP.getUserId(source)
             if user_id then return vRP.getInventoryItemAmount(user_id, weaponName) > 0 end
-            return Error(("Incompatible vRP version, disable AntiGiveWeapon in addon's config"):format(source))
+            Error(("Incompatible vRP version, disable AntiGiveWeapon in addon's config"):format(source))
         end
     else
         local PlayerWeapons = {}
@@ -238,30 +250,33 @@ if Config.AntiGiveWeapon then
             return false
         end
     end
-    if frameworkDetected then Debug('Framework For Weapon Detection: ^3' .. frameworkDetected .. '^0') end
+    if frameworkDetected then Debug(("Framework For Weapon Detection: ^3%s^0"):format(frameworkDetected)) end
     AddEventHandler('weaponDamageEvent', function(sender, ev)
-        if ev.weaponType == GetHashKey("WEAPON_UNARMED") or ev.damageType ~= 3 then return end
         local weaponName = weaponHash[ev.weaponType]
-        if not weaponName then return end
+        if not weaponName or (weaponName and weaponName == "WEAPON_UNARMED") or ev.damageType ~= 3 then return end
         if Config.AntiGiveWeapon.relaxed then
             local now = GetGameTimer()
-            if coolDown[sender] and now < coolDown[sender] then
-                return
-            end
+            if coolDown[sender] and now < coolDown[sender] then return end
             coolDown[sender] = now + 3000
         end
-        local playerPedId = GetPlayerPed(sender)
         local hasWeapon = HasWeapon(sender, weaponName)
-        Debug(('AntiGiveWeapon: %s fired with %s - %s'):format(GetPlayerName(sender) or "unknown", weaponName, hasWeapon == true and "present in inventory" or "missing / spawned"))
+        Debug(("AntiGiveWeapon: %s shot with %s that's %s"):format(GetPlayerName(sender) or "unknown", weaponName, (hasWeapon == true and "^2present^0 " or "^1missing^0 ").."in inventory"))
         if hasWeapon == false then
             CancelEvent()
             if Config.AntiGiveWeapon.ban then
-                Debug(('AntiGiveWeapon: %s was banned for using %s without having it'):format(GetPlayerName(sender), weaponName))
-                PunishPlayer(sender, Config.AntiGiveWeapon.ban, "Give Weapon Detected (Shot with spawned weapon)", Config.AntiGiveWeapon.banMedia)
+                PunishPlayer(sender, Config.AntiGiveWeapon.ban, ("Give Weapon Detected (Shot with: %s)"):format(weaponName), Config.AntiGiveWeapon.banMedia)
             else
-                Warn(('AntiGiveWeapon: %s did not have %s, weapon removed'):format(GetPlayerName(sender), weaponName))
+                local playerPedId = GetPlayerPed(sender)
                 RemoveWeaponFromPed(playerPedId, ev.weaponType)
             end
+        end
+    end)
+end
+
+if Config.AntiGiveWeapon.relaxed then
+    AddEventHandler("playerDropped", function ()
+        if coolDown[source] then
+            coolDown[source] = nil
         end
     end)
 end

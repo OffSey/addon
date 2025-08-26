@@ -61,11 +61,11 @@ local B_CATEGORY = {
 
 RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function(bol,resName)
     if resName == CurrentResourceName then return end
-    if not Resources[resName] then return Warn(("%s tried to get a bypass"):format(source)) end
+    if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a bypass using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.SetEntityCoords then
         local result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY["BypassTeleport"], "BypassTeleport", bol, false)
         if not result then
-            Error(("The resource ^5\"%s\"^0 can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(resName,B_CATEGORY["BypassTeleport"],"BypassTeleport",source,GetPlayerName(tostring(source)),errorText))
+            Warn(("The resource ^5%s^0 can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(resName,"Client","BypassTeleport",source,GetPlayerName(tostring(source)),errorText))
         else
             Debug(("Temporany Permission ^5\"%s.%s\"^0 was %s succesfully by ^5\"%s\"^0!\nPlayer changed: ^5[%s] %s^0"):format(B_CATEGORY["BypassTeleport"],"BypassTeleport",bol == true and"^2granted^0" or "^1removed^0",resName,source,GetPlayerName(tostring(source))))
         end
@@ -76,11 +76,11 @@ end)
 
 RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function(bol,resName)
     if resName == CurrentResourceName then return end
-    if not Resources[resName] then return Warn(("%s tried to get a bypass"):format(source)) end
+    if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a bypass using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.SetEntityVisible then
         local result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY["BypassInvisible"], "BypassInvisible", bol, false)
         if not result then
-            Error(("The resource ^5\"%s\"^0  can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(resName"Client","BypassInvisible",source,GetPlayerName(tostring(source)),errorText))
+            Warn(("The resource ^5%s^0  can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(resName,"Client","BypassInvisible",source,GetPlayerName(tostring(source)),errorText))
         else
             Debug(("Temporany Permission ^5\"%s.%s\"^0 was %s succesfully by ^5\"%s\"^0!\nPlayer changed: ^5[%s] %s^0"):format("Client","BypassInvisible",bol == true and"^2granted^0" or "^1removed^0",resName,source,GetPlayerName(tostring(source))))
         end
