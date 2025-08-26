@@ -157,6 +157,7 @@ end
 local isRecording = {}
 
 function PunishPlayer(source, ban, reason, mediaType)
+    if not reason then reason= "" end
     Debug(source, reason, mediaType)
     if not ban then return DropPlayer(source,"[FIVEGUARD.NET] You have been kicked") end
     if tostring(mediaType) == "video" then
@@ -167,7 +168,7 @@ function PunishPlayer(source, ban, reason, mediaType)
         end
         exports[Fiveguard]:recordPlayerScreen(source, Config.RecordTime*1000, function(success)
             if success then
-                reason = reason .. "(video)[" ..tostring(success).."]"
+                reason = reason .. "(video)["..tostring(success).."]"
                 Debug("[fiveguard] Record Success" .. source)
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             else
@@ -181,7 +182,7 @@ function PunishPlayer(source, ban, reason, mediaType)
     elseif tostring(mediaType) == "image" then
         exports[Fiveguard]:screenshotPlayer(source, function(success)
             if success then
-                reason = reason .. "(image)[" ..tostring(success).."]"
+                reason = reason .. "(image)["..tostring(success).."]"
                 Debug("[fiveguard] Screenshot Success" .. source)
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             else
