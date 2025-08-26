@@ -169,10 +169,10 @@ function PunishPlayer(source, ban, reason, mediaType)
         exports[Fiveguard]:recordPlayerScreen(source, Config.RecordTime*1000, function(success)
             if success then
                 reason = reason .. "(video)["..tostring(success).."]"
-                Debug("[fiveguard] Record Success" .. source)
+                Debug(("Player [^4%s^0] ^4%s^0 recorded successfully"):format(source,GetPlayerName(source)))
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             else
-                Error("[fiveguard] Record Error" .. source)
+                Error(("Unable to record the player [^4%s^1] ^4%s^1"):format(source,GetPlayerName(source)))
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             end
         end, Config.CustomWebhookURL)
@@ -183,10 +183,10 @@ function PunishPlayer(source, ban, reason, mediaType)
         exports[Fiveguard]:screenshotPlayer(source, function(success)
             if success then
                 reason = reason .. "(image)["..tostring(success).."]"
-                Debug("[fiveguard] Screenshot Success" .. source)
+                Debug(("Player [^4%s^0] ^4%s^0 screenshotted successfully"):format(source,GetPlayerName(source)))
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             else
-                Error("[fiveguard] Screenshot Error" .. source)
+                Error(("Unable to screenshot the player [^4%s^1] ^4%s^1"):format(source,GetPlayerName(source)))
                 exports[Fiveguard]:fg_BanPlayer(source, reason, true)
             end
         end, Config.CustomWebhookURL)
