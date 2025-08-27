@@ -87,3 +87,8 @@ Addon developed by **OffSey** and **Jeakels** with the support of the comunity a
 
 - 🌐 [fiveguard.net](https://fiveguard.net)  
 - 💬 [Fiveguard Discord](https://discord.gg/fiveguard)
+
+Supporter:
+- Elite Scripts
+  - 🌐 [Elite Tebex](https://elitedevelopment.tebex.io/)
+  - 💬 [Elite Discord](https://discord.gg/b8jpP82MqJ)
