@@ -69,7 +69,7 @@ return {
         ban = true, -- Ban (false = delete vehicle only)
         banMedia = "image", -- "image" or "video" or "false"
         detectNPC = false,              -- Can spawn client side event 
-        preventLaunchPlayer = true,
+        preventLaunchPlayer = false,    -- !!Can make false ban
         preventInvalidOwner = false,    -- !!Can make false ban
         preventNilResources = false,    -- !!Can make false ban
         preventUnNetworkedEnity = false,-- !!Can make false ban
@@ -218,7 +218,7 @@ return {
     },
 
     EasyPermissions = {
-        enable = true, -- MASTER SWITCH
+        enable = false, -- MASTER SWITCH
         -- !! DO NOT ENABLE MORE THAN 1 PERMISSION SYSTEM BELOW AT SAME TIME! Default is ACE
 
         -- Bypass txAdmin admins
@@ -588,3 +588,4 @@ return {
         }
     }
 }
+
