@@ -9,12 +9,9 @@ local function checkModel()
         local source = tonumber(players[i])
         ---@diagnostic disable-next-line: param-type-mismatch
         local model = GetEntityModel(GetPlayerPed(source))
-        for j = 1, #Config.blacklist do
-            local blockedModel = Config.blacklist[j]
-            if model == GetHashKey(blockedModel) then
-                PunishPlayer(source, Config.ban, ("Blacklisted model detected: %s"):format(blockedModel), Config.banMedia)
-                break
-            end
+        if model and Config.blacklist[model] == true then
+            PunishPlayer(source, Config.ban, ("Blacklisted model detected: %s"):format(blockedModel), Config.banMedia)
+            break
         end
     end
     Citizen.SetTimeout(Config.checkInterval*1000, checkModel)
