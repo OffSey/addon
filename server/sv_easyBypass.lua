@@ -1,5 +1,5 @@
 local data = LoadResourceFile(CurrentResourceName, 'config.lua')
-local Config = assert(load(data))()?.ExportsNative
+local Config = assert(load(data))()?.EasyTempBypass
 if not Config?.enable then return end
 while not READY do Citizen.Wait(0) end
 local B_CATEGORY = {
@@ -59,7 +59,7 @@ local B_CATEGORY = {
     ["BypassSpoofedWeapons"] = "Misc"
 }
 
-RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function(bol,resName)
+local SafeSetEntityCoords = function(bol,resName)
     if resName == CurrentResourceName then return end
     if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a bypass using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.SetEntityCoords then
@@ -72,9 +72,9 @@ RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function(bol,resNa
     else
         Warn("Can't give/remove BypassTeleport since the option is disabled ")
     end
-end)
+end
 
-RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function(bol,resName)
+local SafeSetEntityVisible = function(bol,resName)
     if resName == CurrentResourceName then return end
     if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a bypass using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.SetEntityVisible then
@@ -87,4 +87,25 @@ RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function(bol,resN
     else
         Warn("Can't give/remove BypassInvisible since the option is disabled ")
     end
+end
+
+RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function (...)
+    local s,r = pcall(function ()
+        return exports[Fiveguard]:VerifyToken(source)
+    end)
+    if s and not r then return Warn(("[^4%s^0] ^4%s^0 tried to get BypassTeleport"):format(source,GetPlayerName(source))) end
+    SafeSetEntityCoords(source,...)
 end)
+exports[Fiveguard]:RegisterSafeEvent("fg:addon:SetTempPermission:BypassTeleport", { log = true, ban = false }, true)
+
+RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function (...)
+    local s,r = pcall(function ()
+        return exports[Fiveguard]:VerifyToken(source)
+    end)
+    if s and not r then return Warn(("[^4%s^0] ^4%s^0 tried to get BypassTeleport"):format(source,GetPlayerName(source))) end
+    SafeSetEntityVisible(source,...)
+end)
+exports[Fiveguard]:RegisterSafeEvent("fg:addon:SetTempPermission:BypassInvisible", { log = true, ban = false }, true)
+
+exports("SafeSetEntityVisible", SafeSetEntityVisible)
+exports("SafeSetEntityCoords", SafeSetEntityCoords)
