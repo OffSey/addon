@@ -1,5 +1,5 @@
 local data = LoadResourceFile(CurrentResourceName, 'config.lua')
-local Config = assert(load(data))()?.AntiSpawnVehicle
+local Config = assert(load(data))()?.VehicleProtection
 if not Config?.enable then return end
 while not READY do Citizen.Wait(0) end
 
@@ -32,10 +32,10 @@ local function isVehicleValid(vehicle)
     if Config.preventInvalidOwner and (not owner or owner == -1) then
         return false, "Vehicle with Invalid Owner"
     end
-    if Config.preventUnauthorizedResource and Config.preventNilResource and scriptName == nil then
+    if Config.preventUnauthorizedResource.enable and Config.preventNilResource and scriptName == nil then
         return false, "Vehicle with an invalid resource (2)"
     end
-    if Config.preventUnauthorizedResource and not Config.resourceWhitelisted[scriptName] then
+    if Config.preventUnauthorizedResource.enable and not Config.preventUnauthorizedResource.resourceWhitelisted[scriptName] then
         return false, "Vehicle from non-whitelisted script: " .. tostring(scriptName) .. " (2)"
     end
     return true
@@ -67,6 +67,32 @@ local function check()
     Citizen.SetTimeout(Config.checkInterval * 1000,check)
 end
 check()
+
+if Config.preventSafeSpawn.enable then
+    local function check_safespawn()
+        local ped = PlayerPedId()
+            if IsPedInAnyVehicle(ped, false) then
+                local veh = GetVehiclePedIsIn(ped, false)
+                if DoesEntityExist(veh) and not NetworkGetEntityIsNetworked(veh) then
+                    local pos = GetEntityCoords(ped)
+                    local inWhitelistZone = false
+                    for i=1, #Config.whitelistedCoords do
+                        local zone = Config.whitelistedCoords[i]
+                        if #(pos-zone.coords) <= zone.radius then
+                            inWhitelistZone = true
+                            break
+                        end
+                    end
+                    Debug('[AntiSafeSpawn] inWhitelistZone',inWhitelistZone)
+                    if not inWhitelistZone then
+                        DeleteEntity(veh)
+                    end
+                end
+            end
+        Citizen.SetTimeout(10000,check_safespawn)
+    end
+    check_safespawn()
+end
 
 -- RegisterNetEvent("fg:addon:checkVehicle", function(netId)
 --     local entity = NetworkGetEntityFromNetworkId(netId)
