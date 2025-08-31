@@ -17,22 +17,27 @@ if IsDuplicityVersion() then
         exports[Fiveguard]:SetTempPermission(source,"Client","BypassInvisible",not toogle)
         return setEntityVisible(entity,toogle,...)
     end
-    exports("SafeSetEntityVisible", SetEntityVisible)
-    exports("SafeSetEntityCoords", SetEntityCoords)
 else
     local setEntityCoords = SetEntityCoords
     SetEntityCoords = function (entity,...)
-        TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport",true,a1)
+        local s = pcall(function ()
+            return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassTeleport",true,a1)
+        end)
+        if not s then TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport",true,a1) end
         setEntityCoords(entity,...)
         Citizen.SetTimeout(1000,function ()
-            TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport",false,a1)
+            local sb = pcall(function ()
+                return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassTeleport",false,a1)
+            end)
+            if not sb then TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport",false,a1) end
         end)
     end
     local setEntityVisible = SetEntityVisible
     SetEntityVisible = function (entity,toogle,...)
-        TriggerServerEvent("fg:addon:SetTempPermission:BypassInvisible",not toogle,a1)
+        local s = pcall(function ()
+            return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassInvisible",not toogle,a1)
+        end)
+        if not s then TriggerServerEvent("fg:addon:SetTempPermission:BypassInvisible",not toogle,a1) end
         return setEntityVisible(entity,toogle,...)
     end
-    exports("SafeSetEntityVisible", SetEntityVisible)
-    exports("SafeSetEntityCoords", SetEntityCoords)
 end
