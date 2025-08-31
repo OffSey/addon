@@ -10,23 +10,16 @@ local lastDetection = 0
 
 AddEventHandler('entityCreated', function(entity)
     if not DoesEntityExist(entity) then return end
-
-    local popType = GetEntityPopulationType(entity)
-    if popType ~= 5 then return end
-
-    local entity_type = GetEntityType(entity)
-    if entity_type ~= 2 and entity_type ~= 1 then return end
-
+    if GetEntityPopulationType(entity) ~= 5 then return end
+    local et = GetEntityType(entity)
+    if et ~= 2 and et ~= 1 then return end
     local owner = NetworkGetEntityOwner(entity)
     if not owner or owner == 0 or owner == -1 or owner == "" then return end
-
     local currentTime = os.time()
     if currentTime - lastDetection < 15 then
         return
     end
-
     lastDetection = currentTime
-
-    PunishPlayer(owner, Config.ban, ("Tried To Spawn a Ped (%s)"):format(GetEntityModel(entity)), "image")
+    PunishPlayer(owner, Config.ban, ("Tried To Spawn a %s (%s)"):format(et == 1 and "Ped" or "Vehicle", GetEntityModel(entity)), "image")
     DeleteEntity(entity)
 end)
