@@ -70,7 +70,7 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
             for i = 1, #bp do
                 result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY[bp[i]], bp[i], true)
                 if not result then
-                    Error(("[SetTempPermission] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY[bp[i]], bp[i],source,GetPlayerName(source),errorText))
+                    Warn(("[SetTempPermission] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY[bp[i]], bp[i],source,GetPlayerName(source),errorText))
                 else
                     Debug(("[SetTempPermission] temporany Permission ^5\"%s.%s\"^0 was %s succesfully!\nPlayer changed: ^5[%s] %s^0"):format(B_CATEGORY[bp[i]], bp[i],"^2granted^0",source,GetPlayerName(source)))
                 end
@@ -82,7 +82,7 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
             for i = 1, #bp do
                 result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY[bp[i]], bp[i], false)
                 if not result then
-                    Error(("[SetTempPermission] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY[bp[i]], bp[i],source,GetPlayerName(source),errorText))
+                    Warn(("[SetTempPermission] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY[bp[i]], bp[i],source,GetPlayerName(source),errorText))
                 else
                     Debug(("[SetTempPermission] temporany Permission ^5\"%s.%s\"^0 was %s succesfully!\nPlayer changed: ^5[%s] %s^0"):format(B_CATEGORY[bp[i]], bp[i],"^1removed^0",source,GetPlayerName(source)))
                 end
@@ -96,7 +96,7 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
                 for i = 1, #bp do
                     result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY[bp[i]], bp[i], bol)
                     if not result then
-                        Error(("[SetTempPermission] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY[bp[i]], bp[i],source,GetPlayerName(source),errorText))
+                        Warn(("[SetTempPermission] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY[bp[i]], bp[i],source,GetPlayerName(source),errorText))
                     else
                         Debug(("[SetTempPermission] temporany Permission ^5\"%s.%s\"^0 was %s succesfully!\nPlayer changed: ^5[%s] %s^0"):format(B_CATEGORY[bp[i]], bp[i],bol == true and"^2granted^0" or "^1removed^0",source,GetPlayerName(source)))
                     end
@@ -108,7 +108,7 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
                 for i = 1, #bp do
                     result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY[bp[i]], bp[i], true)
                     if not result then
-                        Error(("[SetTempPermission] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY[bp[i]], bp[i],source,GetPlayerName(source),errorText))
+                        Warn(("[SetTempPermission] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY[bp[i]], bp[i],source,GetPlayerName(source),errorText))
                     else
                         Debug(("[SetTempPermission] temporany Permission ^5\"%s.%s\"^0 was %s succesfully!\nPlayer changed: ^5[%s] %s^0"):format(B_CATEGORY[bp[i]], bp[i],"^2granted^0",source,GetPlayerName(source)))
                     end
@@ -117,7 +117,7 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
                     for i = 1, #bp do
                         result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY[bp[i]], bp[i], false)
                         if not result then
-                            Error(("[SetTempPermission] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY[bp[i]], bp[i],source,GetPlayerName(source),errorText))
+                            Warn(("[SetTempPermission] Can't give temporany permission!\nPermission: ^5\"%s.%s\"^0\nPlayer: ^5[%s] %s^0\nReason: ^5%s^0"):format(B_CATEGORY[bp[i]], bp[i],source,GetPlayerName(source),errorText))
                         else
                             Debug(("[SetTempPermission] temporany Permission ^5\"%s.%s\"^0 was %s succesfully!\nPlayer changed: ^5[%s] %s^0"):format(B_CATEGORY[bp[i]], bp[i],"^1removed^0",source,GetPlayerName(source)))
                         end
