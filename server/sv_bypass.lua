@@ -169,7 +169,6 @@ AddEventHandler('onResourceStop', function(res)
     for eventName , value in pairs(R_EVENTS) do
         if value then
             RemoveEventHandler(value)
-            R_EVENTS[eventName] = nil
         end
     end
 end)
