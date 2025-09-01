@@ -123,7 +123,7 @@ function uninstallInResource(targetResource, currentResource, defModule) {
   return { changed: true };
 }
 
-RegisterCommand("fgAddon", async (source, args, raw) => {
+RegisterCommand("fga", async (source, args, raw) => {
   if (source !== 0) return;
   if (imBusy) { log("Command already running, please wait..."); return; }
   imBusy = true;
@@ -133,10 +133,10 @@ RegisterCommand("fgAddon", async (source, args, raw) => {
       case "help": {
         console.log('fiveguard documentation: https://docs.fiveguard.net')
         console.log("FIVEGUARD ADDON COMMANDS");
-        console.log("         fgAddon help");
-        console.log("         fgAddon unban <all|range> [range: <minId> <maxId>]");
-        console.log("         fgAddon bypass-native <install|uninstall> [optional: resourceName]");
-        console.log("         fgAddon xss <install|uninstall> [optional: resourceName]");
+        console.log("         fga help");
+        console.log("         fga unban <all|range> [range: <minId> <maxId>]");
+        console.log("         fga bypass-native <install|uninstall> [optional: resourceName]");
+        console.log("         fga xss <install|uninstall> [optional: resourceName]");
         break;
       }
       case "bypass-native": {
@@ -180,7 +180,7 @@ RegisterCommand("fgAddon", async (source, args, raw) => {
             console.log("\x1b[31mRestart Server\x1b[0m");
             break;
           default:
-            log("Usage: fgAddon bypass-native <install|uninstall> [resourceName]");
+            log("Usage: fga bypass-native <install|uninstall> [resourceName]");
             break;
         }
         break;
@@ -226,7 +226,7 @@ RegisterCommand("fgAddon", async (source, args, raw) => {
             console.log("\x1b[31mRestart Server\x1b[0m");
             break;
           default:
-            log("Usage: fgAddon xss <install|uninstall> [resourceName]");
+            log("Usage: fga xss <install|uninstall> [resourceName]");
             break;
         }
         break;
@@ -253,14 +253,14 @@ RegisterCommand("fgAddon", async (source, args, raw) => {
           }
           case "range": {
             if (args.length < 4) {
-              console.log("Usage: fgAddon unban range <minId> <maxId>");
+              console.log("Usage: fga unban range <minId> <maxId>");
               return;
             }
 
             const a = Number(args[2]);
             const b = Number(args[3]);
             if (!Number.isFinite(a) || !Number.isFinite(b)) {
-              console.log("Invalid range. Use integers: fgAddon unban range <minId> <maxId>");
+              console.log("Invalid range. Use integers: fga unban range <minId> <maxId>");
               return;
             }
 
@@ -279,13 +279,13 @@ RegisterCommand("fgAddon", async (source, args, raw) => {
             break;
           }
           default:
-            log("Specified command does not exists, use command fgAddon help to get more information");
+            log("Specified command does not exists, use command fga help to get more information");
             break;
         }
         break;
       }
       default:
-        log("Specified command does not exists, use command fgAddon help to get more information");
+        log("Specified command does not exists, use command fga help to get more information");
         break;
     }
   } finally {
