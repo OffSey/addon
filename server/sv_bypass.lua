@@ -166,7 +166,7 @@ end
 
 AddEventHandler('onResourceStop', function(res)
     if CurrentResourceName ~= res then return end
-    for eventName , value in pairs(R_EVENTS) do
+    for _, value in pairs(R_EVENTS) do
         if value then
             RemoveEventHandler(value)
         end
