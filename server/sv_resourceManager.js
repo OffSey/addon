@@ -32,10 +32,10 @@ function saveManifest(resourceName, content) {
   }
 }
 
-function manifestHasBypassLine(manifest, currentResource) {
+function manifestHasBypassLine(manifest, currentResource, defModule) {
   if (!manifest) return false;
   const pattern = new RegExp(
-    String.raw`^\s*shared_script\s+["']@${escapeRegExp(currentResource)}\/bypassNative\.lua["']\s*$`,
+    String.raw`^\s*shared_script\s+["']@${escapeRegExp(currentResource)}/${escapeRegExp(defModule)}["']\s*(?:--.*)?\r?\n?`,
     "m"
   );
   return pattern.test(manifest);
@@ -75,7 +75,7 @@ function getAllResources() {
   return out;
 }
 
-function installInResource(targetResource, currentResource) {
+function installInResource(targetResource, currentResource, defModule) {
   const manifest = readManifest(targetResource);
   if (manifest === null) {
     return { changed: false, skippedReason: "no fxmanifest.lua" };
@@ -86,10 +86,10 @@ function installInResource(targetResource, currentResource) {
   if (manifest.includes("author 'Offsey & Jeakels discord.gg/fiveguard'")) {
     return { changed: false, skippedReason: "addon resource", ignoreMe: true }
   }
-  if (manifestHasBypassLine(manifest, currentResource)) {
+  if (manifestHasBypassLine(manifest, currentResource, defModule)) {
     return { changed: false, skippedReason: "already installed" };
   }
-  const insertion = `shared_script "@${currentResource}/bypassNative.lua"\n`;
+  const insertion = `shared_script "@${currentResource}/${defModule}"\n`;
   let newContent;
   if (manifest.startsWith("\uFEFF")) {
     newContent = "\uFEFF" + insertion + manifest.slice(1);
@@ -103,13 +103,13 @@ function installInResource(targetResource, currentResource) {
   return { changed: true };
 }
 
-function uninstallInResource(targetResource, currentResource) {
+function uninstallInResource(targetResource, currentResource, defModule) {
   const manifest = readManifest(targetResource);
   if (manifest === null) {
     return { changed: false, skippedReason: "no fxmanifest.lua" };
   }
   const lineRegex = new RegExp(
-    String.raw`^\s*shared_script\s+["']@${escapeRegExp(currentResource)}\/bypassNative\.lua["']\s*\r?\n?`,
+    String.raw`^\s*shared_script\s+["']@${escapeRegExp(currentResource)}/${escapeRegExp(defModule)}["']\s*(?:--.*)?\r?\n?`,
     "mg"
   );
   if (!lineRegex.test(manifest)) {
@@ -134,8 +134,9 @@ RegisterCommand("fgAddon", async (source, args, raw) => {
         console.log('fiveguard documentation: https://docs.fiveguard.net')
         console.log("FIVEGUARD ADDON COMMANDS");
         console.log("         fgAddon help");
-        console.log("         fgAddon unban <all/range> [range: <minId> <maxId>]");
-        console.log("         fgAddon bypass-native <uninstall/install> [optional: resourceName]");
+        console.log("         fgAddon unban <all|range> [range: <minId> <maxId>]");
+        console.log("         fgAddon bypass-native <install|uninstall> [optional: resourceName]");
+        console.log("         fgAddon xss <install|uninstall> [optional: resourceName]");
         break;
       }
       case "bypass-native": {
@@ -150,7 +151,7 @@ RegisterCommand("fgAddon", async (source, args, raw) => {
         switch (args[1]) {
           case "install":
             for (const res of targets) {
-              const { changed, skippedReason, ignoreMe } = installInResource(res, currentResource);
+              const { changed, skippedReason, ignoreMe } = installInResource(res, currentResource, "bypassNative.lua");
               if (changed) {
                 log(`Installed bypassNative.lua to ${res} successfully.`);
                 changedCount++;
@@ -167,7 +168,7 @@ RegisterCommand("fgAddon", async (source, args, raw) => {
             break;
           case "uninstall":
             for (const res of targets) {
-              const { changed } = uninstallInResource(res, currentResource);
+              const { changed } = uninstallInResource(res, currentResource, "bypassNative.lua");
               if (changed) {
                 log(`Removed bypassNative.lua reference from ${res}.`);
                 changedCount++;
@@ -179,7 +180,54 @@ RegisterCommand("fgAddon", async (source, args, raw) => {
             console.log("\x1b[31mRestart Server\x1b[0m");
             break;
           default:
-            log("Specified subcommand does not exist, use fgAddon install or fgAddon uninstall");
+            log("Usage: fgAddon bypass-native <install|uninstall> [resourceName]");
+            break;
+        }
+        break;
+      }
+      case "xss": {
+        let targets = [];
+        if (args[2]) {
+          targets = [args[2]];
+        } else {
+          targets = getAllResources();
+        }
+        let changedCount = 0;
+        let skippedCount = 0;
+        switch (args[1]) {
+          case "install":
+            for (const res of targets) {
+              const { changed, skippedReason, ignoreMe } = installInResource(res, currentResource, "xss.lua");
+              if (changed) {
+                log(`Installed xss.lua to ${res} successfully.`);
+                changedCount++;
+              } else {
+                if (!ignoreMe) {
+                  log(`Can not install xss.lua to ${res} Reason: ${skippedReason}.`);
+                  skippedCount++;
+                }
+              }
+              await sleep(Math.floor(Math.random() * (50 - 25 + 1)) + 25);
+            }
+            log(`Installed XSS to (${changedCount}), ${skippedCount} skipped (already installed, failed installing or resources shouldn't have the installation file)`);
+            console.log("\x1b[31mRestart Server\x1b[0m");
+            break;
+          case "uninstall":
+            for (const res of targets) {
+              const { changed } = uninstallInResource(res, currentResource, "xss.lua");
+              if (changed) {
+                log(`Removed xss.lua reference from ${res}.`);
+                changedCount++;
+              } else { skippedCount++; }
+              await sleep(Math.floor(Math.random() * (50 - 25 + 1)) + 25);
+            }
+            if (skippedCount > 1) { skippedCount = skippedCount - 2 }
+            log(`Uninstalled XSS from (${changedCount}), ${skippedCount} skipped.`);
+            console.log("\x1b[31mRestart Server\x1b[0m");
+            break;
+          default:
+            log("Usage: fgAddon xss <install|uninstall> [resourceName]");
+            break;
         }
         break;
       }

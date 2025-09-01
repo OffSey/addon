@@ -1,7 +1,12 @@
-if CurrentResourceName == GetCurrentResourceName() then return end
-
+local a1 = GetCurrentResourceName()
+if a1 == CurrentResourceName then return end
+----------------------------   
+--          BETA          --
+----------------------------
 if IsDuplicityVersion() then
-    print('server')
+    print("[^2INFO^0] the module ^5xss^0 by addon is loaded into "..tostring(a1).." successfully!")
+    local _registerNetEvent = RegisterNetEvent
+    local _addEventHandler = AddEventHandler
     local function sanitizer(...)
         local nowcleandata = {}
         for _, input in ipairs({...}) do
@@ -15,19 +20,16 @@ if IsDuplicityVersion() then
         end
         return nowcleandata
     end
-
-    local _registerNetEvent = RegisterNetEvent
     RegisterNetEvent = function (name, ...)
-        -- Debug('RegisterNetEvent',name)
         local nowcleandata = sanitizer(...)
         return _registerNetEvent(name, table.unpack(nowcleandata))
-        -- return _registerNetEvent(name, nowcleandata)
     end
-    local _addEventHandler = AddEventHandler
+    RegisterServerEvent = function (name, ...)
+        local nowcleandata = sanitizer(...)
+        return _registerNetEvent(name, table.unpack(nowcleandata))
+    end
     AddEventHandler = function (name, ...)
-        -- Debug('AddEventHandler ',name)
         local nowcleandata = sanitizer(...)
         return _addEventHandler(name, table.unpack(nowcleandata))
-        -- return _addEventHandler(name, nowcleandata)
     end
 end
