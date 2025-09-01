@@ -1,5 +1,5 @@
 return {
-    Debug = false,
+    Debug = true,
     CheckUpdates = true, -- RECOMMENDED Enable this to be notified when an update is available!
     -- custom storage for video or images, if not configured will be used the default screenshot webhook url on your fiveguard config
     CustomWebhookURL = "https://discord.com/api/webhooks/URL", -- Discord webhook URL to store video or images
@@ -62,7 +62,6 @@ return {
             },
         },
         preventLaunchPlayer = false,    -- !!Can make false ban
-        preventGlitchVehicle = true,
         preventInvalidOwner = false,    -- !!Can make false ban
         preventNilResources = false,    -- !!Can make false ban
         preventUnNetworkedEnity = false,-- !!Can make false ban
@@ -113,9 +112,9 @@ return {
         }
     },
 
-    AntiExplosions = { -- Crédit: @jona0081
+    AntiExplosions = {
         enable = true,
-        preventExplosions = true,
+        preventExplosions = true, -- Crédit: @jona0081
         preventSafeExplosions = false,
         preventUnnetworkedExplosions = true,
         ban = true, -- If false player will be kicked
