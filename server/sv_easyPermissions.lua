@@ -138,10 +138,13 @@ elseif Config.FrameworkPermissions.enable then
         end
     end
     if string.len(out) > 10 then Error(out) end
-
+    local checkResource = function (res)
+        local rs = GetResourceState(res)
+        return rs == "started" or rs == "starting"
+    end
     local frameworkDetected = ''
     if not Config.FrameworkPermissions.customFramework.enable then
-        if GetResourceState('es_extended') == 'started' then
+        if checkResource('es_extended') then
             frameworkDetected = 'ESX'
             local ESX = exports.es_extended:getSharedObject()
             AddEventHandler('esx:playerLoaded', function(source, xPlayer)
@@ -163,18 +166,8 @@ elseif Config.FrameworkPermissions.enable then
                 SetPermission(playerId, lastGroup, false)
                 SetPermission(playerId, group, true)
             end)
-        elseif GetResourceState('qbx_core') == 'started' then
+        elseif checkResource('qbx_core') then
             frameworkDetected = 'QBox'
-            -- RegisterNetEvent('QBCore:Server:OnPlayerLoaded',function(source)
-            --     Debug('[QBCore:Server:OnPlayerLoaded]',GetInvokingResource(),source)
-            --     if GetInvokingResource() ~= 'qbx_core' then return Warn(source,'tried to exploit QBCore:Server:OnPlayerLoaded') end
-            --     for group,_ in pairs(Config.groups) do
-            --         if IsPlayerAceAllowed(source, group) then
-            --             SetPermission(source, group, true)
-            --             break
-            --         end
-            --     end
-            -- end)
             AddEventHandler('QBCore:Server:PlayerLoaded', function(Player)
                 Debug('[QBCore:Server:PlayerLoaded]',GetInvokingResource(),Player.PlayerData.source)
                 if GetInvokingResource() ~= 'qbx_core' then return Warn(source,'tried to exploit QBCore:Server:PlayerLoaded') end
@@ -217,7 +210,7 @@ elseif Config.FrameworkPermissions.enable then
                     end
                 end
             end)
-        elseif GetResourceState('qb-core') == 'started' then
+        elseif checkResource('qb-core') then
             frameworkDetected = 'QBCore'
             if not IsPrincipalAceAllowed('qbcore.god','group.admin') then
                 ExecuteCommand('add_principal qbcore.god group.admin')
@@ -252,7 +245,7 @@ elseif Config.FrameworkPermissions.enable then
                     end
                 end
             end)
-        elseif GetResourceState('vrp') == 'started' then
+        elseif checkResource('vrp') then
             frameworkDetected = 'vRP'
             local chunk, vRP = LoadResourceFile('vrp','lib/utils.lua')
             if chunk then
@@ -311,7 +304,7 @@ elseif Config.FrameworkPermissions.enable then
                 end
             end)
         else
-            Error('Framework not detected, make sure to start this script after your framework!\nIf u have a custom framework configure it in the config.lua file.')
+            Error('Framework not detected\nIf u have a custom framework anble customFramework and configure it in the config.lua file.')
         end
     else
         AddEventHandler(tostring(Config.FrameworkPermissions.customEvent),function(playerId,group,allow)
@@ -352,14 +345,6 @@ elseif Config.FrameworkPermissions.enable then
             ExecuteCommand('remove_principal qbcore.god group.admin')
         end
     end)
-    -- AddEventHandler('onResourceStop', function(res)
-    --     if  (res ~= Fiveguard) then return end
-    --     for group, groupConfig in pairs(Config.FrameworkPermissions.groups) do
-    --         for i = 1 , #groupConfig do
-    --             ExecuteCommand(("remove_ace group.%s_fg %s allow"):format(group, groupConfig[i]))
-    --         end
-    --     end
-    -- end)
 elseif Config.txAdminPermissions.enable then
     if GetResourceState('monitor') ~= 'started' then return Error('[txAdmin Permission] You can not use this permission without txAdmin in your server!') end
     Info('Easy Permissions: using txAdmin Permissions')
@@ -370,7 +355,6 @@ elseif Config.txAdminPermissions.enable then
             ExecuteCommand(("add_ace fg.txadmin %s allow"):format(Config.txAdminPermissions.fgPermissions[i]))
         end
     end
-
     AddEventHandler("txAdmin:events:adminAuth", function(data)
         Debug('[txAdmin:events:adminAuth]', json.encode(data, {indent=true}))
         if not data then return end
@@ -384,14 +368,12 @@ elseif Config.txAdminPermissions.enable then
             end
         end
     end)
-
     AddEventHandler('onResourceStop', function(res)
         if res ~= CurrentResourceName then return end
         for i = 1, #Config.txAdminPermissions.fgPermissions do
             ExecuteCommand(("remove_ace fg.txadmin %s allow"):format(Config.txAdminPermissions.fgPermissions[i]))
         end
     end)
-
     AddEventHandler('onResourceStop', function(res)
         if res ~= 'monitor' then return end
         for i = 1, #Config.txAdminPermissions.fgPermissions do
