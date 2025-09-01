@@ -61,10 +61,10 @@ return {
                 { coords = vec3(-47.500000, -1097.199951, 25.400000), radius = 2.0 }
             },
         },
-        preventLaunchPlayer = false,    -- !!Can make false ban
-        preventInvalidOwner = false,    -- !!Can make false ban
-        preventNilResources = false,    -- !!Can make false ban
-        preventUnNetworkedEnity = false,-- !!Can make false ban
+        preventLaunchPlayer = false,    -- !!Can make false detections
+        preventInvalidOwner = false,    -- !!Can make false detections
+        preventNilResources = false,    -- !!Can make false detections
+        preventUnNetworkedEnity = false,-- !!Can make false detections
         maxVehicleCheckDistance = 50,
         checkInterval = 5,
         maxRetries = 5,
@@ -277,7 +277,6 @@ return {
     EasyPermissions = {
         enable = false, -- MASTER SWITCH
         -- !! DO NOT ENABLE MORE THAN 1 PERMISSION SYSTEM BELOW AT SAME TIME! Default is ACE
-
         -- Bypass txAdmin admins
         txAdminPermissions = {
             enable = false,
