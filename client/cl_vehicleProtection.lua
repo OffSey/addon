@@ -93,28 +93,3 @@ if Config.preventSafeSpawn.enable then
     end
     check_safespawn()
 end
-
--- RegisterNetEvent("fg:addon:checkVehicle", function(netId)
---     local entity = NetworkGetEntityFromNetworkId(netId)
---     local retries = 0
---     while not DoesEntityExist(entity) and retries < Config.maxRetries do
---         Citizen.Wait(500)
---         entity = NetworkGetEntityFromNetworkId(netId)
---         retries = retries + 1
---     end
---     if DoesEntityExist(entity) then
---         local scriptName = GetEntityScript(entity)
---         if Config.detectNilResources and scriptName == nil then
---             DeleteEntity(entity)
---             if Config.ban then
---                 TriggerServerEvent("fg:addon:dropMe", "Vehicle spawned with an imvalid resource.")
---             end
---         end
---         if scriptName and not Config.resourceWhitelisted[scriptName] then
---             DeleteEntity(entity)
---             if Config.ban then
---                 TriggerServerEvent("fg:addon:dropMe", "Vehicle spawned by a not whitelisted resource: " .. tostring(scriptName))
---             end
---         end
---     end
--- end)

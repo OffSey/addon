@@ -24,13 +24,8 @@ if Config.txAdminPermissions.enable or Config.AcePermissions.enable or Config.Fr
         Debug('[SetPermission]', source, group, enable, PermsTable[source]?.group)
         if not group or type(group) ~= "string" then return Error('Group not valid or not exist') end
         if group == 'user' then return Debug(("Ignored player: [^5%s^0] ^5%s^0 since he's: ^5%s^0"):format(source, GetPlayerName(source), group)) end
-        -- local identifier = GetPlayerIdentifier(source, 0) or PermsTable[source]?.identifier
-        -- Debug('[SetPermission]', json.encode(PermsTable[source], {indent=true}))
         if source ~= 0 then
             if enable then
-                -- if IsPlayerAceAllowed(source, group) then --removed since cfx break logic
-                --     return Warn(("Player: [^5%s^0] ^5%s^0 already have permissions for fg.^5%s^0, ignored"):format(source, GetPlayerName(source), group))
-                -- end
                 if PermsTable[source] and PermsTable[source]?.group ~= group then
                     local oldGroup = PermsTable[source]?.group
                     ExecuteCommand(("remove_principal player.%s fg.%s"):format(source, oldGroup))
@@ -46,9 +41,6 @@ if Config.txAdminPermissions.enable or Config.AcePermissions.enable or Config.Fr
                     return Info(("Permissions ^2granted^0 to player: [^5%s^0] ^5%s^0 Group: ^5%s^0"):format(source, GetPlayerName(source), group))
                 end
             else
-                -- if not IsPlayerAceAllowed(source, group) then --removed since cfx break logic
-                --     return Warn(("Player: [^5%s^0] ^5%s^0 already don't have permissions for fg.^5%s^0, ignored"):format(source, GetPlayerName(source), group))
-                -- end
                 ExecuteCommand(("remove_principal player.%s fg.%s"):format(source, group))
                 PermsTable[source] = nil
                 return Debug(("Permissions ^1removed^0 from player: [^5%s^0] ^5%s^0 Group: ^5%s^0"):format(source, GetPlayerName(source), group))

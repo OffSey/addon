@@ -60,7 +60,6 @@ AddEventHandler('entityCreated', function(entity)
         DeleteEntity(entity)
         return
     end
-    -- TriggerClientEvent("fg:addon:checkVehicle", owner, netId)
 end)
 
 RegisterNetEvent("fg:addon:punish", function(reason)
