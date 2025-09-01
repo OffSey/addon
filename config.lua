@@ -337,7 +337,7 @@ return {
         },
         -- Use framework permission to determinate when add or remove fg perms
         FrameworkPermissions = {
-            enable = false,
+            enable = true,
             customFramework = {
                 enable = false, -- enable this only if u have a custom settings and u know what u are doing
                 customEvent = '', -- name of the events that's triggered when a player get/lose a group
@@ -520,7 +520,7 @@ return {
         },
         -- Use ACE Permissions from FiveM natives
         AcePermissions = {
-            enable = true, -- Group Ace Permissions // ONLY ESX FOR THE MOMENT (Soon QbCore & vRP)
+            enable = false, -- Group Ace Permissions // ONLY ESX FOR THE MOMENT (Soon QbCore & vRP)
             groups = {      -- define wich perms you want to add for a specific group
                 ['admin'] = {
                     --[[ AdminMenu ]] --
