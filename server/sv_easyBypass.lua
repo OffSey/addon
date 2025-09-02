@@ -58,10 +58,25 @@ local B_CATEGORY = {
     ["BypassParticle"] = "Misc",
     ["BypassSpoofedWeapons"] = "Misc"
 }
+Citizen.CreateThread(function ()
+    local safeEventEnabled = pcall(function ()
+        local events, retval, errorText = {
+            "fg:addon:SetTempPermission:BypassTeleport",
+            "fg:addon:SetTempPermission:BypassInvisible"
+        },nil,nil
+        for i=1,#events do
+            retval, errorText = exports[Fiveguard]:RegisterSafeEvent(events[i], { log = true, ban = false }, true)
+        end
+        return retval, errorText
+    end)
+    if not safeEventEnabled then
+        Debug("Safe events not enabled, disabled token check on evemts")
+    end
+end)
 
-local SafeSetEntityCoords = function(bol,resName)
+local SafeSetEntityCoords = function(source, bol, resName)
     if resName == CurrentResourceName then return end
-    if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a bypass using the resource: %s"):format(source,GetPlayerName(source),resName)) end
+    if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a BypassTeleport using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.SetEntityCoords then
         local result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY["BypassTeleport"], "BypassTeleport", bol, false)
         if not result then
@@ -74,9 +89,9 @@ local SafeSetEntityCoords = function(bol,resName)
     end
 end
 
-local SafeSetEntityVisible = function(bol,resName)
+local SafeSetEntityVisible = function(source, bol, resName)
     if resName == CurrentResourceName then return end
-    if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a bypass using the resource: %s"):format(source,GetPlayerName(source),resName)) end
+    if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a BypassInvisible using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.SetEntityVisible then
         local result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY["BypassInvisible"], "BypassInvisible", bol, false)
         if not result then
@@ -89,23 +104,23 @@ local SafeSetEntityVisible = function(bol,resName)
     end
 end
 
-RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function (...)
+RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function (bol,resName)
     local s,r = pcall(function ()
         return exports[Fiveguard]:VerifyToken(source)
     end)
-    if s and not r then return Warn(("[^4%s^0] ^4%s^0 tried to get BypassTeleport"):format(source,GetPlayerName(source))) end
-    SafeSetEntityCoords(source,...)
+    if s and not r then return Warn(("[^4%s^0] ^4%s^0 tried to exploit BypassTeleport"):format(source,GetPlayerName(source))) end
+    SafeSetEntityCoords(source, bol, resName)
 end)
-exports[Fiveguard]:RegisterSafeEvent("fg:addon:SetTempPermission:BypassTeleport", { log = true, ban = false }, true)
 
-RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function (...)
+
+RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function (bol,resName)
     local s,r = pcall(function ()
         return exports[Fiveguard]:VerifyToken(source)
     end)
-    if s and not r then return Warn(("[^4%s^0] ^4%s^0 tried to get BypassTeleport"):format(source,GetPlayerName(source))) end
-    SafeSetEntityVisible(source,...)
+    if s and not r then return Warn(("[^4%s^0] ^4%s^0 tried to exploit BypassTeleport"):format(source,GetPlayerName(source))) end
+    SafeSetEntityVisible(source, bol, resName)
 end)
-exports[Fiveguard]:RegisterSafeEvent("fg:addon:SetTempPermission:BypassInvisible", { log = true, ban = false }, true)
+
 
 exports("SafeSetEntityVisible", SafeSetEntityVisible)
 exports("SafeSetEntityCoords", SafeSetEntityCoords)

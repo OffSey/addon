@@ -1,6 +1,20 @@
 local a1 = GetCurrentResourceName()
 if a1 == CurrentResourceName then return end
 if IsDuplicityVersion() then
+    local resources = GetNumResources()
+    local Fiveguard = nil
+    for i = 0, resources - 1 do
+        local resource = GetResourceByFindIndex(i)
+        local files = GetNumResourceMetadata(resource, "ac")
+        for j = 0, files - 1 do
+            local x = GetResourceMetadata(resource, "ac", j)
+            if x and x:find("fg") then
+                Fiveguard = resource
+                break
+            end
+        end
+        if Fiveguard then break end
+    end
     print("[^2INFO^0] the module ^5bypassNative^0 by addon is loaded into "..tostring(a1).." successfully!")
     local setEntityCoords = SetEntityCoords
     SetEntityCoords = function (entity,...)

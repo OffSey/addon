@@ -266,11 +266,13 @@ return {
     EasyTempBypass = {
         enable = true,
 
-        -- It enable  exports["addon"]:SafeSetEntityCoords(true or false, GetCurrentResourceName())
-                    --exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassTeleport",true or false, GetCurrentResourceName())
+        -- It enable  exports["addon"]:SafeSetEntityCoords(playerId, true or false, GetCurrentResourceName())
+                    --exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassTeleport", true or false, GetCurrentResourceName()) /
+                    --TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport", true or false, GetCurrentResourceName())
         SetEntityCoords = true,
-        -- It enable  exports["addon"]:SafeSetEntityCoords(true or false, GetCurrentResourceName())
-                    --exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassInvisible",true or false, GetCurrentResourceName())
+        -- It enable  exports["addon"]:SafeSetEntityCoords(playerId, true or false, GetCurrentResourceName())
+                    --exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassInvisible", true or false, GetCurrentResourceName()) /
+                    --TriggerServerEvent("fg:addon:SetTempPermission:BypassInvisible", true or false, GetCurrentResourceName())
         SetEntityVisible = true
     },
 
