@@ -76,9 +76,8 @@ if Config.preventSafeSpawn.enable then
                 if DoesEntityExist(veh) and not NetworkGetEntityIsNetworked(veh) then
                     local pos = GetEntityCoords(ped)
                     local inWhitelistZone = false
-                    for i=1, #Config.whitelistedCoords do
-                        local zone = Config.whitelistedCoords[i]
-                        if #(pos-zone.coords) <= zone.radius then
+                    for i=1, #Config.preventSafeSpawn.whitelistedCoords do
+                        if #(pos-Config.preventSafeSpawn.whitelistedCoords[i].coords) <= Config.preventSafeSpawn.whitelistedCoords[i].radius then
                             inWhitelistZone = true
                             break
                         end
