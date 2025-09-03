@@ -66,7 +66,7 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
     if R_EVENTS[se] then return Warn(('Event %s is already registered to bypass %s'):format(se,bp)) end
     if type(bp) == "string" then bp = { bp } end
     if ee then
-        R_EVENTS[se] = AddEventHandler(se, function(...)
+        R_EVENTS[se] = AddEventHandler(se, function()
             for i = 1, #bp do
                 result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY[bp[i]], bp[i], true)
                 if not result then
@@ -78,7 +78,7 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
         end)
         Debug(('Event ^5"%s"^0 registered to ^2enable^0 bypass ^5%s^0'):format(se,json.encode(bp)))
         if R_EVENTS[ee] then return Warn(('Event %s is already registered'):format(ee)) end
-        R_EVENTS[ee] = AddEventHandler(ee, function(...)
+        R_EVENTS[ee] = AddEventHandler(ee, function()
             for i = 1, #bp do
                 result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY[bp[i]], bp[i], false)
                 if not result then
@@ -91,7 +91,7 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
         Debug(('Event ^5"%s"^0 registered to ^1disable^0 bypass ^5%s^0'):format(ee,json.encode(bp)))
     else
         if useBooleanArg then
-            R_EVENTS[se] = AddEventHandler(se, function(bol,...)
+            R_EVENTS[se] = AddEventHandler(se, function(bol)
                 if not bol then return Error(se.. 'don\'t have a boolean argoument!') end
                 for i = 1, #bp do
                     result, errorText = exports[Fiveguard]:SetTempPermission(source, B_CATEGORY[bp[i]], bp[i], bol)
