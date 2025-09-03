@@ -8,20 +8,20 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
     if not se or not bp then return end
     if R_EVENTS[se] then return Warn(('Event %s is already registered'):format(se)) end
     if ee then
-        R_EVENTS[se] = AddEventHandler(se, function(...)
+        R_EVENTS[se] = AddEventHandler(se, function()
             TriggerServerEvent(('fg:addon:%s'):format(se))
         end)
         if R_EVENTS[ee] then return Warn(('Event %s is already registered'):format(ee)) end
-        R_EVENTS[ee] = AddEventHandler(ee, function(...)
+        R_EVENTS[ee] = AddEventHandler(ee, function()
             TriggerServerEvent(('fg:addon:%s'):format(ee))
         end)
     else
         if useBooleanArg then
-            R_EVENTS[se] = AddEventHandler(se, function(bol,...)
+            R_EVENTS[se] = AddEventHandler(se, function(bol)
                 TriggerServerEvent(('fg:addon:%s'):format(se), bol)
             end)
         else
-            R_EVENTS[se] = AddEventHandler(se, function(...)
+            R_EVENTS[se] = AddEventHandler(se, function()
                 TriggerServerEvent(('fg:addon:%s'):format(se))
                 Citizen.Wait(5000)
                 TriggerServerEvent(('fg:addon:%s'):format(ee))
