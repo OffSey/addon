@@ -58,7 +58,7 @@ local B_CATEGORY = {
     ["BypassParticle"] = "Misc",
     ["BypassSpoofedWeapons"] = "Misc"
 }
-Citizen.CreateThread(function ()
+do
     local safeEventEnabled = pcall(function ()
         local events, retval, errorText = {
             "fg:addon:SetTempPermission:BypassTeleport",
@@ -72,7 +72,7 @@ Citizen.CreateThread(function ()
     if not safeEventEnabled then
         Debug("Safe events not enabled, disabled token check on evemts")
     end
-end)
+end
 
 local SafeSetEntityCoords = function(source, bol, resName)
     if resName == CurrentResourceName then return end
