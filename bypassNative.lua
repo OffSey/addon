@@ -18,7 +18,7 @@ do
 end
 
 if IsDuplicityVersion() then
-    print("[^2INFO^0] the module ^5bypassNative^0 by addon is loaded into "..tostring(a1).." successfully!")
+    print(("[^2INFO^0] the module ^5bypassNative^0 by addon is loaded into ^5%s^0 successfully!"):format(tostring(a1)))
     local setEntityCoords = SetEntityCoords
     SetEntityCoords = function (entity, ...)
         local source = NetworkGetEntityOwner(entity)
