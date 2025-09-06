@@ -123,6 +123,9 @@ function uninstallInResource(targetResource, currentResource, defModule) {
   return { changed: true };
 }
 
+RegisterCommand("fgAddon", async (source, args, raw) => {
+  log("Specified command does not exists anymore, use command fga help to get more information about commands");
+}, true);
 RegisterCommand("fga", async (source, args, raw) => {
   if (source !== 0) return;
   if (imBusy) { log("Command already running, please wait..."); return; }
