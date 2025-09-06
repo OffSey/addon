@@ -25,7 +25,6 @@ local function checkThrow ()
 end
 checkThrow()
 
-RegisterNetEvent('fg:addon:anti-throw')
-AddEventHandler('fg:addon:anti-throw', function()
+RegisterNetEvent('fg:addon:antiThrow:punish', function()
     PunishPlayer(source, Config.ban, "Tried to throw a vehicle (1)",Config.banMedia)
 end)

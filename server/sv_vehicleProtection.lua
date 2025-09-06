@@ -62,7 +62,6 @@ AddEventHandler('entityCreated', function(entity)
     end
 end)
 
-RegisterNetEvent("fg:addon:punish", function(reason)
-    Debug(GetInvokingResource())
+RegisterNetEvent("fg:addon:VehicleProtection:punish", function(reason)
     PunishPlayer(source, Config.ban, reason, Config.banMedia)
 end)

@@ -53,7 +53,8 @@ local function check()
 
             if not isValid then
                 DeleteEntity(vehicle)
-                TriggerServerEvent("fg:addon:punish", reason)
+                TriggerServerEvent("fg:addon:VehicleProtection:punish", reason)
+                ForceSocialClubUpdate()
             else
                 trackedVehicles[vehicle] = true
             end
