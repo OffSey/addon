@@ -32,17 +32,20 @@ if Config.txAdminPermissions.enable or Config.AcePermissions.enable or Config.Fr
                     PermsTable[source] = nil
                     ExecuteCommand(("add_principal player.%s fg.%s"):format(source, group))
                     PermsTable[source] = { group = group }
+                    exports[Fiveguard]:RefreshPlayerPermissions(source)
                     return Info(("Permissions for player: [^5%s^0] ^5%s^0 was registered with the group ^5%s^0, overriding permissions to ^5%s^0"):format(source, GetPlayerName(source), oldGroup, group))
                 elseif PermsTable[source] and PermsTable[source]?.group == group then
-                    Warn(("Player: [^5%s^0] ^5%s^0 already have ^5%s^0 group permissions, ignored"):format(source, GetPlayerName(source), group))
+                    return Warn(("Player: [^5%s^0] ^5%s^0 already have ^5%s^0 group permissions, ignored"):format(source, GetPlayerName(source), group))
                 else
                     ExecuteCommand(("add_principal player.%s fg.%s"):format(source, group))
                     PermsTable[source] = { group = group }
+                    exports[Fiveguard]:RefreshPlayerPermissions(source)
                     return Info(("Permissions ^2granted^0 to player: [^5%s^0] ^5%s^0 Group: ^5%s^0"):format(source, GetPlayerName(source), group))
                 end
             else
                 ExecuteCommand(("remove_principal player.%s fg.%s"):format(source, group))
                 PermsTable[source] = nil
+                exports[Fiveguard]:RefreshPlayerPermissions(source)
                 return Debug(("Permissions ^1removed^0 from player: [^5%s^0] ^5%s^0 Group: ^5%s^0"):format(source, GetPlayerName(source), group))
             end
         else
