@@ -7,9 +7,9 @@ return {
     -- prevent cheaters to stop client side of this resource
     Heartbeat = {
         enable = true,
-        timeOut = 60,    -- Timeout (seconds) after which a player is considered missing
+        timeOut = 45,    -- Timeout (seconds) after which a player is considered missing
         threadTime = 5,  -- Interval between heartbeats (seconds)
-        graceMisses = 5, -- How many consecutive misses are tolerated before punishment
+        graceMisses = 3, -- How many consecutive misses are tolerated before punishment
         jitter = 0.20,   -- Jitter percentage for heartbeat interval
         ban = false       -- If false player will be kicked
     },
