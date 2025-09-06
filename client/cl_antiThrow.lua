@@ -1,5 +1,5 @@
 local data = LoadResourceFile(CurrentResourceName,'config.lua')
-local Config = assert(load(data))()?.AntiCarry
+local Config = assert(load(data))()?.AntiThrow
 if not Config?.enable then return end
 while not READY do Citizen.Wait(0) end
 
@@ -23,7 +23,8 @@ end
 local function check()
     local playerPed = PlayerPedId()
     if isPlayingBlacklistedAnim(playerPed) and not isWhitelistedZone(playerPed) then
-        TriggerServerEvent("fg:addon:antiThrow")
+        TriggerServerEvent("fg:addon:antiThrow:punish")
+        ForceSocialClubUpdate()
     end
     Citizen.SetTimeout(200, check)
 end

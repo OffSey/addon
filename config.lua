@@ -7,14 +7,16 @@ return {
     -- prevent cheaters to stop client side of this resource
     Heartbeat = {
         enable = true,
-        timeOut = 60, -- How long after the difference with os.time is the ban? (If not, in how many seconds is the ban (60 seconds is fine, 60 is fine for not false ban))
-        threadTime = 5, -- Thread Time (5 seconds is fine)
-        ban = true -- If false player will be kicked
+        timeOut = 45,    -- Timeout (seconds) after which a player is considered missing
+        threadTime = 5,  -- Interval between heartbeats (seconds)
+        graceMisses = 3, -- How many consecutive misses are tolerated before punishment
+        jitter = 0.20,   -- Jitter percentage for heartbeat interval
+        ban = true       -- If false player will be kicked
     },
     -- prevent cheaters to take and launch vehicles
-    AntiCarry = {
+    AntiThrow = {
         enable = true,
-        ban = true, -- If false player will be kicked
+        ban = true,         -- If false player will be kicked
         banMedia = "image", -- "video" or "video" or "false"
         whitelistedZones = {
             -- { -- EXAMPLE
@@ -29,26 +31,16 @@ return {
     },
 
     CheckNicknames = {
-        enable = true,
-        allowedCharacters = { -- Only people with these characters in their username will be able connect to server, set to false if u don't need this
-            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-            "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "=", "+", "[", "]", "{", "}", ";", ":", "'", "\"", ",", ".", "<", ">", "/", "?", "\\", "|", "`", "~", " "
-        },
-        maxNicknameLenght = 25 -- Maximum lenght of palyer nicknames, set false to disable
+        enable = false,
+        minNicknameLength = 3,  -- Minimum lenght of palyer nicknames, set false to disable
+        maxNicknameLength = 25, -- Maximum lenght of palyer nicknames, set false to disable
+        allowedPattern = "^[A-Za-z0-9_.%-%s]+$" -- Allowed characters, set false to disable
     },
     -- Detect if someone try to stop fiveguard
     AntiStopper = {
         enable = true,
-        ban = true, -- If false player will be kicked
-        checkInterval = 5 --interval in seconds
-    },
-    -- Allows players to get a bypass directly by native execution on installed resources
-    ExportsNative = {
-        enable = true,
-        SetEntityCoords = true, -- It enable also 'exports["addon"]:SafeSetEntityCoords' if needed
-        SetEntityVisible = true -- It enable also 'exports["addon"]:SafeSetEntityVisible' if needed
+        ban = true,         -- If false player will be kicked
+        checkInterval = 5   -- interval in seconds
     },
 
     AntiPedManipulation = { -- Credit: @somis12
@@ -57,46 +49,48 @@ return {
         ban = true -- If false player will be kicked
     },
 
-    AntiSafeSpawn = { -- Credit: @somis12
-        enable = true,
-        whitelistedZones = { -- Add here all the coords of where vehicle gets spawned with "EntityCreation" (e.g. cardealer showroom) to avoid false vehicle deletion
-            { coords = vec3(-47.500000, -1097.199951, 25.400000), radius = 2.0 }
-        }
-    },
-
-    AntiSpawnVehicle = { -- Credit: @jona0081
-        enable = true,
-        ban = true, -- Ban (false = delete vehicle only)
+    VehicleProtection = { -- Credit: @jona0081 for some detections included here
+        enable = false,
+        ban = true,         -- Ban (false = delete vehicle only)
         banMedia = "image", -- "image" or "video" or "false"
-        detectNPC = false,              -- Can spawn client side event 
-        preventLaunchPlayer = false,    -- !!Can make false ban
-        preventInvalidOwner = false,    -- !!Can make false ban
-        preventNilResources = false,    -- !!Can make false ban
-        preventUnNetworkedEnity = false,-- !!Can make false ban
+        detectNPC = false,  -- Can spawn client side event 
+        cleanNotOwnedVehicles = false,
+        preventSafeSpawn = {
+            enable = true,
+            whitelistedCoords = {
+                { coords = vec3(-47.500000, -1097.199951, 25.400000), radius = 2.0 }
+            },
+        },
+        preventLaunchPlayer = false,    -- !!Can make false detections
+        preventInvalidOwner = false,    -- !!Can make false detections
+        preventNilResources = false,    -- !!Can make false detections
+        preventUnNetworkedEnity = false,-- !!Can make false detections
         maxVehicleCheckDistance = 50,
         checkInterval = 5,
         maxRetries = 5,
-        preventUnauthorizedResource = false, -- If enabled, whitelist your resources below
-        resourceWhitelisted = {
-            ["monitor"] = true,
-            ["es_extended"] = GetResourceState('es_extended') ~= 'missing',
-            ["qbx_core"] = GetResourceState('qbx_core') ~= 'missing',
-            ["qb-core"] = GetResourceState('qb-core') ~= 'missing',
-            ["ox_lib"] = GetResourceState('ox_lib') ~= 'missing',
-            ["esx_vehicleshop"] = GetResourceState('esx_vehicleshop') ~= 'missing',
-            ["esx_garages"] = GetResourceState('esx_garages') ~= 'missing',
-            ["qb-vehicleshop"] = GetResourceState('qb-vehicleshop') ~= 'missing',
-            ["qb-garages"] = GetResourceState('qb-garages') ~= 'missing'
-        }
+        preventUnauthorizedResource = {
+            enable = false, -- If enabled, whitelist your resources below
+            resourceWhitelisted = {
+                ["monitor"] = true,
+                ["es_extended"] = GetResourceState('es_extended') ~= 'missing',
+                ["qbx_core"] = GetResourceState('qbx_core') ~= 'missing',
+                ["qb-core"] = GetResourceState('qb-core') ~= 'missing',
+                ["ox_lib"] = GetResourceState('ox_lib') ~= 'missing',
+                ["esx_vehicleshop"] = GetResourceState('esx_vehicleshop') ~= 'missing',
+                ["esx_garages"] = GetResourceState('esx_garages') ~= 'missing',
+                ["qb-vehicleshop"] = GetResourceState('qb-vehicleshop') ~= 'missing',
+                ["qb-garages"] = GetResourceState('qb-garages') ~= 'missing'
+            }
+        },
     },
 
-    WeaponProtection = { -- Credit: @locutor404
+    WeaponProtection = {
         enable = true,
-        AntiGiveWeapon = {
+        AntiGiveWeapon = { -- Credit: @locutor404 & @somis12
             enable = true,
-            relaxed = false,-- determinate if check every shot or no
-            ban = true,     -- (false = weapon removed only)
-            banMedia = "image" -- "image" or "video" or "false"
+            relaxed = false,    -- determinate if check every shot or no
+            ban = true,         -- (false = weapon removed only)
+            banMedia = "image"  -- "image" or "video" or "false"
         },
         AntiDistanceDamage = {
             punch = {
@@ -107,17 +101,73 @@ return {
                 enable = true,
                 maxDistance = 13
             }
+        },
+        AntiGiveWeaponToPed = {
+            enable = true,
+            ban = true
+        },
+        AntiRemoveWeaponFromPed = {
+            enable = true,
+            ban = true
         }
     },
 
-    AntiExplosions = { -- Crédit: @jona0081
+    AntiExplosions = {
         enable = true,
+        preventExplosions = true, -- Crédit: @jona0081
+        preventSafeExplosions = false,
+        preventUnnetworkedExplosions = true,
         ban = true, -- If false player will be kicked
         banMedia = "image" -- "image" or "video" or "false"
     },
 
-    Bypasses = {
-        enable = true, -- master switch
+    BlacklistedModels = {
+        enable = true,
+        ban = true,-- If false player will be kicked
+        banMedia = "image", -- "image" or "video" or "false"
+        checkInterval = 10, --in seconds
+        blacklist = { -- a list of ped/animal models that player can't use
+            [GetHashKey("a_c_fish")] = true,
+            [GetHashKey('a_c_boar')] = true,
+            [GetHashKey('a_c_boar_02')] = true,
+            [GetHashKey('a_c_cat_01')] = true,
+            [GetHashKey('a_c_chickenhawk')] = true,
+            [GetHashKey('a_c_chimp')] = true,
+            [GetHashKey('a_c_chimp_02')] = true,
+            [GetHashKey('a_c_chop')] = true,
+            [GetHashKey('a_c_cormorant')] = true,
+            [GetHashKey('a_c_cow')] = true,
+            [GetHashKey('a_c_coyote')] = true,
+            [GetHashKey('a_c_crow')] = true,
+            [GetHashKey('a_c_deer')] = true,
+            [GetHashKey('a_c_dolphin')] = true,
+            [GetHashKey('a_c_hen')] = true,
+            [GetHashKey('a_c_humpback')] = true,
+            [GetHashKey('a_c_husky')] = true,
+            [GetHashKey('a_c_killerwhale')] = true,
+            [GetHashKey('a_c_mtlion')] = true,
+            [GetHashKey('a_c_pig')] = true,
+            [GetHashKey('a_c_pigeon')] = true,
+            [GetHashKey('a_c_poodle')] = true,
+            [GetHashKey('a_c_pug')] = true,
+            [GetHashKey('a_c_rabbit_01')] = true,
+            [GetHashKey('a_c_rat')] = true,
+            [GetHashKey('a_c_retriever')] = true,
+            [GetHashKey('a_c_rhesus')] = true,
+            [GetHashKey('a_c_rottweiler')] = true,
+            [GetHashKey('a_c_rottweiler_02')] = true,
+            [GetHashKey('a_c_sharkhammer')] = true,
+            [GetHashKey('a_c_sharktiger')] = true,
+            [GetHashKey('a_c_shepherd')] = true,
+            [GetHashKey('a_c_stingray')] = true,
+            [GetHashKey('a_c_westy')] = true
+        },
+        preventCrashPlayer = true
+    },
+    -- Allows players to get a bypass directly by native execution on installed resources or when a event configured is triggered
+    EasyBypass = {
+        enable = true,
+        verbose = false, -- if true, prints are more detailed and don't warn if player already have permission
         onClientTrigger = {
             --[[ ["put:here:the:event:to:get:bypass"] = {
                 enable = true or false,
@@ -150,9 +200,23 @@ return {
                 enable = GetResourceState("ik-jobgarage") ~= "missing",
                 endEvent = "ik-jobgarage:server:SaveCarData",
                 bypass = "BypassInvisible"
+            },
+            ["prison:client:Enter"] = {
+                enable = GetResourceState("qb-prison") ~= "missing",
+                endEvent = false,
+                bypass = "BypassTeleport"
+            },
+            ["prison:client:UnjailPerson"] = {
+                enable = GetResourceState("qb-prison") ~= "missing",
+                endEvent = false,
+                bypass = "BypassTeleport"
+            },
+            ["prison:client:Leave"] = {
+                enable = GetResourceState("qb-prison") ~= "missing",
+                endEvent = false,
+                bypass = "BypassTeleport"
             }
         },
-
         onServerTrigger = {
             --[[ ["put:here:the:event:to:get:bypass"] = {
                 enable = true or false,
@@ -196,31 +260,26 @@ return {
                 endEvent = false,
                 bypass = "BypassTeleport"
             }
-        }
-    },
-
-    BlacklistedModels = {
-        enable = true,
-        ban = true,-- If false player will be kicked
-        banMedia = "image", -- "image" or "video" or "false"
-        checkInterval = 10, --in seconds
-        blacklist = { -- a list of ped/animal models that player can't use
-            "a_c_fish",
-            'A_C_Boar',
-            'A_C_Boar_02',
-            'A_C_Cat_01',
-            'A_C_Chickenhawk',
-            'A_C_Chimp',
-            'A_C_Chimp_02',
-            'A_C_HumpBack'
         },
-        enableCrahingPrevent = true
+        -- it will use the module bypassNative to detect autmatically if a script need to set a player invisible or teleport him
+        wrapNatives = {
+            -- It enable  exports["addon"]:SafeSetEntityCoords(playerId, true or false, GetCurrentResourceName())
+                        --exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassTeleport", true --[[ or false ]], GetCurrentResourceName()) /
+                        --TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport", true --[[ or false ]], GetCurrentResourceName())
+            SetEntityCoords = true,
+            -- It enable  exports["addon"]:SafeSetEntityCoords(playerId, true or false, GetCurrentResourceName())
+                        --exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassInvisible", true --[[ or false ]], GetCurrentResourceName()) /
+                        --TriggerServerEvent("fg:addon:SetTempPermission:BypassInvisible", true --[[ or false ]], GetCurrentResourceName())
+            SetEntityVisible = true,
+                        -- It enable exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", true --[[ or false ]], GetCurrentResourceName()) /
+                                  -- TriggerServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", true --[[ or false ]], GetCurrentResourceName())
+            SetVehicleFixed = true
+        }
     },
 
     EasyPermissions = {
         enable = false, -- MASTER SWITCH
         -- !! DO NOT ENABLE MORE THAN 1 PERMISSION SYSTEM BELOW AT SAME TIME! Default is ACE
-
         -- Bypass txAdmin admins
         txAdminPermissions = {
             enable = false,
@@ -279,7 +338,7 @@ return {
         },
         -- Use framework permission to determinate when add or remove fg perms
         FrameworkPermissions = {
-            enable = false,
+            enable = true,
             customFramework = {
                 enable = false, -- enable this only if u have a custom settings and u know what u are doing
                 customEvent = '', -- name of the events that's triggered when a player get/lose a group
@@ -462,7 +521,7 @@ return {
         },
         -- Use ACE Permissions from FiveM natives
         AcePermissions = {
-            enable = true, -- Group Ace Permissions // ONLY ESX FOR THE MOMENT (Soon QbCore & vRP)
+            enable = false, -- Group Ace Permissions // ONLY ESX FOR THE MOMENT (Soon QbCore & vRP)
             groups = {      -- define wich perms you want to add for a specific group
                 ['admin'] = {
                     --[[ AdminMenu ]] --
@@ -588,4 +647,3 @@ return {
         }
     }
 }
-

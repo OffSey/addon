@@ -1,5 +1,5 @@
 local data = LoadResourceFile(CurrentResourceName, 'config.lua')
-local Config = assert(load(data))()?.AntiSpawnVehicle
+local Config = assert(load(data))()?.VehicleProtection
 if not Config?.enable then return end
 while not READY do Citizen.Wait(0) end
 
@@ -32,10 +32,10 @@ local function isVehicleValid(vehicle)
     if Config.preventInvalidOwner and (not owner or owner == -1) then
         return false, "Vehicle with Invalid Owner"
     end
-    if Config.preventUnauthorizedResource and Config.preventNilResource and scriptName == nil then
+    if Config.preventUnauthorizedResource.enable and Config.preventNilResource and scriptName == nil then
         return false, "Vehicle with an invalid resource (2)"
     end
-    if Config.preventUnauthorizedResource and not Config.resourceWhitelisted[scriptName] then
+    if Config.preventUnauthorizedResource.enable and not Config.preventUnauthorizedResource.resourceWhitelisted[scriptName] then
         return false, "Vehicle from non-whitelisted script: " .. tostring(scriptName) .. " (2)"
     end
     return true
@@ -53,7 +53,8 @@ local function check()
 
             if not isValid then
                 DeleteEntity(vehicle)
-                TriggerServerEvent("fg:addon:punish", reason)
+                TriggerServerEvent("fg:addon:VehicleProtection:punish", reason)
+                ForceSocialClubUpdate()
             else
                 trackedVehicles[vehicle] = true
             end
@@ -68,27 +69,27 @@ local function check()
 end
 check()
 
--- RegisterNetEvent("fg:addon:checkVehicle", function(netId)
---     local entity = NetworkGetEntityFromNetworkId(netId)
---     local retries = 0
---     while not DoesEntityExist(entity) and retries < Config.maxRetries do
---         Citizen.Wait(500)
---         entity = NetworkGetEntityFromNetworkId(netId)
---         retries = retries + 1
---     end
---     if DoesEntityExist(entity) then
---         local scriptName = GetEntityScript(entity)
---         if Config.detectNilResources and scriptName == nil then
---             DeleteEntity(entity)
---             if Config.ban then
---                 TriggerServerEvent("fg:addon:dropMe", "Vehicle spawned with an imvalid resource.")
---             end
---         end
---         if scriptName and not Config.resourceWhitelisted[scriptName] then
---             DeleteEntity(entity)
---             if Config.ban then
---                 TriggerServerEvent("fg:addon:dropMe", "Vehicle spawned by a not whitelisted resource: " .. tostring(scriptName))
---             end
---         end
---     end
--- end)
+if Config.preventSafeSpawn.enable then
+    local function check_safespawn()
+        local ped = PlayerPedId()
+            if IsPedInAnyVehicle(ped, false) then
+                local veh = GetVehiclePedIsIn(ped, false)
+                if DoesEntityExist(veh) and not NetworkGetEntityIsNetworked(veh) then
+                    local pos = GetEntityCoords(ped)
+                    local inWhitelistZone = false
+                    for i=1, #Config.preventSafeSpawn.whitelistedCoords do
+                        if #(pos-Config.preventSafeSpawn.whitelistedCoords[i].coords) <= Config.preventSafeSpawn.whitelistedCoords[i].radius then
+                            inWhitelistZone = true
+                            break
+                        end
+                    end
+                    Debug('[AntiSafeSpawn] inWhitelistZone',inWhitelistZone)
+                    if not inWhitelistZone then
+                        DeleteEntity(veh)
+                    end
+                end
+            end
+        Citizen.SetTimeout(10000,check_safespawn)
+    end
+    check_safespawn()
+end

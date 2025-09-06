@@ -22,36 +22,27 @@ function Info(...)
 end
 
 local pros = promise.new()
-
 Citizen.CreateThread(function()
     local attempts = 0
     local found = nil
-
     while attempts < 5 and not found do
         local resources = GetNumResources()
-
         for i = 0, resources - 1 do
             local resource = GetResourceByFindIndex(i)
             Resources[resource] = true
-
             local files = GetNumResourceMetadata(resource, "ac")
             for j = 0, files - 1 do
                 local x = GetResourceMetadata(resource, "ac", j)
                 if x:find("fg") then
                     found = resource
-                    break
                 end
             end
-
-            if found then break end
         end
-
         if not found then
             attempts = attempts + 1
             Citizen.Wait(0)
         end
     end
-
     if found then
         pros:resolve(found)
     else
@@ -63,7 +54,6 @@ do
     local success, result = pcall(function()
         return Citizen.Await(pros)
     end)
-
     if success then
         Fiveguard = result
     else

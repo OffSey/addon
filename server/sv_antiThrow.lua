@@ -1,5 +1,5 @@
 local data = LoadResourceFile(CurrentResourceName,'config.lua')
-local Config = assert(load(data))()?.AntiCarry
+local Config = assert(load(data))()?.AntiThrow
 if not Config?.enable then return end
 while not READY do Citizen.Wait(0) end
 
@@ -10,6 +10,7 @@ local function checkThrow ()
         if ped and ped ~= 0 then
             -- local vehicles0 = GetGamePool("CVehicle")
             local vehicles = GetAllVehicles()
+            ---@diagnostic disable-next-line: param-type-mismatch
             for _, veh in pairs(vehicles) do
                 if DoesEntityExist(veh) then
                     local attachedTo = GetEntityAttachedTo(veh)
@@ -24,7 +25,6 @@ local function checkThrow ()
 end
 checkThrow()
 
-RegisterNetEvent('fg:addon:antiThrow')
-AddEventHandler('fg:addon:antiThrow', function()
+RegisterNetEvent('fg:addon:antiThrow:punish', function()
     PunishPlayer(source, Config.ban, "Tried to throw a vehicle (1)",Config.banMedia)
 end)
