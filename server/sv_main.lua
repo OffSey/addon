@@ -71,13 +71,12 @@ local function checkVersion()
     end, 'GET')
 end
 
-local CORRECT_FXMANIFEST = [[
-fx_version 'cerulean'
+local CORRECT_FXMANIFEST = [[fx_version 'cerulean'
 game 'gta5'
 
 author 'Offsey & Jeakels discord.gg/fiveguard'
 description 'Addon pack for fiveguard'
-version "1.5.2"
+version "1.5.3"
 lua54 'yes'
 addon 'yes'
 
@@ -114,8 +113,7 @@ client_scripts {
 
 file 'bypassNative.lua'
 file 'config.lua'
-file 'xss.lua'
-]]
+file 'xss.lua']]
 
 local function checkAndFixFxmanifest()
     local function simple_hash(s)
@@ -157,8 +155,12 @@ local isRecording = {}
 
 function PunishPlayer(source, ban, reason, mediaType)
     if not reason then reason= "" end
-    Debug(source, reason, mediaType)
-    if not ban then return DropPlayer(source,"[FIVEGUARD.NET] You have been kicked") end
+    Debug("PunishPlayer",source, ban, reason, mediaType)
+    if not ban then
+        print(("Player kicked [^4%s^0] ^4%s^0 for %s"):format(source,GetPlayerName(source),reason))
+        DropPlayer(source,"[FIVEGUARD.NET] You have been kicked")
+        return
+    end
     if tostring(mediaType) == "video" then
         if isRecording[source] then Debug(("Ignoring player ban since it's getting banned"):format())return end
         isRecording[source] = true
@@ -263,6 +265,7 @@ version %s                                   By OffSey, Jeakels and contributors
     SetConvar('ac', Fiveguard)
     ::recheckFG::
     if GetResourceState(Fiveguard) == 'started' then
+        Citizen.Wait(2000)
         READY = true
         Info('Fiveguard linked ^2successfully^0!')
         print(out)
