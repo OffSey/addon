@@ -24,7 +24,7 @@ server_scripts {
     'server/sv_easyPermissions.lua',
     'server/sv_heartbeat.lua',
     'server/sv_vehicleProtection.lua',
-    'server/sv_weaponProtection.lua',
+    'server/sv_weaponProtection.lua'
 }
 
 client_scripts {
@@ -35,7 +35,7 @@ client_scripts {
     'client/cl_easyBypass.lua',
     'client/cl_heartbeat.lua',
     'client/cl_vehicleProtection.lua',
-    'client/cl_weaponProtection.lua',
+    'client/cl_weaponProtection.lua'
 }
 
 file 'bypassNative.lua'
