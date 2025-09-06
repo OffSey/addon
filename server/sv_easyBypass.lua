@@ -60,22 +60,6 @@ local B_CATEGORY = {
     ["BypassSpoofedWeapons"] = "Misc"
 }
 
-do
-    local safeEventEnabled = pcall(function ()
-        local events, retval, errorText = {
-            "fg:addon:SetTempPermission:BypassTeleport",
-            "fg:addon:SetTempPermission:BypassInvisible"
-        }, nil, nil
-        for i=1,#events do
-            retval, errorText = exports[Fiveguard]:RegisterSafeEvent(events[i], { log = true, ban = false }, true)
-        end
-        return retval, errorText
-    end)
-    if not safeEventEnabled then
-        Debug("Safe events not enabled, disabled token check on evemts")
-    end
-end
-
 local setAutoBypass = function(se, ee, bp, useBooleanArg)
     local result, errorText
     if not se or not bp then return end
@@ -155,7 +139,7 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
     end
 end
 
-local SafeSetEntityCoords = function(source, bol, resName)
+local SafeSetEntityCoords = function(bol, resName)
     if resName == CurrentResourceName then return end
     if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a BypassTeleport using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.wrapNatives.SetEntityCoords then
@@ -172,7 +156,7 @@ local SafeSetEntityCoords = function(source, bol, resName)
     end
 end
 
-local SafeSetEntityVisible = function(source, bol, resName)
+local SafeSetEntityVisible = function(bol, resName)
     if resName == CurrentResourceName then return end
     if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a BypassInvisible using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.wrapNatives.SetEntityVisible then
@@ -190,10 +174,6 @@ local SafeSetEntityVisible = function(source, bol, resName)
 end
 
 RegisterNetEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", function (bol,resName)
-    local s,r = pcall(function ()
-        return exports[Fiveguard]:VerifyToken(source)
-    end)
-    if s and not r then return Warn(("[^4%s^0] ^4%s^0 tried to exploit BypassVehicleFixAndGodMode"):format(source,GetPlayerName(source))) end
     if resName == CurrentResourceName then return end
     if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a BypassVehicleFixAndGodMode using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.wrapNatives.SetVehicleFixed then
@@ -210,21 +190,11 @@ RegisterNetEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", functi
     end
 end)
 
-RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function (bol,resName)
-    local s,r = pcall(function ()
-        return exports[Fiveguard]:VerifyToken(source)
-    end)
-    if s and not r then return Warn(("[^4%s^0] ^4%s^0 tried to exploit BypassTeleport"):format(source,GetPlayerName(source))) end
-    SafeSetEntityCoords(source, bol, resName)
-end)
+RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", SafeSetEntityCoords)
+RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", SafeSetEntityVisible)
 
-RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function (bol,resName)
-    local s,r = pcall(function ()
-        return exports[Fiveguard]:VerifyToken(source)
-    end)
-    if s and not r then return Warn(("[^4%s^0] ^4%s^0 tried to exploit BypassTeleport"):format(source,GetPlayerName(source))) end
-    SafeSetEntityVisible(source, bol, resName)
-end)
+exports("SafeSetEntityCoords", SafeSetEntityCoords)
+exports("SafeSetEntityVisible", SafeSetEntityVisible)
 
 do
     for startEvent, value in pairs(Config.onServerTrigger) do
@@ -260,9 +230,6 @@ do
         ::continue::
     end
 end
-
-exports("SafeSetEntityVisible", SafeSetEntityVisible)
-exports("SafeSetEntityCoords", SafeSetEntityCoords)
 
 AddEventHandler('onResourceStop', function(res)
     if CurrentResourceName ~= res then return end

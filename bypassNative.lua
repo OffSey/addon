@@ -1,5 +1,5 @@
-local a1 = GetCurrentResourceName()
-if a1 == CurrentResourceName then return end
+local resourceName = GetCurrentResourceName()
+if resourceName == CurrentResourceName then return end
 local Fiveguard = nil
 local Addon = nil
 do
@@ -31,66 +31,51 @@ do
 end
 
 if IsDuplicityVersion() then
-    print(("[^2INFO^0] the module ^5bypassNative^0 by addon is loaded into ^5%s^0 successfully!"):format(tostring(a1)))
+    print(("[^2INFO^0] the module ^5bypassNative^0 by addon is loaded into ^5%s^0 successfully!"):format(tostring(resourceName)))
     local setEntityCoords = SetEntityCoords
-    SetEntityCoords = function (entity, ...)
+    local setEntityVisible = SetEntityVisible
+    SetEntityCoords = function (...)
+        local entity = ...
         local source = NetworkGetEntityOwner(entity)
-        local s = pcall(function ()
-            exports[Addon]:SafeSetEntityCoords(source, "BypassTeleport", true)
-        end)
-        if not s then Warn("EasyBypass is disabled") end
-        setEntityCoords(entity, ...)
+        if not pcall(function ()
+            return exports[Addon]:SafeSetEntityCoords(source, "BypassTeleport", true)
+        end) then Warn("EasyBypass is disabled") end
+        setEntityCoords(...)
         Citizen.SetTimeout(1000,function ()
-            local sb = pcall(function ()
-                exports[Addon]:SafeSetEntityCoords(source, "BypassTeleport", false)
-        end)
-        if not sb then Warn("EasyBypass is disabled") end
+            if not pcall(function ()
+                return exports[Addon]:SafeSetEntityCoords(source, "BypassTeleport", false)
+            end) then Warn("EasyBypass is disabled") end
         end)
     end
-    local setEntityVisible = SetEntityVisible
-    SetEntityVisible = function (entity, toogle, ...)
+    SetEntityVisible = function (...)
+        local entity, toggle = ...
         local source = NetworkGetEntityOwner(entity)
-        local s = pcall(function ()
-            exports[Addon]:SafeSetEntityVisible(source, "BypassInvisible", not toogle)
-        end)
-        if not s then Warn("EasyBypass is disabled") end
-        return setEntityVisible(entity, toogle, ...)
+        if not pcall(function ()
+            return exports[Addon]:SafeSetEntityVisible(source, "BypassInvisible", not toggle)
+        end) then Warn("EasyBypass is disabled") end
+        setEntityVisible(...)
     end
 else
     local setEntityCoords = SetEntityCoords
-    SetEntityCoords = function (entity,...)
-        local s = pcall(function ()
-            return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassTeleport", true, a1)
-        end)
-        if not s then TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport", true, a1) end
-        setEntityCoords(entity,...)
-        Citizen.SetTimeout(1000,function ()
-            local sb = pcall(function ()
-                return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassTeleport", false, a1)
-            end)
-            if not sb then TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport", false, a1) end
-        end)
-    end
     local setVehicleFixed = SetVehicleFixed
-    SetVehicleFixed = function (entity)
-        local s = pcall(function ()
-            return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", true, a1)
-        end)
-        if not s then TriggerServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", true, a1) end
-        setVehicleFixed(entity)
-        Citizen.SetTimeout(1000,function ()
-            local sb = pcall(function ()
-                return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", false, a1)
-            end)
-            if not sb then TriggerServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", false, a1) end
+    local setEntityVisible = SetEntityVisible
+    SetEntityCoords = function (...)
+        TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport", true, resourceName)
+        setEntityCoords(...)
+        Citizen.SetTimeout(1000, function ()
+            TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport", false, resourceName)
         end)
     end
-    local setEntityVisible = SetEntityVisible
-    SetEntityVisible = function (entity, toogle, ...)
-        local s = pcall(function ()
-            return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassInvisible", not toogle, a1)
+    SetVehicleFixed = function (...)
+        TriggerServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", true, resourceName)
+        setVehicleFixed(...)
+        Citizen.SetTimeout(1000, function ()
+            TriggerServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", false, resourceName)
         end)
-        if not s then TriggerServerEvent("fg:addon:SetTempPermission:BypassInvisible", not toogle, a1) end
-        return setEntityVisible(entity, toogle,...)
+    end
+    SetEntityVisible = function (...)
+        local _, toggle = ...
+        TriggerServerEvent("fg:addon:SetTempPermission:BypassInvisible", not toggle, resourceName)
+        setEntityVisible(...)
     end
 end
