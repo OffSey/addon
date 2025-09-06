@@ -18,12 +18,12 @@ CreateThread(function()
     for _, id in ipairs(GetPlayers()) do
         local src = tonumber(id)
         ---@diagnostic disable-next-line: need-check-nil
-        hbState[src] = { lastSeen = GetGameTimer(), expected = nil, misses = 0, lastFast = 0, lastSlow = 0 }
+        hbState[src] = { clientReady = false, lastSeen = GetGameTimer(), expected = nil, misses = 0, lastFast = 0, lastSlow = 0 }
     end
 end)
 
 AddEventHandler("playerJoining", function()
-    hbState[source] = { lastSeen = GetGameTimer(), expected = nil, misses = 0, lastFast = 0, lastSlow = 0 }
+    hbState[source] = { clientReady = false, lastSeen = GetGameTimer(), expected = nil, misses = 0, lastFast = 0, lastSlow = 0 }
 end)
 
 AddEventHandler("playerDropped", function()
@@ -31,10 +31,12 @@ AddEventHandler("playerDropped", function()
 end)
 
 RegisterNetEvent("fg:addon:heartbeat:pong", function(token, clientFast, clientSlow)
-    -- Debug(("heartbeat received! source: %s token: %s clientFast: %s clientSlow: %s"):format(source, token, clientFast, clientSlow))
+    Debug(("heartbeat received! source: %s token: %s clientFast: %s clientSlow: %s"):format(source, token, clientFast, clientSlow))
     local st = hbState[source]
     if not st then return end
-
+    if not st.clientReady then
+        st.clientReady = true
+    end
     if not (token and token == st.expected) then
         st.misses = math.min(st.misses + 1, Config.graceMisses)
         return
@@ -58,16 +60,15 @@ end)
 CreateThread(function()
     while true do
         local cycleStart = GetGameTimer()
-
         for _, id in ipairs(GetPlayers()) do
             local src = tonumber(id)
             ---@diagnostic disable-next-line: need-check-nil
-            hbState[src] = hbState[src] or { lastSeen = GetGameTimer(), expected = nil, misses = 0, lastFast = 0, lastSlow = 0 }
+            hbState[src] = hbState[src] or { clientReady = false, lastSeen = GetGameTimer(), expected = nil, misses = 0, lastFast = 0, lastSlow = 0 }
             local t = newToken(src)
             hbState[src].expected = t
             ---@diagnostic disable-next-line: param-type-mismatch
             TriggerClientEvent("fg:addon:heartbeat:ping", src, t)
-            -- Debug(("heartbeat sent to %s with token %s"):format(src,t))
+            Debug(("heartbeat sent to %s with token %s"):format(src,t))
         end
 
         Citizen.Wait(math.floor((Config.threadTime * 1000) / 2))
@@ -76,11 +77,10 @@ CreateThread(function()
         for _, id in ipairs(GetPlayers()) do
             local src = tonumber(id)
             local st = hbState[src]
-            if st then
-                if now - st.lastSeen > (Config.timeOut * 1000) then
+            if st and st.clientReady then
+                    if now - st.lastSeen > (Config.timeOut * 1000) then
                     st.misses += 1
                 end
-
                 if st.misses >= (Config.graceMisses) then
                     PunishPlayer(src, Config.ban, "Heartbeat not received (misses: "..tostring(st.misses)..")", false)
                 end
@@ -90,7 +90,6 @@ CreateThread(function()
         local spent = GetGameTimer() - cycleStart
         local sleep = intervalWithJitter() - spent
         if sleep < 0 then sleep = 0 end
-        -- Debug(("MainThread spent %s\nsleep %s"):format(spent,sleep))
         Citizen.Wait(sleep)
     end
 end)
