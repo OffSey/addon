@@ -3,48 +3,45 @@ local Config = assert(load(data))()?.CheckNicknames
 if not Config?.enable then return end
 while not READY do Citizen.Wait(0) end
 
+local function trim(s)
+  return (s:gsub("^%s+", ""):gsub("%s+$", ""))
+end
+
 local function isCharacterNameValid(name)
-    local nameLength = #name
-    if nameLength > Config.maxNicknameLenght then
-        local excess = nameLength - Config.maxNicknameLenght
-        return false, "You have " .. excess .. " extra characters. Limit: " .. Config.maxNicknameLenght
-    end
-    return true, ""
+  local n = #name
+
+  if Config.minNicknameLength and n < Config.minNicknameLength then
+    return false, ("Nickname too short. Minimum: %d characters."):format(Config.minNicknameLength)
+  end
+  if Config.maxNicknameLength and n > Config.maxNicknameLength then
+    return false, ("Nickname too long, Maximum: %d characters."):format(Config.maxNicknameLength)
+  end
+  return true, ""
 end
 
 local function isNameValid(name)
-    for i = 1, #name do
-        local char = name:sub(i, i)
-        local found = false
-        for _, validChar in ipairs(Config.allowedCharacters) do
-            if char == validChar then
-                found = true
-                break
-            end
-        end
-        if not found then
-            return false, "Your name contains invalid characters."
-        end
-    end
-    return true, ""
+  if not Config.allowedPattern then return true, "" end
+  if name ~= trim(name) or name:match("^%s+$") then
+    return false, "Leading/trailing spaces or only-space nickname are not allowed."
+  end
+  if not name:match(Config.allowedPattern) then
+    return false, "Your nickname contains invalid characters."
+  end
+  return true, ""
 end
 
 AddEventHandler("playerConnecting", function(playerName, setKickReason, deferrals)
-    deferrals.defer()
-    Wait(100)
-    if Config.allowedCharacters then
-        local isValid, reason = isNameValid(playerName)
-        if not isValid then
-            deferrals.done("[fiveguard] Connection refused: " .. reason)
-            return
-        end
-    end
-    if Config.maxNicknameLenght then
-        local isValid, reason = isCharacterNameValid(playerName)
-        if not isValid then
-            deferrals.done("[fiveguard] Connection refused: " .. reason)
-            return
-        end
-    end
-    deferrals.done()
+  deferrals.defer()
+  Wait(100)
+  local ok, reason = isNameValid(playerName)
+  if not ok then
+    deferrals.done("Connection refused: " .. reason)
+    return
+  end
+  ok, reason = isCharacterNameValid(playerName)
+  if not ok then
+    deferrals.done("Connection refused: " .. reason)
+    return
+  end
+  deferrals.done()
 end)

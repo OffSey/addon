@@ -15,24 +15,17 @@ Debug("[explosionEvent] Received from player: " .. tostring(source) .. "\n" ..
       "  - Networked: " .. tostring(ev.isNetworked) .. "\n" ..
       "  - Explosion FX: " .. tostring(ev.explosionFX))
 
-    if ev.explosionType == 9 and ev.damageScale == 1 and ev.cameraShake == 1 and ev.isNetworked == nil and ev.explosionFX == nil then
+    if Config.preventExplosions and (ev.explosionType == 9 and ev.damageScale == 1 and ev.cameraShake == 1 and ev.isNetworked == nil and ev.explosionFX == nil) then
         CancelEvent()
-        Warn('Explosions Susano (or others cheat) detected and deleted')
-        return PunishPlayer(sender, Config.ban, "Detected Susano Explosions", Config.banMedia)
+        return PunishPlayer(sender, Config.ban, "Detected Explosions", Config.banMedia)
     end
 
-    if ev.explosionType == 7 and ev.damageScale == 1 and ev.cameraShake >= 0.6 and ev.ownerNetId == 1 and ev.isNetworked == nil and ev.explosionFX == nil then
+    if Config.preventSafeExplosions and (ev.explosionType == 7 and ev.damageScale == 1 and ev.cameraShake >= 0.6 and (ev.ownerNetId == 1 or ev.ownerNetId == 0) and ev.isNetworked == nil and ev.explosionFX == nil) then
         CancelEvent()
-        Warn('Explosions Safe Susano (or others cheat) detected and deleted')
-        return PunishPlayer(sender, Config.ban, "Detected Susano Safe Explosions", Config.banMedia)
+        return PunishPlayer(sender, Config.ban, "Detected Safe Explosions", Config.banMedia)
     end
 
-    if ev.explosionType == 7 and ev.damageScale == 1 and ev.cameraShake >= 0.6 and ev.ownerNetId == 0 and ev.isNetworked == nil and ev.explosionFX == nil then
-        CancelEvent()
-        return PunishPlayer(sender, Config.ban, "Detected Keyser Explosions", Config.banMedia)
-    end
-    --thanks to https://discord.com/users/589401992305311756
-    if ev.explosionType == 7 and ev.f104 == 0 then
+    if Config.preventUnnetworkedExplosions and (ev.explosionType == 7 and ev.f104 == 0) then --thanks to @somis12
         CancelEvent()
         return PunishPlayer(sender, Config.ban, "Detected Unnetworked Explosions", Config.banMedia)
     end
