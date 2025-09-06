@@ -1,5 +1,5 @@
 local data = LoadResourceFile(CurrentResourceName,'config.lua')
-local Config = assert(load(data))()?.Bypasses
+local Config = assert(load(data))()?.EasyBypass
 if not Config.enable then return end
 while not READY do Citizen.Wait(0) end
 local R_EVENTS = {}

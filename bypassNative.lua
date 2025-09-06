@@ -1,6 +1,7 @@
 local a1 = GetCurrentResourceName()
 if a1 == CurrentResourceName then return end
 local Fiveguard = nil
+local Addon = nil
 do
     local resources = GetNumResources()
     for i = 0, resources - 1 do
@@ -15,6 +16,18 @@ do
         end
         if Fiveguard then break end
     end
+    for i = 0, resources - 1 do
+        local resource = GetResourceByFindIndex(i)
+        local files = GetNumResourceMetadata(resource, "addon")
+        for j = 0, files - 1 do
+            local x = GetResourceMetadata(resource, "addon", j)
+            if x and x:find("yes") then
+                Addon = resource
+                break
+            end
+        end
+        if Addon then break end
+    end
 end
 
 if IsDuplicityVersion() then
@@ -22,16 +35,25 @@ if IsDuplicityVersion() then
     local setEntityCoords = SetEntityCoords
     SetEntityCoords = function (entity, ...)
         local source = NetworkGetEntityOwner(entity)
-        exports[Fiveguard]:SetTempPermission(source,"Client", "BypassTeleport", true)
+        local s = pcall(function ()
+            exports[Addon]:SafeSetEntityCoords(source, "BypassTeleport", true)
+        end)
+        if not s then Warn("EasyBypass is disabled") end
         setEntityCoords(entity, ...)
-        Citizen.SetTimeout(100,function ()
-            exports[Fiveguard]:SetTempPermission(source,"Client", "BypassTeleport", false)
+        Citizen.SetTimeout(1000,function ()
+            local sb = pcall(function ()
+                exports[Addon]:SafeSetEntityCoords(source, "BypassTeleport", false)
+        end)
+        if not sb then Warn("EasyBypass is disabled") end
         end)
     end
     local setEntityVisible = SetEntityVisible
     SetEntityVisible = function (entity, toogle, ...)
         local source = NetworkGetEntityOwner(entity)
-        exports[Fiveguard]:SetTempPermission(source, "Client", "BypassInvisible", not toogle)
+        local s = pcall(function ()
+            exports[Addon]:SafeSetEntityVisible(source, "BypassInvisible", not toogle)
+        end)
+        if not s then Warn("EasyBypass is disabled") end
         return setEntityVisible(entity, toogle, ...)
     end
 else
@@ -47,6 +69,20 @@ else
                 return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassTeleport", false, a1)
             end)
             if not sb then TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport", false, a1) end
+        end)
+    end
+    local setVehicleFixed = SetVehicleFixed
+    SetVehicleFixed = function (entity)
+        local s = pcall(function ()
+            return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", true, a1)
+        end)
+        if not s then TriggerServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", true, a1) end
+        setVehicleFixed(entity)
+        Citizen.SetTimeout(1000,function ()
+            local sb = pcall(function ()
+                return exports[Fiveguard]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", false, a1)
+            end)
+            if not sb then TriggerServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", false, a1) end
         end)
     end
     local setEntityVisible = SetEntityVisible

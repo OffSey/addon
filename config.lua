@@ -1,5 +1,5 @@
 return {
-    Debug = true,
+    Debug = false,
     CheckUpdates = true, -- RECOMMENDED Enable this to be notified when an update is available!
     -- custom storage for video or images, if not configured will be used the default screenshot webhook url on your fiveguard config
     CustomWebhookURL = "https://discord.com/api/webhooks/URL", -- Discord webhook URL to store video or images
@@ -50,7 +50,7 @@ return {
     },
 
     VehicleProtection = { -- Credit: @jona0081 for some detections included here
-        enable = true,
+        enable = false,
         ban = true,         -- Ban (false = delete vehicle only)
         banMedia = "image", -- "image" or "video" or "false"
         detectNPC = false,  -- Can spawn client side event 
@@ -162,11 +162,12 @@ return {
             [GetHashKey('a_c_stingray')] = true,
             [GetHashKey('a_c_westy')] = true
         },
-        enableCrahingPrevent = true
+        preventCrashPlayer = true
     },
-
-    Bypasses = {
-        enable = true, -- master switch
+    -- Allows players to get a bypass directly by native execution on installed resources or when a event configured is triggered
+    EasyBypass = {
+        enable = true,
+        verbose = false, -- if true, prints are more detailed and don't warn if player already have permission
         onClientTrigger = {
             --[[ ["put:here:the:event:to:get:bypass"] = {
                 enable = true or false,
@@ -216,7 +217,6 @@ return {
                 bypass = "BypassTeleport"
             }
         },
-
         onServerTrigger = {
             --[[ ["put:here:the:event:to:get:bypass"] = {
                 enable = true or false,
@@ -260,20 +260,21 @@ return {
                 endEvent = false,
                 bypass = "BypassTeleport"
             }
+        },
+        -- it will use the module bypassNative to detect autmatically if a script need to set a player invisible or teleport him
+        wrapNatives = {
+            -- It enable  exports["addon"]:SafeSetEntityCoords(playerId, true or false, GetCurrentResourceName())
+                        --exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassTeleport", true --[[ or false ]], GetCurrentResourceName()) /
+                        --TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport", true --[[ or false ]], GetCurrentResourceName())
+            SetEntityCoords = true,
+            -- It enable  exports["addon"]:SafeSetEntityCoords(playerId, true or false, GetCurrentResourceName())
+                        --exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassInvisible", true --[[ or false ]], GetCurrentResourceName()) /
+                        --TriggerServerEvent("fg:addon:SetTempPermission:BypassInvisible", true --[[ or false ]], GetCurrentResourceName())
+            SetEntityVisible = true,
+                        -- It enable exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", true --[[ or false ]], GetCurrentResourceName()) /
+                                  -- TriggerServerEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", true --[[ or false ]], GetCurrentResourceName())
+            SetVehicleFixed = true
         }
-    },
-    -- Allows players to get a bypass directly by native execution on installed resources
-    EasyTempBypass = {
-        enable = true,
-
-        -- It enable  exports["addon"]:SafeSetEntityCoords(playerId, true or false, GetCurrentResourceName())
-                    --exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassTeleport", true or false, GetCurrentResourceName()) /
-                    --TriggerServerEvent("fg:addon:SetTempPermission:BypassTeleport", true or false, GetCurrentResourceName())
-        SetEntityCoords = true,
-        -- It enable  exports["addon"]:SafeSetEntityCoords(playerId, true or false, GetCurrentResourceName())
-                    --exports["anticheat-name"]:ExecuteServerEvent("fg:addon:SetTempPermission:BypassInvisible", true or false, GetCurrentResourceName()) /
-                    --TriggerServerEvent("fg:addon:SetTempPermission:BypassInvisible", true or false, GetCurrentResourceName())
-        SetEntityVisible = true
     },
 
     EasyPermissions = {
