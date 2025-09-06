@@ -43,7 +43,7 @@ if IsDuplicityVersion() then
         Citizen.SetTimeout(1000,function ()
             local sb = pcall(function ()
                 exports[Addon]:SafeSetEntityCoords(source, "BypassTeleport", false)
-            end)
+        end)
         if not sb then Warn("EasyBypass is disabled") end
         end)
     end
