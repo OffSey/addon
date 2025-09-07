@@ -9,21 +9,19 @@ if IsDuplicityVersion() then
     local _AddEventHandler      = AddEventHandler
 
     local function escape_html(s)
-        if not s:find("[%z\1-\8\11\12\14-\31\127]") then return s end
-        if not s:find("[&<>'\"]") then return s end
-        s = s:gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"):gsub("'", "&#39;")
-        return s
+        if not s:find("[%z\1-\8\11\12\14-\31\127]") and not s:find("[&<>'\"]") then
+            return s
+        end
+        return s:gsub("[%z\1-\8\11\12\14-\31\127]", ""):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"):gsub("'", "&#39;")
     end
     local function sanitize_deep(v, seen)
+        if type(seen) ~= "table" then seen = setmetatable({}, { __mode = "k" }) end
         local t = type(v)
-        if t == "string" then
-            return escape_html(v)
+        if t == "string" then return escape_html(v)
         elseif t == "table" then
-            if getmetatable(v) ~= nil then
-                return v
-            end
-            seen = seen or {}
-            if seen[v] then return seen[v] end
+            if getmetatable(v) ~= nil then return v end
+            local cached = seen[v]
+            if cached then return cached end
             local out = {}
             seen[v] = out
             for k, val in pairs(v) do
