@@ -4,20 +4,19 @@ if not Config?.enable then return end
 while not READY do Citizen.Wait(0) end
 
 local function checkThrow ()
-    local players = GetPlayers()
-    for _, src in ipairs(players) do
+    local pedToSrc = {}
+    for _, src in ipairs(GetPlayers()) do
         local ped = GetPlayerPed(src)
         if ped and ped ~= 0 then
-            -- local vehicles0 = GetGamePool("CVehicle")
-            local vehicles = GetAllVehicles()
-            ---@diagnostic disable-next-line: param-type-mismatch
-            for _, veh in pairs(vehicles) do
-                if DoesEntityExist(veh) then
-                    local attachedTo = GetEntityAttachedTo(veh)
-                    if attachedTo == ped and GetPedInVehicleSeat(veh, -1) ~= ped then
-                        PunishPlayer(sender, Config.ban, "Tried to throw a vehicle (2)", Config.banMedia)
-                    end
-                end
+            pedToSrc[ped] = src
+        end
+    end
+    for _, veh in ipairs(GetGamePool("CVehicle")) do
+        if DoesEntityExist(veh) and IsEntityAttached(veh) then
+            local attachedTo = GetEntityAttachedTo(veh)
+            local src = pedToSrc[attachedTo]
+            if src and GetPedInVehicleSeat(veh, -1) ~= attachedTo then
+                PunishPlayer(src, Config.ban, "Tried to throw a vehicle (2)", Config.banMedia)
             end
         end
     end
