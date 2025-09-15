@@ -39,12 +39,12 @@ if IsDuplicityVersion() then
         local source = NetworkGetEntityOwner(entity)
         if not pcall(function ()
             return exports[Addon]:SafeSetEntityCoords(source, "BypassTeleport", true)
-        end) then Warn("EasyBypass is disabled") end
+        end) then print('[^3WARN^0] EasyBypass is disabled^0') end
         setEntityCoords(...)
         Citizen.SetTimeout(1000,function ()
             if not pcall(function ()
                 return exports[Addon]:SafeSetEntityCoords(source, "BypassTeleport", false)
-            end) then Warn("EasyBypass is disabled") end
+            end) then print('[^3WARN^0] EasyBypass is disabled^0') end
         end)
     end
     SetEntityVisible = function (...)
@@ -52,7 +52,7 @@ if IsDuplicityVersion() then
         local source = NetworkGetEntityOwner(entity)
         if not pcall(function ()
             return exports[Addon]:SafeSetEntityVisible(source, "BypassInvisible", not toggle)
-        end) then Warn("EasyBypass is disabled") end
+        end) then print('[^3WARN^0] EasyBypass is disabled^0') end
         setEntityVisible(...)
     end
 else
