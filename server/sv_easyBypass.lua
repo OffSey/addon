@@ -60,6 +60,11 @@ local B_CATEGORY = {
     ["BypassSpoofedWeapons"] = "Misc"
 }
 
+---@param se string
+---@param ee string|nil
+---@param bp string|table
+---@param useBooleanArg boolean
+---@return nil
 local setAutoBypass = function(se, ee, bp, useBooleanArg)
     local result, errorText
     if not se or not bp then return end
@@ -139,7 +144,11 @@ local setAutoBypass = function(se, ee, bp, useBooleanArg)
     end
 end
 
-local SafeSetEntityCoords = function(bol, resName)
+---@param source any
+---@param bol boolean
+---@param resName string
+---@return nil
+local SafeSetEntityCoords = function(source, bol, resName)
     if resName == CurrentResourceName then return end
     if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a BypassTeleport using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.wrapNatives.SetEntityCoords then
@@ -156,7 +165,11 @@ local SafeSetEntityCoords = function(bol, resName)
     end
 end
 
-local SafeSetEntityVisible = function(bol, resName)
+---@param source any
+---@param bol boolean
+---@param resName string
+---@return nil
+local SafeSetEntityVisible = function(source, bol, resName)
     if resName == CurrentResourceName then return end
     if not Resources[resName] then return Warn(("[^4%s^0] ^4%s^0 tried to get a BypassInvisible using the resource: %s"):format(source,GetPlayerName(source),resName)) end
     if Config.wrapNatives.SetEntityVisible then
@@ -190,11 +203,19 @@ RegisterNetEvent("fg:addon:SetTempPermission:BypassVehicleFixAndGodMode", functi
     end
 end)
 
-RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", SafeSetEntityCoords)
-RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", SafeSetEntityVisible)
+RegisterNetEvent("fg:addon:SetTempPermission:BypassTeleport", function (bol, resName)
+    return SafeSetEntityCoords(source, bol, resName)
+end)
+RegisterNetEvent("fg:addon:SetTempPermission:BypassInvisible", function (bol, resName)
+    return SafeSetEntityVisible(source, bol, resName)
+end)
 
-exports("SafeSetEntityCoords", SafeSetEntityCoords)
-exports("SafeSetEntityVisible", SafeSetEntityVisible)
+exports("SafeSetEntityCoords", function (source, bol, resName)
+    return SafeSetEntityCoords(source, bol, resName)
+end)
+exports("SafeSetEntityVisible", function (source, bol, resName)
+    return SafeSetEntityVisible(source, bol, resName)
+end)
 
 do
     for startEvent, value in pairs(Config.onServerTrigger) do
@@ -209,7 +230,7 @@ do
         else
             RegisterNetEvent(startEvent)
             RegisterNetEvent(value.endEvent)
-            setAutoBypass(startEvent, value.endEvent, value.bypass)
+            setAutoBypass(startEvent, value.endEvent, value.bypass, false)
         end
         ::continue::
     end
@@ -225,7 +246,7 @@ do
         else
             RegisterNetEvent(('fg:addon:%s'):format(startEvent))
             RegisterNetEvent(('fg:addon:%s'):format(value.endEvent))
-            setAutoBypass('fg:addon:'..startEvent, value?.endEvent and 'fg:addon:'..value.endEvent or nil, value.bypass)
+            setAutoBypass('fg:addon:'..startEvent, value?.endEvent and 'fg:addon:'..value.endEvent or nil, value.bypass, false)
         end
         ::continue::
     end
