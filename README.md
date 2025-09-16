@@ -15,9 +15,8 @@ This resource extends **Fiveguard** by allowing you to manage permissions, bypas
 * [Credits](#-credits)
 ---
 ## 📥 Installation
-1. [Download](https://github.com/OffSey/addon/archive/refs/heads/main.zip) the script
-2. Extract and remove the `-main` suffix from the folder name
-3. Configure the `config.lua` file as needed
+1. [Download](https://github.com/OffSey/addon/releases/latest/download/addon.zip) the script
+2. Configure the `config.lua` file as needed
 ---
 ## ⚙️ Main Features
 ### 🔒 Permissions Management
