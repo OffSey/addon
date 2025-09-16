@@ -12,7 +12,7 @@ local function checkThrow ()
         end
     end
     for _, veh in ipairs(GetGamePool("CVehicle")) do
-        if DoesEntityExist(veh) and IsEntityAttached(veh) then
+        if DoesEntityExist(veh) then
             local attachedTo = GetEntityAttachedTo(veh)
             local src = pedToSrc[attachedTo]
             if src and GetPedInVehicleSeat(veh, -1) ~= attachedTo then
