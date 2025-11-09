@@ -215,7 +215,27 @@ return {
                 enable = GetResourceState("qb-prison") ~= "missing",
                 endEvent = false,
                 bypass = "BypassTeleport"
-            }
+            },
+            ["rtx_mazebankattractions:UsingAttractionHandler"] = {
+                enable = GetResourceState("rtx_mazebank_themepark") ~= "missing",
+                endEvent = "rtx_mazebankattractions:UsingAttractionHandler",
+                bypass = "BypassNoclip"
+            },
+            ["rtx_waterpark:UseWaterSlideClient"] = {
+                enable = GetResourceState("rtx_waterpark") ~= "missing",
+                endEvent = "rtx_waterpark:UseWaterSlideClient",
+                bypass = "BypassNoclip"
+            },
+            ["rtx_waterpark_roxwood:UseWaterSlideClient"] = {
+                enable = GetResourceState("rtx_waterpark_roxwood") ~= "missing",
+                endEvent = "rtx_waterpark_roxwood:UseWaterSlideClient",
+                bypass = "BypassNoclip"
+            },
+            ["rtx_spawnableattractions:Global:AttractionUsing"] = {
+                enable = GetResourceState("rtx_spawnableattractions") ~= "missing",
+                endEvent = "rtx_spawnableattractions:Global:AttractionUsing",
+                bypass = "BypassNoclip"
+            },
         },
         onServerTrigger = {
             --[[ ["put:here:the:event:to:get:bypass"] = {
@@ -241,7 +261,7 @@ return {
                 bypass = "BypassNoclip"
             },
             ["lsrp_lunapark:Wheel:attachPlayer"] = {
-                enable = GetResourceState("v") ~= "missing",
+                enable = GetResourceState("lsrp_lunapark") ~= "missing",
                 endEvent = "lsrp_lunapark:Wheel:detachPlayer",
                 bypass = "BypassNoclip",
             },
