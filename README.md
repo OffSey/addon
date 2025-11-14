@@ -45,6 +45,10 @@ Preconfigured for:
 * **rcore\_clothing**
 * **lsrp\_lunapark**
 * **rtx\_themepark**
+* **rtx\_mazebank\_themepark**
+* **rtx\_waterpark**
+* **rtx\_waterpark\_roxwood**
+* **rtx\_spawnableattractions**
 * **ik-jobgarage**
 * **jg-advancedgarages**
 * **jg-dealerships**
