@@ -271,7 +271,7 @@ return {
                 bypass = "BypassStealOutfit"
             },
             ["rtx_themepark:Global:UsingAttractionPlayer"] = {
-                enable = GetResourceState("rtx_themepark") ~= "missing",
+                enable = GetResourceState("rtx_themepark") ~= "missing" or GetResourceState("rtx_themepark_dlc") ~= "missing",
                 endEvent = "rtx_themepark:Global:UsingAttractionPlayer",
                 bypass = { "BypassNoclip", "BypassSpoofedWeapons", "BypassBulletproofTires" }
             },
@@ -667,4 +667,3 @@ return {
         }
     }
 }
-
