@@ -1,5 +1,8 @@
 # Fiveguard Addon
 This resource extends **Fiveguard** by allowing you to manage permissions, bypasses, and advanced security checks for your FiveM server.
+
+# XionShield: https://xionshield.eu
+
 ---
 ## 📑 Index
 * [Installation](#-installation)
